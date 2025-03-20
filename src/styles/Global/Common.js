@@ -9,4 +9,8 @@ export const Common = css`
         font-family: 'Noto Sans KR', sans-serif !important;
         color: #444444;
     }
+
+    a {
+        text-decoration: none;
+    }
 `;
