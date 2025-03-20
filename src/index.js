@@ -7,6 +7,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import { BrowserRouter } from 'react-router-dom';
 import { Reset } from 'styled-reset';
+import { Global } from '@emotion/react';
+import { Common } from './styles/Global/Common';
 
 const queryClient = new QueryClient();
 
@@ -15,7 +17,7 @@ root.render(
   <QueryClientProvider client={queryClient}>
     <RecoilRoot>
       <BrowserRouter>
-        <Reset/>
+        <Global styles={Common}/>
         <App />
       </BrowserRouter>
     </RecoilRoot>
