@@ -3,10 +3,10 @@ import { css } from '@emotion/react';
 export const SLayout = css`
     position : relative;
     transform : translateY(0%);
-    padding: 20px 0;
-    height: 140px;
+    padding: 10px 0;
+    height: 120px;
     background-color: #f6f6f6;
-    color: #a6a6a6;
+    color:rgb(210, 210, 210);
 `;
 
 export const SContainer = css`
@@ -27,6 +27,6 @@ export const SBox = css`
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 24px;
 `;

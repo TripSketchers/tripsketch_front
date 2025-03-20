@@ -41,8 +41,9 @@ export const SContainer = css`
     input {
         background-color: #eee;
         border: none;
-        padding: 15px 18px;
-        margin: 8px 0;
+        border-radius: 5px;
+        padding: 13px 15px;
+        margin: 5px 0;
         width: 100%;
         font-size: 14px;
     }
@@ -64,7 +65,7 @@ export const SBox = css`
         justify-content: center;
         align-items: center;
         margin: 0 5px;
-        height: 50px;
-        width: 50px;
+        height: 40px;
+        width: 40px;
     }
 `;

@@ -4,15 +4,16 @@ export const SLayout = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    height: calc(100vh - 240px);
 
     h1 {
-        font-size: 28px;
+        font-size: 24px;
         font-weight: bold;
         margin: 0;
     }
 
     p {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 100;
         line-height: 20px;
         letter-spacing: 0.5px;
@@ -20,7 +21,7 @@ export const SLayout = css`
     }
 
     span {
-        font-size: 14px;
+        font-size: 12px;
     }
 `;
 
@@ -30,9 +31,9 @@ export const SContainer = css`
     box-shadow: 0 0px 28px rgba(0,0,0,0.25), 0 0px 10px rgba(0,0,0,0.22);
     position: relative;
     overflow: hidden;
-    width: 1000px;
+    width: 800px;
     max-width: 100%;
-    min-height: 650px;
+    min-height: 500px;
 `;
 
 export const SOverlayBox = (isRightPanelActive) => css`

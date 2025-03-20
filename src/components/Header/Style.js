@@ -16,10 +16,6 @@ export const SContainer = css`
     & a {
         background-color: white;
         border: 0;
-        font-size: 20px;
-
-        &:hover {
-            color: blue;
-        }
+        font-size: 16px;
     }
 `;

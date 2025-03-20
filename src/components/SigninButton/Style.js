@@ -5,7 +5,7 @@ export const SLayout = css`
     border: 1px solid rgb(44,195,185);
     background: rgb(44,195,185);
     color: #FFFFFF;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     padding: 12px 45px;
     letter-spacing: 1px;

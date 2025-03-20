@@ -14,9 +14,9 @@ function SigninContainer({ isSignin, isRightPanelActive }) {
             <form css={S.SContainer}>
                 <h1>{text}</h1>
                 <div css={S.SBox}>
-                    <a href="#"><RiKakaoTalkFill size={30}/></a>
-                    <a href="#"><FaGoogle size={24}/></a>
-                    <a href="#"><SiNaver size={21}/></a>
+                    <a href="#"><RiKakaoTalkFill size={28}/></a>
+                    <a href="#"><FaGoogle size={21}/></a>
+                    <a href="#"><SiNaver size={18}/></a>
                 </div>
                 <span>이메일로 {text}</span>
                 <input type="email" placeholder="Email" />
