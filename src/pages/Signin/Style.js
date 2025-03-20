@@ -4,8 +4,6 @@ export const SLayout = css`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 90px;
-    height: calc(100vh - 110px);
 
     h1 {
         font-size: 28px;

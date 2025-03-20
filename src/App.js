@@ -12,8 +12,7 @@ const wrapper = css`
 `
 const content = css`
   min-width: 1000px;
-  min-height: calc(100vh - 240px);
-  padding-bottom: 100px;
+  min-height: calc(100vh - 242px);
 `;
 
 function App() {
