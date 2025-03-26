@@ -48,6 +48,7 @@ function SigninContainer({ isSignin, isRightPanelActive }) {
                 alert("회원가입이 완료되었습니다!");
                 window.location.replace("/signin");
             } else {
+                localStorage.setItem("accessToken", "Bearer " + response.data.accessToken);
                 window.location.replace("/");
             }
     
