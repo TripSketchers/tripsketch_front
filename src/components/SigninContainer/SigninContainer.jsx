@@ -6,14 +6,15 @@ import { FaGoogle } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
 import SigninButton from '../SigninButton/SigninButton';
 import { instance } from '../../api/config/instance';
+import { useNavigate } from 'react-router-dom';
 
 function SigninContainer({ isSignin, isRightPanelActive }) {
     const text = isSignin?"로그인":"회원가입";
     const [ errorMessage, setErrorMessage ] = useState("");
     const [ signupUser, setSignupUser ] = useState({
-        email: "",
-        password: "",
-        checkPassword: ""
+        email: null,
+        password: null,
+        checkPassword: null
     })
 
     const handleInputChange = (e) => {
@@ -24,7 +25,7 @@ function SigninContainer({ isSignin, isRightPanelActive }) {
     }
     
     useEffect(() => {
-        if(signupUser.checkPassword != "" && signupUser.password != signupUser.checkPassword) {
+        if(signupUser.checkPassword != null && signupUser.password != signupUser.checkPassword) {
             setErrorMessage("*비밀번호가 일치하지 않습니다.");
         } else {
             setErrorMessage("");
@@ -39,9 +40,19 @@ function SigninContainer({ isSignin, isRightPanelActive }) {
         }
         try {
             const response = await instance.post("/auth/signup", signupData);
+            alert("회원가입이 완료되었습니다!")
+            window.location.replace("/signin");
         } catch (error) {
             console.error(error);
-            alert(error.response.data.email);
+            const errors = error.response.data;
+
+            if (errors.email) {
+                alert(errors.email);
+            }
+            
+            if (errors.password) {
+                alert(errors.password);
+            }
         }
     }
 
@@ -57,11 +68,13 @@ function SigninContainer({ isSignin, isRightPanelActive }) {
                 <span>이메일로 {text}</span>
                 <input type="email" name="email" placeholder="Email" onChange={handleInputChange}/>
                 <input type="password" name="password" placeholder="Password" onChange={handleInputChange}/>
-                {isSignin ? <></> : <>
-                                        <input type="password" name="checkPassword" placeholder="Re-enter Password" onChange={handleInputChange}/>
-                                        <div css={S.ErrorMsg}>{errorMessage}</div>
-                                    </>}
-                <SigninButton type="submit" onClick={handleSignupSubmit}>{text}</SigninButton>
+                {isSignin ? <SigninButton type="submit">{text}</SigninButton> : 
+                            <>
+                                <input type="password" name="checkPassword" placeholder="Re-enter Password" onChange={handleInputChange}/>
+                                <div css={S.ErrorMsg}>{errorMessage}</div>
+                                <SigninButton type="submit" onClick={handleSignupSubmit}>{text}</SigninButton>
+                            </>}
+                
             </form>
         </div>
     );
