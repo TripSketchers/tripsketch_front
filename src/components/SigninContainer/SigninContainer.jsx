@@ -6,55 +6,58 @@ import { FaGoogle } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
 import SigninButton from '../SigninButton/SigninButton';
 import { instance } from '../../api/config/instance';
-import { useNavigate } from 'react-router-dom';
 
 function SigninContainer({ isSignin, isRightPanelActive }) {
     const text = isSignin?"로그인":"회원가입";
     const [ errorMessage, setErrorMessage ] = useState("");
-    const [ signupUser, setSignupUser ] = useState({
+    const [ user, setUser ] = useState({
         email: null,
         password: null,
         checkPassword: null
     })
 
     const handleInputChange = (e) => {
-        setSignupUser({
-            ...signupUser,
+        setUser({
+            ...user,
             [e.target.name]: e.target.value
         })
     }
     
     useEffect(() => {
-        if(signupUser.checkPassword != null && signupUser.password != signupUser.checkPassword) {
+        if(user.checkPassword != null && user.password != user.checkPassword) {
             setErrorMessage("*비밀번호가 일치하지 않습니다.");
         } else {
             setErrorMessage("");
         }
-    }, [signupUser.password, signupUser.checkPassword])
+    }, [user.password, user.checkPassword])
 
-    const handleSignupSubmit = async (e) => {
-        e.preventDefault(); // 기본 동작 막기
-        const signupData = {
-            email: signupUser.email,
-            password: signupUser.password
-        }
+    const handleAuthSubmit = async (e) => {
+        e.preventDefault();
+    
+        const data = {
+            email: user.email,
+            password: user.password
+        };
+    
+        const endpoint = isSignin ? "/auth/signin" : "/auth/signup";
+    
         try {
-            const response = await instance.post("/auth/signup", signupData);
-            alert("회원가입이 완료되었습니다!")
-            window.location.replace("/signin");
+            const response = await instance.post(endpoint, data);
+    
+            if (!isSignin) {
+                alert("회원가입이 완료되었습니다!");
+                window.location.replace("/signin");
+            } else {
+                window.location.replace("/");
+            }
+    
         } catch (error) {
-            console.error(error);
-            const errors = error.response.data;
-
-            if (errors.email) {
-                alert(errors.email);
-            }
-            
-            if (errors.password) {
-                alert(errors.password);
-            }
+            const errors = error.response?.data;
+            if (errors?.email) alert(errors.email);
+            else if (errors?.password) alert(errors.password);
+            else if (errors?.signin) alert(errors.signin);
         }
-    }
+    };
 
     return (
         <div css={S.SLayout(isSignin, isRightPanelActive)}>
@@ -68,13 +71,11 @@ function SigninContainer({ isSignin, isRightPanelActive }) {
                 <span>이메일로 {text}</span>
                 <input type="email" name="email" placeholder="Email" onChange={handleInputChange}/>
                 <input type="password" name="password" placeholder="Password" onChange={handleInputChange}/>
-                {isSignin ? <SigninButton type="submit">{text}</SigninButton> : 
-                            <>
+                {isSignin ? <></> : <>
                                 <input type="password" name="checkPassword" placeholder="Re-enter Password" onChange={handleInputChange}/>
                                 <div css={S.ErrorMsg}>{errorMessage}</div>
-                                <SigninButton type="submit" onClick={handleSignupSubmit}>{text}</SigninButton>
                             </>}
-                
+                <SigninButton type="submit" onClick={handleAuthSubmit}>{text}</SigninButton>
             </form>
         </div>
     );
