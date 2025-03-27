@@ -5,6 +5,7 @@ import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import AuthRoute from "./components/Routes/AuthRoute";
 
 const wrapper = css`
   width: 100%;
@@ -15,13 +16,14 @@ const content = css`
 `;
 
 function App() {
+  
   return (
     <div css={wrapper}>
       <Header/>
       <div css={content}>
         <Routes>
           <Route path='/' element={ <Main/> }/>
-          <Route path='/signin' element={ <Signin/> }/>
+          <Route path='/auth/*' element={ <AuthRoute/> }/>
         </Routes>
       </div>
       <Footer/>
