@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 /** @jsxImportSource @emotion/react */
 import * as S from './Style';
 import SigninContainer from '../../components/SigninContainer/SigninContainer';
 import SigninButton from '../../components/SigninButton/SigninButton';
+import { useSearchParams } from 'react-router-dom';
 
 function Signin(props) {
     const [isRightPanelActive, setIsRightPanelActive] = useState(false);
+    const [searchParams] = useSearchParams(); // 쿼리 파라미터 받기
 
     const handleSignUpClick = () => setIsRightPanelActive(true);
     const handleSignInClick = () => setIsRightPanelActive(false);
+
+    useEffect(() => {   // 쿼리에 email, provider 있으면 회원가입 창으로 전환
+        const email = searchParams.get("email");
+        const provider = searchParams.get("provider");
+
+        if (email && provider) {
+            setIsRightPanelActive(true);
+        }
+    }, [searchParams]);
 
     return (
         <div css={S.SLayout}>

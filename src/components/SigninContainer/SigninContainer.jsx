@@ -65,9 +65,9 @@ function SigninContainer({ isSignin, isRightPanelActive }) {
             <form css={S.SContainer}>
                 <h1>{text}</h1>
                 <div css={S.SBox}>
-                    <a href="#"><RiKakaoTalkFill size={28}/></a>
-                    <a href="#"><FaGoogle size={21}/></a>
-                    <a href="#"><SiNaver size={18}/></a>
+                    <a href="http://localhost:8080/oauth2/authorization/kakao"><RiKakaoTalkFill size={28}/></a>
+                    <a href="http://localhost:8080/oauth2/authorization/google"><FaGoogle size={21}/></a>
+                    <a href="http://localhost:8080/oauth2/authorization/naver"><SiNaver size={18}/></a>
                 </div>
                 <span>이메일로 {text}</span>
                 <input type="email" name="email" placeholder="Email" onChange={handleInputChange}/>

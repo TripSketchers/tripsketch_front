@@ -11,7 +11,7 @@ function Header(props) {
                 <img src={logo} />
             </Link>
             <div css={S.SContainer}>
-                <Link to={"/signin"} >로그인</Link>
+                <Link to={"/auth/signin"} >로그인</Link>
             </div>
         </div>
     );
