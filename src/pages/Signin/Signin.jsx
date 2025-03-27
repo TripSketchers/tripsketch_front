@@ -12,15 +12,6 @@ function Signin(props) {
     const handleSignUpClick = () => setIsRightPanelActive(true);
     const handleSignInClick = () => setIsRightPanelActive(false);
 
-    useEffect(() => {   // 쿼리에 email, provider 있으면 회원가입 창으로 전환
-        const email = searchParams.get("email");
-        const provider = searchParams.get("provider");
-
-        if (email && provider) {
-            setIsRightPanelActive(true);
-        }
-    }, [searchParams]);
-
     return (
         <div css={S.SLayout}>
             <div css={S.SContainer}>
