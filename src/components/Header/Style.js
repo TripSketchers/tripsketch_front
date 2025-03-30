@@ -13,9 +13,19 @@ export const SLayout = css`
 
 export const SContainer = css`
     margin-right: 30px;
-    & a {
-        background-color: white;
-        border: 0;
-        font-size: 16px;
+`;
+
+export const SLoginBox = css`
+    background-color: rgb(140, 211, 206);
+    border-radius: 20px;
+    padding: 15px 35px;
+    cursor: pointer;
+    & * {
+        font-weight: 600;
+        color: white;
+    }
+
+    :active {
+        background-color: rgb(106, 175, 171);
     }
 `;

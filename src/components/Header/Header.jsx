@@ -18,7 +18,7 @@ function Header(props) {
             <div css={S.SContainer}>
                 {!!principalState?.data?.data ? 
                 <span>반가워요, {principalState.data.data.email.split("@")[0]}님!</span> : 
-                <Link to={"/auth/signin"} >로그인</Link>}
+                <div css={S.SLoginBox}><Link to={"/auth/signin"} >로그인</Link></div>}
             </div>
         </div>
     );
