@@ -14,7 +14,7 @@ export const SLayout = css`
 export const SContainer = css`
     margin-right: 30px;
     & a {
-        background-color: white;
+        background-color: transparent;
         border: 0;
         font-size: 16px;
     }
