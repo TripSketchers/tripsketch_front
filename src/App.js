@@ -1,11 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import Main from "./pages/Main/Main";
-import Signin from "./pages/Signin/Signin";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import AuthRoute from "./components/Routes/AuthRoute";
+import { useQuery } from "@tanstack/react-query";
+import { instance } from "./api/config/instance";
 
 const wrapper = css`
   width: 100%;
@@ -17,6 +18,29 @@ const content = css`
 
 function App() {
   
+  const getPrincipal = useQuery({
+    queryKey: ["getPrincipal"],
+    queryFn: async () => {
+      try {
+        const option = {
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+        return await instance.get("/account/principal", option);
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    retry: 0,
+    refetchInterval: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+  });
+
+  if(getPrincipal.isLoading) {
+    return <></>;
+  }
+
   return (
     <div css={wrapper}>
       <Header/>
