@@ -8,6 +8,7 @@ import { css } from '@emotion/react';
 import Album from "./pages/Album/Album";
 import Plan from "./pages/Plan/Plan";
 import AlbumUpload from "./pages/AlbumUpload/AlbumUpload";
+import AuthRoute from "./components/Routes/AuthRoute";
 
 const wrapper = css`
   /* display: flex;
@@ -21,6 +22,7 @@ const content = css`
 `;
 
 function App() {
+  
   return (
     <div css={wrapper}>
       <Header/>
@@ -31,6 +33,7 @@ function App() {
           <Route path="/album" element={<Album />} />
           <Route path="/plan" element={<Plan />} />
           <Route path="/album/upload" element={<AlbumUpload />} />
+          <Route path='/auth/*' element={ <AuthRoute/> }/>
         </Routes>
       </div>
       <Footer/>

@@ -25,7 +25,7 @@ export const SLayout = (isSignin, isRightPanelActive) => css`
         : (isRightPanelActive ? '5' : '1')};
     opacity: ${isSignin ? '1' : (isRightPanelActive ? '1' : '0')};
     transform: ${isRightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
-    animation: ${!isSignin && isRightPanelActive ? `${show} 0.6s` : 'none'};
+    animation: ${!isSignin && isRightPanelActive ? css`${show} 0.6s` : 'none'};
 `;
 
 export const SContainer = css`
@@ -68,4 +68,9 @@ export const SBox = css`
         height: 40px;
         width: 40px;
     }
+`;
+
+export const ErrorMsg = css`
+    font-size: 12px;
+    color: red;
 `;
