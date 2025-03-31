@@ -1,12 +1,11 @@
 import React from 'react';
 import { css } from '@emotion/react';
 /** @jsxImportSource @emotion/react */
-import * as S from "./Style"
 import Navbar from '../Navbar/Navbar';
 
 function NavLayout({ children }) {
     return (
-        <div css={S.SLayout}>
+        <div css={SLayout}>
             <Navbar />
             {children}
         </div>
@@ -14,3 +13,8 @@ function NavLayout({ children }) {
 }
 
 export default NavLayout;
+
+const SLayout = css`
+    position: relative;
+    top: 0px;
+`;
