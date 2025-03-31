@@ -7,6 +7,7 @@ import { css } from '@emotion/react';
 import AuthRoute from "./components/Routes/AuthRoute";
 import { useQuery } from "@tanstack/react-query";
 import { instance } from "./api/config/instance";
+import AccountRoute from "./components/Routes/AccountRoute";
 
 const wrapper = css`
   width: 100%;
@@ -48,6 +49,7 @@ function App() {
         <Routes>
           <Route path='/' element={ <Main/> }/>
           <Route path='/auth/*' element={ <AuthRoute/> }/>
+          <Route path='/account/*' element={ <AccountRoute/> }/>
         </Routes>
       </div>
       <Footer/>
