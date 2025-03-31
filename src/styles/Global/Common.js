@@ -6,11 +6,22 @@ export const Common = css`
     ${reset}
     * {
         box-sizing: border-box;
-        font-family: 'Noto Sans KR', sans-serif !important;
+        font-family: 'Spoqa Han Sans Neo', 'sans-serif' !important; 
         color: #444444;
     }
 
     a {
         text-decoration: none;
     }
+
+    button{
+        background: inherit ; 
+        border:none; 
+        box-shadow:none; 
+        border-radius:0; 
+        padding:0; 
+        overflow:visible; 
+        cursor:pointer;
+    }
+    
 `;
