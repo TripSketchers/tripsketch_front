@@ -11,6 +11,7 @@ import AuthRoute from "./components/Routes/AuthRoute";
 import { useQuery } from "@tanstack/react-query";
 import { instance } from "./api/config/instance";
 import AccountRoute from "./components/Routes/AccountRoute";
+import Signin from "./pages/Signin/Signin";
 
 const wrapper = css`
   /* display: flex;
