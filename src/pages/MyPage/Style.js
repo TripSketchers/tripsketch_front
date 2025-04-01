@@ -5,8 +5,7 @@ export const SLayout = css`
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: 0 5%;
-    padding: 0 50px;
+    margin: 0 10%;
 `;
 
 export const SContainer = css`

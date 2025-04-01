@@ -5,8 +5,7 @@ export const SLayout = css`
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: 0 5%;
-    padding: 0 50px;
+    margin: 0 10%;
 `;
 
 export const SProfileContainer = css`
@@ -44,7 +43,7 @@ export const SProfile = css`
 
 export const SEditContainer = css`
     width: 100%;
-    max-width: 800px;
+    max-width: 1100px;
     padding: 10px 20px;
 `;
 
@@ -73,6 +72,7 @@ export const SRow = css`
     align-items: center;
     margin-bottom: 15px;
     width: 100%;
+    max-width: 800px;
     font-size: 14px;
 
     *:first-child {
@@ -108,14 +108,32 @@ export const SSubmitBox = css`
     justify-content: center;
     align-items: center;
     width: 100%;
-    button {
-        width: 40%;
-        padding: 12px;
+    * {
         margin-top: 30px;
-        font-size: 16px;
-        background-color:rgb(59, 92, 128);
-        color: white;
         border: none;
         border-radius: 6px;
+        padding: 12px;
+        font-size: 16px;
+        color: white;
+        text-align: center;
+        width: 200px;
+        min-width: 85px;
     }
+
+    a {
+        display: inline-block;
+        margin-right: 10px;
+        line-height: normal;
+        background-color: #aaa;
+    }
+`;
+
+export const SDisabledBtn = css`
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+`;
+
+export const SActiveBtn = css`
+    background-color:rgb(59, 92, 128);
 `;

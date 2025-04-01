@@ -1,13 +1,21 @@
 import { useQueryClient } from '@tanstack/react-query';
-import React from 'react';
+import React, { useState } from 'react';
 /** @jsxImportSource @emotion/react */
 import * as S from './Style';
 import profile_icon from '../../assets/profile icon.png'
+import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
+import { Link } from 'react-router-dom';
 
 function ProfileEdit(props) {
 
     const queryClient = useQueryClient();
     const principal = queryClient.getQueryState(["getPrincipal"]);
+
+    const [showModal, setShowModal] = useState(false);
+
+    const handleWithdrawalBtnOnClick = () => {
+        
+    }
 
     return (
         <div css={S.SLayout}>
@@ -16,7 +24,13 @@ function ProfileEdit(props) {
                     <img src={profile_icon} />
                 </div>
                 <h2 css={S.SUser}>{principal.data.data.email.split("@")[0]}</h2>
-                <button css={S.SLeaveBtn}>회원 탈퇴</button>
+                {showModal && (
+                    <ConfirmModal
+                        onClose={() => setShowModal(false)}
+                        onConfirm={handleWithdrawalBtnOnClick}
+                    />
+                )}
+                <button css={S.SLeaveBtn} onClick={() => setShowModal(true)}>회원 탈퇴</button>
             </div>
             <div css={S.SEditContainer}>
                 <div css={S.STitleBox}>
@@ -28,24 +42,41 @@ function ProfileEdit(props) {
                         <label htmlFor="">{principal.data.data.email}</label>
                         <button>이메일 인증</button>
                     </div>
-                    <div css={S.SRow}>
-                        <label>현재 비밀번호</label>
-                        <input type="password" />
-                        <button>일치 확인</button>
-                    </div>
-                    <div css={S.SRow}>
-                        <label>새 비밀번호</label>
-                        <input type="password" />
-                        <div></div>
-                    </div>
-                    <div css={S.SRow}>
-                        <label>비밀번호 확인</label>
-                        <input type="password" />
-                        <div></div>
-                    </div>
+                    {!!principal.data.data.password ? 
+                    <>
+                        <div css={S.SRow}>
+                            <label>현재 비밀번호</label>
+                            <input type="password" />
+                            <button>일치 확인</button>
+                        </div>
+                        <div css={S.SRow}>
+                            <label>새 비밀번호</label>
+                            <input type="password" />
+                            <div></div>
+                        </div>
+                        <div css={S.SRow}>
+                            <label>비밀번호 확인</label>
+                            <input type="password" />
+                            <div></div>
+                        </div>
+                    </> : 
+                    <>
+                        <div css={S.SRow}>
+                            <label>소셜 플랫폼</label>
+                            <label htmlFor="">{principal.data.data.provider}</label>
+                            <div></div>
+                        </div>
+                    </>
+                    }
                 </div>
                 <div css={S.SSubmitBox}>
-                    <button>변경하기</button>
+                    <Link to={"/account/mypage"}>돌아가기</Link>
+                    <button
+                        css={!!!principal.data.data.password ? S.SDisabledBtn : S.SActiveBtn}
+                        disabled={!!!principal.data.data.password}
+                    >
+                        저장하기
+                    </button>
                 </div>
             </div>
         </div>
