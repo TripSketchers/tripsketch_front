@@ -12,6 +12,11 @@ export const Common = css`
 
     a {
         text-decoration: none;
+        cursor: pointer;
+    }
+
+    button {
+        cursor: pointer;
     }
 
     button{
