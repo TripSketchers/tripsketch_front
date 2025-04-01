@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 
 export const SLayout = css`
     position: relative;
+    width: 100%;
 
     & > div {
         display: flex;
@@ -28,6 +29,6 @@ export const SContainer = css`
     }
 `;
 
-export const ButtonBox = css`
+export const SButtonBox = css`
     text-align: center;
 `;

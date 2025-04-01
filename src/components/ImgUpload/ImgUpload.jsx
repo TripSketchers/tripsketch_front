@@ -45,7 +45,7 @@ function ImgUpload({ userID, tripID, date, place }) {
         loadImages();
     }, []);
 
-    const handleImgChange = (e) => {
+    const handleImgChangeBtn = (e) => {
         const selectedFiles = Array.from(e.target.files);
 
         // 업로드 개수 제한
@@ -77,8 +77,12 @@ function ImgUpload({ userID, tripID, date, place }) {
         });
     };
 
+    const handleReselectionBtn = () => {
+        setImages([]);
+    }
+
     // Firebase Storage 업로드
-    const handleUpload = async () => {
+    const handleUploadBtn = async () => {
         if (images.length === 0) {
             alert("업로드할 이미지가 없습니다.");
             return;
@@ -103,9 +107,11 @@ function ImgUpload({ userID, tripID, date, place }) {
         }
     };
 
+    
+
     return (
         <div css={S.SLayout} >
-            <input type="file" multiple accept="image/png, image/jpeg, image/jpg" onChange={handleImgChange} />
+            <input type="file" multiple accept="image/png, image/jpeg, image/jpg" onChange={handleImgChangeBtn} />
             <div>
                 <div css={S.SContainer}>
                     {currentImages.map((img, index) => (
@@ -114,7 +120,7 @@ function ImgUpload({ userID, tripID, date, place }) {
             </div>
             </div>
             { images.length > 5 && (
-                <div css={S.ButtonBox}>
+                <div css={S.SButtonBox}>
                 <button
                     onClick={prevPage}
                     disabled={currentPage === 0}
@@ -126,7 +132,8 @@ function ImgUpload({ userID, tripID, date, place }) {
                 >&gt;</button>
                 </div>
             )}
-            <button onClick={handleUpload}>임시 업로드 버튼</button>
+            <button onClick={handleUploadBtn}>임시 업로드 버튼</button>
+            <button onClick={handleReselectionBtn}>다시 선택</button>
         </div>
     );
 }

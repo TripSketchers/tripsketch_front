@@ -23,6 +23,7 @@ function AlbumUpload(props) {
     // 날짜 클릭 시 해당하는 place 목록을 1열부터 순서대로 배치
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedPlaces, setSelectedPlaces] = useState([]);
+    const [selectedPlaceId, setSelectedPlaceId] = useState(null);
 
     // 날짜 클릭 시 해당하는 장소 목록 업데이트
     const handleDateClick = (date) => {
@@ -33,6 +34,7 @@ function AlbumUpload(props) {
 
     // 장소 클릭 시 trip_schedule_id 출력
     const handlePlaceClick = (id) => {
+        setSelectedPlaceId(id);
         console.log("선택한 trip_schedule_id:", id);
     };
 
@@ -46,17 +48,15 @@ function AlbumUpload(props) {
                     </div>
                     <div css={S.SRightContainer}>
                         <h3>장소 선택</h3>
-                        <div css={S.TripTable}>
+                        <div css={S.STripTable}>
                             {/* 날짜 목록 (가로 스크롤 가능) */}
                             <div>
                                 <div className='title'>날짜</div>
-                                <ul css={S.Scroll}>
+                                <ul css={S.SScroll}>
                                     {Array.from(new Set(items.map((item) => item.date))).map((date) => (
-                                        <li
-                                        key={date}
-                                        className={`item ${selectedDate === date ? "active" : ""}`}
-                                        onClick={() => handleDateClick(date)}
-                                        >
+                                        <li key={date} 
+                                            css={S.SSelectSchedule(selectedDate === date)}
+                                            onClick={() => handleDateClick(date)} >
                                             {date}
                                         </li>
                                     ))}
@@ -65,13 +65,11 @@ function AlbumUpload(props) {
                             <div>
                                 {/* 장소 목록 (세로 스크롤 가능) */}
                                 <div className='title' >장소</div>
-                                <ul  css={S.Scroll} > 
+                                <ul css={S.SScroll} > 
                                     {selectedPlaces.map((place) => (
-                                        <li
-                                            key={place.trip_schedule_id}
-                                            className={`item ${place.trip_schedule_id ? "active" : ""}`}
-                                            onClick={() => handlePlaceClick(place.trip_schedule_id)}
-                                        >
+                                        <li key={place.trip_schedule_id}
+                                            css={S.SSelectSchedule(place.trip_schedule_id === selectedPlaceId)}
+                                            onClick={() => handlePlaceClick(place.trip_schedule_id)} >
                                             {place.place}
                                         </li>
                                     ))}
@@ -83,7 +81,7 @@ function AlbumUpload(props) {
                             <h3>추억 기록</h3>
                             <textarea placeholder="사진에 대한 추억을 남겨보세요 (선택)" autoFocus={false}/>
                         </div>
-                        <div css={S.UploadButton} >
+                        <div css={S.SUploadButton} >
                             <button>업로드</button>
                         </div>
                     </div>
