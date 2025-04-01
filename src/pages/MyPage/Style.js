@@ -7,7 +7,7 @@ export const SLayout = css`
     flex-direction: column;
     margin: 0 5%;
     padding: 0 50px;
-    `;
+`;
 
 export const SContainer = css`
     max-width: 1100px;
@@ -50,7 +50,7 @@ export const SProfile = css`
 
 export const STripContainer = css`
     padding: 10px 20px;
-    `;
+`;
 
 export const STitleBox = css`
     margin-bottom: 30px;

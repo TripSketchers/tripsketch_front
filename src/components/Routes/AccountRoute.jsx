@@ -2,6 +2,7 @@ import React from 'react';
 import MyPage from '../../pages/MyPage/MyPage';
 import { useQueryClient } from '@tanstack/react-query';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import ProfileEdit from '../../pages/ProfileEdit/ProfileEdit';
 
 function AccountRoute(props) {
 
@@ -15,7 +16,7 @@ function AccountRoute(props) {
     return (
         <Routes>
             <Route path='mypage' element={<MyPage/>}/>
-            <Route path='edit' element={<></>}/>
+            <Route path='edit' element={<ProfileEdit/>}/>
         </Routes>            
     );
 }

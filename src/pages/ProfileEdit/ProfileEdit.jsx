@@ -1,0 +1,55 @@
+import { useQueryClient } from '@tanstack/react-query';
+import React from 'react';
+/** @jsxImportSource @emotion/react */
+import * as S from './Style';
+import profile_icon from '../../assets/profile icon.png'
+
+function ProfileEdit(props) {
+
+    const queryClient = useQueryClient();
+    const principal = queryClient.getQueryState(["getPrincipal"]);
+
+    return (
+        <div css={S.SLayout}>
+            <div css={S.SProfileContainer}>
+                <div css={S.SProfile}>
+                    <img src={profile_icon} />
+                </div>
+                <h2 css={S.SUser}>{principal.data.data.email.split("@")[0]}</h2>
+                <button css={S.SLeaveBtn}>회원 탈퇴</button>
+            </div>
+            <div css={S.SEditContainer}>
+                <div css={S.STitleBox}>
+                    <h1>프로필 편집</h1>
+                </div>
+                <div css={S.SFormBox}>
+                    <div css={S.SRow}>
+                        <label>이메일</label>
+                        <label htmlFor="">{principal.data.data.email}</label>
+                        <button>이메일 인증</button>
+                    </div>
+                    <div css={S.SRow}>
+                        <label>현재 비밀번호</label>
+                        <input type="password" />
+                        <button>일치 확인</button>
+                    </div>
+                    <div css={S.SRow}>
+                        <label>새 비밀번호</label>
+                        <input type="password" />
+                        <div></div>
+                    </div>
+                    <div css={S.SRow}>
+                        <label>비밀번호 확인</label>
+                        <input type="password" />
+                        <div></div>
+                    </div>
+                </div>
+                <div css={S.SSubmitBox}>
+                    <button>변경하기</button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default ProfileEdit;
