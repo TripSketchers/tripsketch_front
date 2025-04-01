@@ -5,6 +5,7 @@ import * as S from './Style';
 import profile_icon from '../../assets/profile icon.png'
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { Link } from 'react-router-dom';
+import { instance } from '../../api/config/instance';
 
 function ProfileEdit(props) {
 
@@ -13,8 +14,22 @@ function ProfileEdit(props) {
 
     const [showModal, setShowModal] = useState(false);
 
-    const handleWithdrawalBtnOnClick = () => {
-        
+    const handleWithdrawalBtnOnClick = async () => {
+        try {
+            const option = {
+                headers: {
+                    Authorization: localStorage.getItem("accessToken")
+                }
+            }
+            console.log(principal.data.data.userId);
+            
+            await instance.delete(`/account/${principal.data.data.userId}`, option);
+            localStorage.removeItem("accessToken");
+            await queryClient.refetchQueries(["getPrincipal"]);
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -60,21 +75,18 @@ function ProfileEdit(props) {
                             <div></div>
                         </div>
                     </> : 
-                    <>
-                        <div css={S.SRow}>
-                            <label>소셜 플랫폼</label>
-                            <label htmlFor="">{principal.data.data.provider}</label>
-                            <div></div>
-                        </div>
-                    </>
+                    <div css={S.SRow}>
+                        <label>소셜 플랫폼</label>
+                        <label htmlFor="">{principal.data.data.provider}</label>
+                        <div></div>
+                    </div>
                     }
                 </div>
                 <div css={S.SSubmitBox}>
                     <Link to={"/account/mypage"}>돌아가기</Link>
                     <button
                         css={!!!principal.data.data.password ? S.SDisabledBtn : S.SActiveBtn}
-                        disabled={!!!principal.data.data.password}
-                    >
+                        disabled={!!!principal.data.data.password}>
                         저장하기
                     </button>
                 </div>
