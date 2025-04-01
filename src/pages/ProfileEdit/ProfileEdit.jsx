@@ -21,8 +21,6 @@ function ProfileEdit(props) {
                     Authorization: localStorage.getItem("accessToken")
                 }
             }
-            console.log(principal.data.data.userId);
-            
             await instance.delete(`/account/${principal.data.data.userId}`, option);
             localStorage.removeItem("accessToken");
             await queryClient.refetchQueries(["getPrincipal"]);
@@ -31,6 +29,23 @@ function ProfileEdit(props) {
             console.error(error);
         }
     }
+
+    const handleSendMail = async () => {
+        try {
+            const option = {
+                headers: {
+                    Authorization: localStorage.getItem("accessToken")
+                }
+            }
+            await instance.post("/account/auth/email", {}, option);  // 주소, 데이터, 옵션
+            alert("인증 메일 전송 완료. 인증 요청 메일을 확인해주세요.");
+        } catch (error) {
+            alert("인증 메일 전송 실패. 다시 시도해주세요.");
+        }
+    }
+
+    console.log(principal.data.data);
+    
 
     return (
         <div css={S.SLayout}>
@@ -55,7 +70,13 @@ function ProfileEdit(props) {
                     <div css={S.SRow}>
                         <label>이메일</label>
                         <label htmlFor="">{principal.data.data.email}</label>
-                        <button>이메일 인증</button>
+                        {principal.data.data.enabled > 0 ?
+                            <button disabled>
+                                인증 완료
+                            </button> :   
+                            <button onClick={handleSendMail}>
+                                인증 하기
+                            </button>}
                     </div>
                     {!!principal.data.data.password ? 
                     <>
@@ -84,9 +105,7 @@ function ProfileEdit(props) {
                 </div>
                 <div css={S.SSubmitBox}>
                     <Link to={"/account/mypage"}>돌아가기</Link>
-                    <button
-                        css={!!!principal.data.data.password ? S.SDisabledBtn : S.SActiveBtn}
-                        disabled={!!!principal.data.data.password}>
+                    <button disabled={!!!principal.data.data.password}>
                         저장하기
                     </button>
                 </div>

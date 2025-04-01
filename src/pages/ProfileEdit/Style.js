@@ -100,6 +100,12 @@ export const SRow = css`
         :active {
             background-color:rgb(164, 186, 209);
         }
+
+        :disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
     }
 `;
 
@@ -126,14 +132,13 @@ export const SSubmitBox = css`
         line-height: normal;
         background-color: #aaa;
     }
-`;
 
-export const SDisabledBtn = css`
-    background-color: #ccc;
-    cursor: not-allowed;
-    opacity: 0.6;
-`;
-
-export const SActiveBtn = css`
-    background-color:rgb(59, 92, 128);
+    button {
+        background-color:rgb(59, 92, 128);
+        :disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+    }
 `;
