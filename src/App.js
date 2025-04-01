@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import Main from "./pages/Main/Main";
-import Signin from "./pages/Signin/Signin";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 /** @jsxImportSource @emotion/react */
@@ -9,6 +8,9 @@ import Album from "./pages/Album/Album";
 import Plan from "./pages/Plan/Plan";
 import AlbumUpload from "./pages/AlbumUpload/AlbumUpload";
 import AuthRoute from "./components/Routes/AuthRoute";
+import { useQuery } from "@tanstack/react-query";
+import { instance } from "./api/config/instance";
+import AccountRoute from "./components/Routes/AccountRoute";
 
 const wrapper = css`
   /* display: flex;
@@ -23,6 +25,29 @@ const content = css`
 
 function App() {
   
+  const getPrincipal = useQuery({
+    queryKey: ["getPrincipal"],
+    queryFn: async () => {
+      try {
+        const option = {
+          headers: {
+            Authorization: localStorage.getItem("accessToken"),
+          },
+        };
+        return await instance.get("/account/principal", option);
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    retry: 0,
+    refetchInterval: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+  });
+
+  if(getPrincipal.isLoading) {
+    return <></>;
+  }
+
   return (
     <div css={wrapper}>
       <Header/>
@@ -34,6 +59,7 @@ function App() {
           <Route path="/plan" element={<Plan />} />
           <Route path="/album/upload" element={<AlbumUpload />} />
           <Route path='/auth/*' element={ <AuthRoute/> }/>
+          <Route path='/account/*' element={ <AccountRoute/> }/>
         </Routes>
       </div>
       <Footer/>
