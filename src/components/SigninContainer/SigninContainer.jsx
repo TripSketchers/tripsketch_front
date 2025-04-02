@@ -6,6 +6,7 @@ import { FaGoogle } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
 import SigninButton from '../SigninButton/SigninButton';
 import { instance } from '../../api/config/instance';
+import PasswordInput from '../PasswordInput/PasswordInput';
 
 function SigninContainer({ isSignin, isRightPanelActive }) {
     const text = isSignin?"로그인":"회원가입";
@@ -59,7 +60,7 @@ function SigninContainer({ isSignin, isRightPanelActive }) {
             else if (errors?.signin) alert(errors.signin);
         }
     };
-
+    
     return (
         <div css={S.SLayout(isSignin, isRightPanelActive)}>
             <form css={S.SContainer}>
@@ -70,16 +71,24 @@ function SigninContainer({ isSignin, isRightPanelActive }) {
                     <a href="http://localhost:8080/oauth2/authorization/naver"><SiNaver size={18}/></a>
                 </div>
                 <span>이메일로 {text}</span>
-                <input type="email" name="email" placeholder="Email" onChange={handleInputChange}/>
-                <input type="password" name="password" placeholder="Password" onChange={handleInputChange}/>
-                {isSignin ? <></> : <>
-                                <input type="password" name="checkPassword" placeholder="Re-enter Password" onChange={handleInputChange}/>
-                                <div css={S.ErrorMsg}>{errorMessage}</div>
-                            </>}
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    onChange={handleInputChange}
+                />
+                <PasswordInput name="password" onChange={handleInputChange} placeholder="Password"/>
+                {isSignin ? <></> : (
+                    <>
+                        <PasswordInput name="checkPassword" onChange={handleInputChange} placeholder="Re-enter Password"/>
+                        <div css={S.ErrorMsg}>{errorMessage}</div>
+                    </>
+                )}
                 <SigninButton type="submit" onClick={handleAuthSubmit}>{text}</SigninButton>
             </form>
         </div>
     );
+    
 }
 
 export default SigninContainer;

@@ -5,6 +5,7 @@ import * as S from './Style';
 import { Link } from 'react-router-dom';
 import { instance } from '../../api/config/instance';
 import ProfileContainer from '../../components/ProfileContainer/ProfileContainer';
+import PasswordInput from '../../components/PasswordInput/PasswordInput';
 
 function ProfileEdit(props) {
 
@@ -48,17 +49,17 @@ function ProfileEdit(props) {
                     <>
                         <div css={S.SRow}>
                             <label>현재 비밀번호</label>
-                            <input type="password" />
+                            <PasswordInput name="password" placeholder="Password"/>
                             <button>일치 확인</button>
                         </div>
                         <div css={S.SRow}>
                             <label>새 비밀번호</label>
-                            <input type="password" />
+                            <PasswordInput name="newPassword" placeholder="New Password"/>
                             <div></div>
                         </div>
                         <div css={S.SRow}>
                             <label>비밀번호 확인</label>
-                            <input type="password" />
+                            <PasswordInput name="checkNewPassword" placeholder="Re-Enter Password"/>
                             <div></div>
                         </div>
                     </> : 
