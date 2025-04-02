@@ -5,7 +5,7 @@ export const SInputWrapper = css`
     display: flex;
     align-items: center;
     width: 100%;
-    `;
+`;
 
 export const SInputStyle = css`
     flex: 1;
@@ -14,12 +14,26 @@ export const SInputStyle = css`
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 4px;
+
+    &:disabled {
+        background-color: #f5f5f5;
+        color: #999;
+        cursor: not-allowed;
+    }
 `;
 
 export const SIconStyle = css`
-    position: absolute;
-    right: 0px;
     cursor: pointer;
-    color: #888;
-    font-size: 18px;
+    position: absolute;
+    right: 10px;
+
+    & * {
+        color: rgb(141, 141, 141);
+        font-size: 18px;
+    }
+
+    :disabled {
+        pointer-events: none; /* 아이콘 클릭 비활성화 */
+        opacity: 0.5;
+    }
 `;

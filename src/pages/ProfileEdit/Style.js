@@ -42,18 +42,17 @@ export const SRow = css`
     max-width: 800px;
     font-size: 14px;
 
-    *:first-child {
+    & > *:first-child {
         width: 20%;
         min-width: 85px;
     }
 
-    *:nth-child(2) {
-        padding: 8px;
+    & > *:nth-child(2) {
         width: 50%;
         min-width: 150px;
     }
 
-    *:last-child {
+    & > *:last-child {
         width: 20%;
         min-width: 85px;
     }
@@ -74,6 +73,18 @@ export const SRow = css`
             opacity: 0.6;
         }
     }
+`;
+
+export const SMatchMsg = css`
+    margin-top: 5px;
+    color: green;
+    font-size: 12px;
+`;
+
+export const SErrorMsg = css`
+    margin-top: 5px;
+    color: red;
+    font-size: 12px;
 `;
 
 export const SSubmitBox = css`
