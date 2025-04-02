@@ -8,6 +8,44 @@ export const SLayout = css`
     margin: 0 10%;
 `;
 
+export const SProfileContainer = css`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px 20px;
+`;
+
+export const SUser = css`
+    padding: 10px 0 5px;
+`;
+
+export const SEditBtn = css`
+    color: #0888d8;
+    font-size: 12px;
+`;
+
+export const SLeaveBtn = css`
+    color:rgb(226, 71, 71);
+    font-size: 12px;
+`;
+
+export const SProfile = css`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #dbdbdb;
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    background-color:rgb(245, 245, 245);
+    img {
+        padding: 10px;
+        width: 100%;
+        height: 100%;
+    }
+`;
+
 export const SEditContainer = css`
     width: 100%;
     max-width: 1100px;

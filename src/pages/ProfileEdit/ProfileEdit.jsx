@@ -2,33 +2,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 /** @jsxImportSource @emotion/react */
 import * as S from './Style';
-import profile_icon from '../../assets/profile icon.png'
-import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { Link } from 'react-router-dom';
 import { instance } from '../../api/config/instance';
+import ProfileContainer from '../../components/ProfileContainer/ProfileContainer';
 
 function ProfileEdit(props) {
 
     const queryClient = useQueryClient();
     const principal = queryClient.getQueryState(["getPrincipal"]);
-
-    const [showModal, setShowModal] = useState(false);
-
-    const handleWithdrawalBtnOnClick = async () => {
-        try {
-            const option = {
-                headers: {
-                    Authorization: localStorage.getItem("accessToken")
-                }
-            }
-            await instance.delete(`/account/${principal.data.data.userId}`, option);
-            localStorage.removeItem("accessToken");
-            await queryClient.refetchQueries(["getPrincipal"]);
-            window.location.reload();
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     const handleSendMail = async () => {
         try {
@@ -44,24 +25,9 @@ function ProfileEdit(props) {
         }
     }
 
-    console.log(principal.data.data);
-    
-
     return (
         <div css={S.SLayout}>
-            <div css={S.SProfileContainer}>
-                <div css={S.SProfile}>
-                    <img src={profile_icon} />
-                </div>
-                <h2 css={S.SUser}>{principal.data.data.email.split("@")[0]}</h2>
-                {showModal && (
-                    <ConfirmModal
-                        onClose={() => setShowModal(false)}
-                        onConfirm={handleWithdrawalBtnOnClick}
-                    />
-                )}
-                <button css={S.SLeaveBtn} onClick={() => setShowModal(true)}>회원 탈퇴</button>
-            </div>
+            <ProfileContainer isMyPage={false}/>
             <div css={S.SEditContainer}>
                 <div css={S.STitleBox}>
                     <h1>프로필 편집</h1>
