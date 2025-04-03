@@ -59,11 +59,7 @@ function ProfileEdit() {
 
         // 비밀번호 확인 검사
         if (name === "checkNewPassword" || name === "newPassword") {
-            if (
-                updated.checkNewPassword &&
-                updated.newPassword &&
-                updated.checkNewPassword !== updated.newPassword
-            ) {
+            if (updated.checkNewPassword && updated.newPassword && updated.checkNewPassword !== updated.newPassword) {
                 setMessages(prev => ({
                     ...prev,
                     error: "*비밀번호가 일치하지 않습니다."
@@ -87,11 +83,7 @@ function ProfileEdit() {
                 }
             };
 
-            const response = await instance.post(
-                "/account/check-password",
-                { password: password.currentPassword },
-                option
-            );
+            const response = await instance.post("/account/check-pw", { password: password.currentPassword }, option);
 
             setIsMatch(response.data);
             setMessages(prev => ({
@@ -105,8 +97,20 @@ function ProfileEdit() {
         }
     };
 
-    const handleSubmitOnClick = () => {
-        
+    const handleSubmitOnClick = async () => {
+        try {
+            const option = {
+                headers: {
+                    Authorization: localStorage.getItem("accessToken")
+                }
+            };
+
+            await instance.put("/account/change-pw", { newPassword: password.newPassword }, option);
+            alert("비밀번호가 변경되었습니다!");
+            window.location.replace("/account/mypage");
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const canSubmit =

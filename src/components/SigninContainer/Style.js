@@ -71,6 +71,8 @@ export const SBox = css`
 `;
 
 export const ErrorMsg = css`
+    width: 100%;
+    text-align: left;
     font-size: 12px;
     color: red;
 `;

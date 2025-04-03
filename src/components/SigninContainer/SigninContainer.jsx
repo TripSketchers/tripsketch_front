@@ -38,13 +38,6 @@ function SigninContainer({ isSignin, isRightPanelActive }) {
             } else {
                 setMessages(prev => ({ ...prev, password: '' }));
             }
-
-            // 비밀번호 변경 시 확인값도 다시 확인
-            if (updatedUser.checkPassword && value !== updatedUser.checkPassword) {
-                setMessages(prev => ({ ...prev, checkPassword: "*비밀번호가 일치하지 않습니다." }));
-            } else {
-                setMessages(prev => ({ ...prev, checkPassword: '' }));
-            }
         }
 
         if (name === 'checkPassword') {
@@ -117,7 +110,7 @@ function SigninContainer({ isSignin, isRightPanelActive }) {
                     placeholder="Password"
                     onChange={handleInputChange}
                 />
-                <div css={S.ErrorMsg}>{messages.password}</div>
+                {!isSignin && <div css={S.ErrorMsg}>{messages.password}</div> }
 
                 {!isSignin &&
                     <>
