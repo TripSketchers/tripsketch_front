@@ -93,5 +93,5 @@ export const SViewTypeBox = css`
 `;
 export const ViewType = (viewType) =>  css`
     cursor: pointer;
-    border-bottom: ${viewType == 1 ? "3px solid #51748b" : "" };
+    border-bottom: ${viewType === 1 ? "3px solid #51748b" : "" };
 `;

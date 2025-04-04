@@ -1,33 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 /** @jsxImportSource @emotion/react */
 import logo from '../../assets/TripSketch_가로.png'
 import * as S from './Style';
 import { Link } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { AiOutlineUp, AiOutlineDown } from 'react-icons/ai'
+import { AiOutlineDown } from 'react-icons/ai'
 
 function Header(props) {
 
     const queryClient = useQueryClient();
     const principalState = queryClient.getQueryState(["getPrincipal"]);
-
-    // const [view, setView] = useState(false); 
-
-    // const dropdownRef = useRef(null);
-
-    // useEffect(() => {
-    //     const handleClickOutside = (e) => {
-    //         if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-    //             setView(false);
-    //         }
-    //     };
-
-    //     document.addEventListener('click', handleClickOutside);
-
-    //     return () => {
-    //         document.removeEventListener('click', handleClickOutside);
-    //     };
-    // }, []);
 
     const handleLogoutOnClick = () => {
         if(window.confirm("로그아웃 하시겠습니까?")) {
@@ -35,11 +17,6 @@ function Header(props) {
             window.location.replace("/");
         }
     }
-
-    // const toggleDropdown = (e) => {
-    //     e.stopPropagation();    // 이벤트가 부모로 전파되지 않도록 처리
-    //     setView(!view);
-    // };
 
     return (
         <div css={S.SLayout}>
