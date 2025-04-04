@@ -83,7 +83,7 @@ function ProfileEdit() {
                 }
             };
 
-            const response = await instance.post("/account/check-pw", { password: password.currentPassword }, option);
+            const response = await instance.post("/account/password/check", { password: password.currentPassword }, option);
 
             setIsMatch(response.data);
             setMessages(prev => ({
@@ -105,7 +105,7 @@ function ProfileEdit() {
                 }
             };
 
-            await instance.put("/account/change-pw", { newPassword: password.newPassword }, option);
+            await instance.put("/account/password", { newPassword: password.newPassword }, option);
             alert("비밀번호가 변경되었습니다!");
             window.location.replace("/account/mypage");
         } catch (error) {
