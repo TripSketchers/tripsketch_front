@@ -5,7 +5,7 @@ import NavLayout from '../../components/NavLayout/NavLayout';
 import NavContainer from '../../components/NavContainer/NavContainer';
 import ImgUpload from '../../components/ImgUpload/ImgUpload';
 
-function AlbumUpload(props) {
+function TripAlbumUpload(props) {
     const items = [
         { trip_schedule_id: 1, date: "1일차", place: "광안리 해수욕장" },
         { trip_schedule_id: 2, date: "1일차", place: "짜장 카페" },
@@ -91,4 +91,4 @@ function AlbumUpload(props) {
     );
 }
 
-export default AlbumUpload;
+export default TripAlbumUpload;

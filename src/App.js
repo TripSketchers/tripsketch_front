@@ -4,14 +4,15 @@ import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import Album from "./pages/Album/Album";
-import Plan from "./pages/Plan/Plan";
-import AlbumUpload from "./pages/AlbumUpload/AlbumUpload";
+import TripAlbum from "./pages/TripAlbum/TripAlbum";
+import TripPlan from "./pages/TripPlan/TripPlan";
+import TripAlbumUpload from "./pages/TripAlbumUpload/TripAlbumUpload";
 import AuthRoute from "./components/Routes/AuthRoute";
 import { useQuery } from "@tanstack/react-query";
 import { instance } from "./api/config/instance";
 import AccountRoute from "./components/Routes/AccountRoute";
 import Signin from "./pages/Signin/Signin";
+import TripRoute from "./components/Routes/TripRoute";
 
 const wrapper = css`
   /* display: flex;
@@ -55,12 +56,9 @@ function App() {
       <div css={content}>
         <Routes>
           <Route path='/' element={ <Main/> }/>
-          <Route path='/signin' element={ <Signin/> }/>
-          <Route path="/album" element={<Album />} />
-          <Route path="/plan" element={<Plan />} />
-          <Route path="/album/upload" element={<AlbumUpload />} />
           <Route path='/auth/*' element={ <AuthRoute/> }/>
           <Route path='/account/*' element={ <AccountRoute/> }/>
+          <Route path='/trip/*' element={ <TripRoute/> }/>
         </Routes>
       </div>
       <Footer/>

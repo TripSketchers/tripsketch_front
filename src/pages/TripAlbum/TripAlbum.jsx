@@ -7,7 +7,7 @@ import NavContainer from '../../components/NavContainer/NavContainer';
 import { Link } from 'react-router-dom';
 import AlbumWhole from '../../components/AlbumWhole/AlbumWhole';
 
-function Album(props) {
+function TripAlbum(props) {
     const [ viewType, setViewType ] = useState(0);     
     
     const handleRadioChange = (event) => {
@@ -47,4 +47,4 @@ function Album(props) {
     );
 }
 
-export default Album;
+export default TripAlbum;
