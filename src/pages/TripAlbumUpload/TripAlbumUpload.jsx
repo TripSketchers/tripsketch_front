@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 /** @jsxImportSource @emotion/react */
 import * as S from './Style';
 import NavLayout from '../../components/NavLayout/NavLayout';

@@ -1,14 +1,9 @@
-import React, { useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import React from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 /** @jsxImportSource @emotion/react */
 import * as S from './Style';
 
 function Navbar() {
-    // const [activeLink, setActiveLink] = useState("/album");
-
-    // const handleClick = (link) => {
-    //     setActiveLink(link); // 클릭한 링크의 경로 저장
-    // };
 
     const location = useLocation();
     const currentPath = location.pathname;

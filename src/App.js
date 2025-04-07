@@ -4,25 +4,18 @@ import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import TripAlbum from "./pages/TripAlbum/TripAlbum";
-import TripPlan from "./pages/TripPlan/TripPlan";
-import TripAlbumUpload from "./pages/TripAlbumUpload/TripAlbumUpload";
 import AuthRoute from "./components/Routes/AuthRoute";
 import { useQuery } from "@tanstack/react-query";
 import { instance } from "./api/config/instance";
 import AccountRoute from "./components/Routes/AccountRoute";
-import Signin from "./pages/Signin/Signin";
 import TripRoute from "./components/Routes/TripRoute";
 
 const wrapper = css`
-  /* display: flex;
-  flex-direction: column; */
   width: 100%;
   min-height: 100vh;
 `
 const content = css`
   min-height: calc(100vh - 220px);
-  /* flex: 1; */
 `;
 
 function App() {

@@ -2,8 +2,6 @@ import React from 'react';
 /** @jsxImportSource @emotion/react */
 import * as S from './Style';
 import { IoMdMore } from "react-icons/io";
-import { FaRegImage } from "react-icons/fa6";
-import { Link } from 'react-router-dom';
 
 function TripCard({ dDay, title, location, dateRange }) {
     return (

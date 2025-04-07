@@ -20,7 +20,6 @@ function AlbumWhole(props) {
             <div css={SAlbumContainer}>
                 {/* div 삽입 */}
                 <div></div>
-                
             </div>
         </div>
     );
