@@ -10,10 +10,10 @@ function Navbar() {
 
     return (
         <div css={S.SNav}>
-            <NavLink to='/plan' css={S.SNavItem(currentPath === "/plan")} >
+            <NavLink to='/trip/plan/:trip_id' css={S.SNavItem(currentPath === "/trip/plan/:trip_id")} >
                     여행 계획
             </NavLink>
-            <NavLink to='/album' css={S.SNavItem(currentPath === "/album" || currentPath === "/album/upload")}>
+            <NavLink to='/trip/album/:trip_id' css={S.SNavItem(currentPath === "/trip/album/:trip_id" || currentPath === "/trip/album/:trip_id/upload")}>
                     여행 앨범
             </NavLink>
         </div>
