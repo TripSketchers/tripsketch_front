@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import * as S from './Style';
 import NavLayout from '../../components/NavComponents/NavLayout/NavLayout';
 import AlbumFolder from '../../components/AlbumComponents/AlbumFolder/AlbumFolder';
-import NavContainer from '../../components/NavContainer/NavContainer';
+import NavContainer from '../../components/NavComponents/NavContainer/NavContainer';
 import { Link } from 'react-router-dom';
 import AlbumWhole from '../../components/AlbumComponents/AlbumWhole/AlbumWhole';
 
