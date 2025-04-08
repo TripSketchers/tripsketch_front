@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TripHeader from "../TripHeader/TripHeader";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
@@ -7,11 +7,18 @@ import TripPlace from "../TripPlace/TripPlace";
 import TripAccommodation from "../TripAccommodation/TripAccommodation";
 
 function TripSelectContainer({ selectedStep }) {
+	const [showModal, setShowModal] = useState(true);
+
 	return (
 		<div css={S.SLayout}>
-			<TripHeader />
+			<TripHeader onOpenModal={() => setShowModal(true)} />
 			<div css={S.SContainer}>
-				{selectedStep === 1 && <TripDate />}
+				{selectedStep === 1 && (
+					<TripDate
+						showModal={showModal}
+						setShowModal={setShowModal}
+					/>
+				)}
 				{selectedStep === 2 && <TripPlace />}
 				{selectedStep === 3 && <TripAccommodation />}
 			</div>

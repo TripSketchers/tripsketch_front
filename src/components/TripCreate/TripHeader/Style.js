@@ -22,3 +22,12 @@ export const STripDes = css`
 	margin-bottom: 5px;
 	font-size: 20px;
 `;
+
+export const SDateBox = css`
+	display: flex;
+	justify-content: space-between;
+	button {
+		font-size: 16px;
+		line-height: 14px;
+	}
+`;
