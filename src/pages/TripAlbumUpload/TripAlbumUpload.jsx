@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 /** @jsxImportSource @emotion/react */
 import * as S from './Style';
-import NavLayout from '../../components/NavLayout/NavLayout';
-import NavContainer from '../../components/NavContainer/NavContainer';
-import ImgUpload from '../../components/ImgUpload/ImgUpload';
+import NavLayout from '../../components/NavComponents/NavLayout/NavLayout';
+import NavContainer from '../../components/NavComponents/NavContainer/NavContainer';
+import ImgUpload from '../../components/AlbumComponents/ImgUpload/ImgUpload';
 
 function TripAlbumUpload(props) {
     const items = [
