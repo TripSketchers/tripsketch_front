@@ -1,5 +1,5 @@
 import React from 'react';
-import NavContainer from '../../components/NavLayout/NavLayout';
+import NavContainer from '../../components/NavComponents/NavLayout/NavLayout';
 /** @jsxImportSource @emotion/react */
 import * as S from './Style';
 

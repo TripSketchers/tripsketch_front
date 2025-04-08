@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { storage } from "../../api/Firebase/Firebase"; // Firebase Storage 설정
+import { storage } from "../../../api/Firebase/Firebase"; // Firebase Storage 설정
 import { ref, uploadString } from "firebase/storage";
 import Dexie from "dexie"; // IndexedDB 라이브러리
 /** @jsxImportSource @emotion/react */

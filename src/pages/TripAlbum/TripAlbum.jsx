@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 /** @jsxImportSource @emotion/react */
 import * as S from './Style';
-import NavLayout from '../../components/NavLayout/NavLayout';
-import AlbumFolder from '../../components/AlbumFolder/AlbumFolder';
+import NavLayout from '../../components/NavComponents/NavLayout/NavLayout';
+import AlbumFolder from '../../components/AlbumComponents/AlbumFolder/AlbumFolder';
 import NavContainer from '../../components/NavContainer/NavContainer';
 import { Link } from 'react-router-dom';
-import AlbumWhole from '../../components/AlbumWhole/AlbumWhole';
+import AlbumWhole from '../../components/AlbumComponents/AlbumWhole/AlbumWhole';
 
 function TripAlbum(props) {
     const [ viewType, setViewType ] = useState(0);     
@@ -37,7 +37,7 @@ function TripAlbum(props) {
                         </div>
                     </div>
                     
-                    <Link to={"/album/upload"}>사진 업로드</Link>
+                    <Link to={"/trip/album/:trip_id/upload"}>사진 업로드</Link>
                 </div>
                 <div>
                 {viewType === 0 ? <AlbumWhole /> : <AlbumFolder />}
