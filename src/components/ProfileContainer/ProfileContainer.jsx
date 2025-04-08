@@ -44,6 +44,9 @@ function ProfileContainer({ isMyPage }) {
                 <>
                     {showModal && (
                         <ConfirmModal
+                            title='정말 탈퇴하시겠어요?'
+                            message='탈퇴 시 모든 정보가 삭제됩니다.'
+                            confirmText='탈퇴하기'
                             onClose={() => setShowModal(false)}
                             onConfirm={handleWithdrawalBtnOnClick}
                         />

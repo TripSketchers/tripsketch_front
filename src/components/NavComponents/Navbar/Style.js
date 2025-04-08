@@ -19,5 +19,5 @@ export const SNavItem = (currentPath) => css`
     color: ${currentPath ? "black" : "white"};
     font-size: 18px;
     box-shadow: 1px -3px 3px rgba(0,0,0,0.3);
-    z-index: ${currentPath ? "3" : "1"};
+    z-index: ${currentPath ? "1" : "0"};
 `;
