@@ -9,6 +9,11 @@ import TripAccommodation from "../TripAccommodation/TripAccommodation";
 function TripSelectContainer({ selectedStep }) {
 	const [showModal, setShowModal] = useState(true);
 
+	const [dateRange, setDateRange] = useState({
+		startDate: null,
+		endDate: null,
+	});
+
 	return (
 		<div css={S.SLayout}>
 			<TripHeader onOpenModal={() => setShowModal(true)} />
@@ -17,6 +22,8 @@ function TripSelectContainer({ selectedStep }) {
 					<TripDate
 						showModal={showModal}
 						setShowModal={setShowModal}
+						dateRange={dateRange}
+						setDateRange={setDateRange}
 					/>
 				)}
 				{selectedStep === 2 && <TripPlace />}
