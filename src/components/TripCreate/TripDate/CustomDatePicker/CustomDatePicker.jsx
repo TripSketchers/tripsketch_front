@@ -21,8 +21,6 @@ function CustomDatePicker({ dateRange, setDateRange }) {
         if (start && !end) {
             setDateRange({ startDate: start, endDate: null });
         } else if (start && end) {
-            const diff = differenceInCalendarDays(end, start);
-            // 10일 초과 방지는 UI에서 막히므로 여기선 굳이 alert 필요 X
             setDateRange({ startDate: start, endDate: end });
         }
     };

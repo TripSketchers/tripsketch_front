@@ -23,7 +23,6 @@ function TripMap(props) {
                     zoom={12}
                 >
                     <Marker position={center} />
-                    
                 </GoogleMap>
             </LoadScript>
         </div>
