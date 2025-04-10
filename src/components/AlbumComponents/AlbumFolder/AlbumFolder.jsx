@@ -54,24 +54,18 @@ function AlbumFolder() {
       </div>
 
       <div css={S.SFolderContainer}>
-      {dummyData.map(({ id, date, place, img }) => (
-          <div key={id} css={S.SFolder}>
-            <FaFolder className="folderFrame" />
-            <div css={S.SFolderMoreBtn} ref={openModalId === id ? modalRef : null}>
-              <IoMdMore
-                className="folderMoreBtn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleMoreModal(id);
-                }}
-              />
-              {openModalId === id && (
-                <div className="folderMoreModal" onClick={() => openDeleteModal(id)}>
-                  <IoMdTrash /> <span>삭제</span>
-                </div>
-              )}
-            </div>
-
+      	{dummyData.map(({ id, date, place, img }) => (
+          	<div key={id} css={S.SFolder}>
+				<FaFolder className="folderFrame" />
+				<div css={S.SFolderMoreBtn} ref={openModalId === id ? modalRef : null}>
+				<IoMdMore className="folderMoreBtn"
+					onClick={(e) => { e.stopPropagation(); toggleMoreModal(id);}}/>
+				{openModalId === id && (
+					<div className="folderMoreModal" onClick={() => openDeleteModal(id)}>
+						<IoMdTrash /> <span>삭제</span>
+					</div>
+			)}
+			</div>
             <div css={S.SFolderPhotoFrame}>
               <img src={img} alt="앨범" />
               <div className="infoBox">
@@ -79,16 +73,14 @@ function AlbumFolder() {
                 <span>{date}</span>
               </div>
             </div>
-
             {/* 삭제 확인 모달 */}
             {openDeleteId === id && (
-              <ConfirmModal
-                title="폴더를 삭제하시겠어요?"
-                message="삭제 시 복구할 수 없습니다."
-                confirmText="삭제"
-                onClose={closeDeleteModal}
-                onConfirm={() => handleDelete(id)}
-              />
+				<ConfirmModal
+					title="폴더를 삭제하시겠어요?"
+					message="삭제 시 복구할 수 없습니다."
+					confirmText="삭제"
+					onClose={closeDeleteModal}
+					onConfirm={() => handleDelete(id)} />
             )}
           </div>
         ))}

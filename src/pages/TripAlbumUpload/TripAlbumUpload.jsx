@@ -43,47 +43,45 @@ function TripAlbumUpload(props) {
             <NavContainer>
                 <div css={S.SLayout}>
                     <div css={S.SLeftContainer}>
-                        <h3>사진 업로드</h3>
+                        
                         <ImgUpload />
                     </div>
                     <div css={S.SRightContainer}>
-                        <h3>장소 선택</h3>
-                        <div css={S.STripTable}>
-                            {/* 날짜 목록 (가로 스크롤 가능) */}
-                            <div>
-                                <div className='title'>날짜</div>
-                                <ul css={S.SScroll}>
-                                    {Array.from(new Set(items.map((item) => item.date))).map((date) => (
-                                        <li key={date} 
-                                            css={S.SSelectSchedule(selectedDate === date)}
-                                            onClick={() => handleDateClick(date)} >
-                                            {date}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            <div>
-                                {/* 장소 목록 (세로 스크롤 가능) */}
-                                <div className='title' >장소</div>
-                                <ul css={S.SScroll} > 
-                                    {selectedPlaces.map((place) => (
-                                        <li key={place.trip_schedule_id}
+                        <div className='titleBox'>
+                            <h3>장소 선택</h3>
+                            <span>※ 장소는 사진 전체에 적용됩니다.</span>
+                        </div>
+                        <div css={S.STripBox}>
+                            <div css={S.STripTable}>
+                                {/* 날짜 목록 (가로 스크롤 가능) */}
+                                <div>
+                                    <div className='title'>날짜</div>
+                                    <ul css={S.SScroll}>
+                                        {Array.from(new Set(items.map((item) => item.date))).map((date) => (
+                                            <li key={date} 
+                                                css={S.SSelectSchedule(selectedDate === date)}
+                                                onClick={() => handleDateClick(date)} >
+                                                {date}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <div>
+                                    {/* 장소 목록 (세로 스크롤 가능) */}
+                                    <div className='title' >장소</div>
+                                    <ul css={S.SScroll} > 
+                                        {selectedPlaces.map((place) => (
+                                            <li key={place.trip_schedule_id}
                                             css={S.SSelectSchedule(place.trip_schedule_id === selectedPlaceId)}
                                             onClick={() => handlePlaceClick(place.trip_schedule_id)} >
-                                            {place.place}
-                                        </li>
-                                    ))}
-                                </ul>
-
+                                                {place.place}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                        <div css={S.SContent}>
-                            <h3>추억 기록</h3>
-                            <textarea placeholder="사진에 대한 추억을 남겨보세요 (선택)" autoFocus={false}/>
-                        </div>
-                        <div css={S.SUploadButton} >
-                            <button>업로드</button>
-                        </div>
+                        <button css={S.SUploadButton}>업로드</button>
                     </div>
                 </div>
             </NavContainer>
