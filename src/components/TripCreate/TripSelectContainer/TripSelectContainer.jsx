@@ -15,7 +15,7 @@ function TripSelectContainer({ selectedStep }) {
 	});
 
 	return (
-		<div css={S.SLayout}>
+		<div css={S.SLayout(selectedStep)}>
 			<TripHeader selectedStep={selectedStep} onOpenModal={() => setShowModal(true)} />
 			<div css={S.SContainer}>
 				{selectedStep === 1 && (

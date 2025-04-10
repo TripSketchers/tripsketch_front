@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 
-export const SLayout = css`
+export const SLayout = (selectedStep) => css`
 	display: flex;
 	flex-direction: column;
 	margin-right: 5px;
@@ -9,10 +9,12 @@ export const SLayout = css`
 	background-color: rgb(229, 236, 238);
 	box-shadow: 0px 0px 10px #a7b5b9;
 	overflow: hidden;
-	min-width: 250px;
+	${selectedStep === 1
+		? `min-width: 250px; max-width: 400px;`
+		: `min-width: 600px; max-width: 800px;`}
 `;
 
 export const SContainer = css`
-	padding: 20px;
+	height: 100%;
 	overflow-y: auto;
 `;
