@@ -30,7 +30,8 @@ export const SValue = css`
 `;
 
 export const STimeInput = css`
-	width: 110px;
+	width: 90px;
+	
 	font-size: 16px;
 	border: none;
 	outline: none;
