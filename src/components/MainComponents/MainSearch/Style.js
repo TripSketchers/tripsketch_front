@@ -48,3 +48,22 @@ export const SRightContainer = css`
         font-weight: 700;
     }
 `;
+
+export const SStartBtn = css`
+    display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 10px;
+	padding: 10px;
+	width: 30%;
+	min-width: 110px;
+	height: 100%;
+	font-size: 20px;
+	background-color: #6ec4d3;
+    box-shadow: 2px 2px 5px #a7b5b9;
+	transition: all 0.2s ease;
+    color: white;
+	:hover {
+		transform: scale(0.95);
+	}
+`;
