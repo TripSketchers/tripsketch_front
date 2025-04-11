@@ -28,7 +28,7 @@ function MainSearch(props) {
     }
 
     const handleStartBtn = () => {
-        navigate('/signin');
+        navigate('/auth/signin');
     }
 
     return (

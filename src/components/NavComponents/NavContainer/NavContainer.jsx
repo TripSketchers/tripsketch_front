@@ -17,7 +17,6 @@ export default NavContainer;
 const SLayout = css`
     position: relative;
     top: -2px;
-    z-index: 2;
 
     display: flex;
     justify-content: center;
