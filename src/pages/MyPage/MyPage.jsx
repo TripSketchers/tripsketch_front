@@ -61,12 +61,14 @@ function MyPage() {
 									navigate(`/trip/plan/${trip.tripId}`);
 								}}
 								key={trip.tripId}
+                                tripId={trip.tripId}
 								dDay={calculateDDay(trip.startDate)}
 								title={trip.title}
 								location={trip.tripDestinationKoName}
 								dateRange={`${formatDate(
 									trip.startDate
 								)} - ${formatDate(trip.endDate)}`}
+                                onDeleteSuccess={() => getTripsQuery.refetch()}
 							/>
 						))}
 					</div>
