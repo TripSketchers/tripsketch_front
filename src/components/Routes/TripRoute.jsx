@@ -18,9 +18,9 @@ function TripRoute(props) {
     return (
         <Routes>
             <Route path='create' element={<TripCreate/>}/>
-            <Route path='plan/:trip_id' element={<TripPlan/>}/>
-            <Route path='album/:trip_id' element={<TripAlbum/>}/>
-            <Route path='album/:trip_id/upload' element={<TripAlbumUpload/>}/>
+            <Route path='plan/:tripId' element={<TripPlan/>}/>
+            <Route path='album/:tripId' element={<TripAlbum/>}/>
+            <Route path='album/:tripId/upload' element={<TripAlbumUpload/>}/>
         </Routes>
     );
 }
