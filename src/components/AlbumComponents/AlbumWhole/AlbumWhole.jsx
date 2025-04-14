@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
+import * as S from './Style';
 import AlbumPhoto from "../../../assets/AlbumPhoto.jpg";
 import AlbumDetailModal from '../AlbumDetailModal/AlbumDetailModal';
+import { useQuery } from '@tanstack/react-query';
+import { instance } from '../../../api/config/instance';
 
-function AlbumWhole(props) {
+function AlbumWhole({tripId}) {
     const [ sorting, setSorting ] = useState(0); //최신순 : 0, 과거순: 1
     const [ openDetailModal, setOpenDetailModal ] = useState(0);
     
@@ -16,17 +18,48 @@ function AlbumWhole(props) {
         setOpenDetailModal(1);
     }
 
+    const getAlbum = useQuery({
+        queryKey: ["getAlbum"],
+        queryFn: async () => {
+            try {
+                const options = {
+                    headers: {
+                        Authorization: localStorage.getItem("accessToken")
+                    }
+                }
+                return await instance.get(`/trips/${1}/album/photos`, options);
+            }catch (error) {
+                console.error(error);
+            }
+        },
+        retry: 0,
+        refetchOnWindowFocus: false
+    });
+
+    console.log(getAlbum?.data?.data.map(item => item.photos.map(photo => photo.memo)));
+
     return (
         <div>
-            <div css={SSortingBox}>
+            <div css={S.SSortingBox}>
                 <span onClick={() => handleSortingClick(0) } >최신순</span>
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 <span onClick={() => handleSortingClick(1)} >오래된 순</span>
             </div>
-            <span>{"date"}&nbsp;{"place"}</span>
-            <div css={SAlbumContainer}>
-                <div><img src={AlbumPhoto}/></div>
-            </div>
+            {getAlbum?.data?.data?.map(item => {
+                return (
+                <div css={S.SAlbumContainer}>
+                    <span>{item.album.date}&nbsp;{item.album.place}</span>
+                    <div css={S.SAlbumBox}>
+                        {item.photos.map(photo => {
+                            return (
+                                <div css={S.SAlbumImg}>
+                                    <img src={photo.photoUrl}/>
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
+            )})}
             <button onClick={handle}>임시버튼</button>
             {openDetailModal && <AlbumDetailModal /> }
         </div>
@@ -34,37 +67,3 @@ function AlbumWhole(props) {
 }
 
 export default AlbumWhole;
-
-const SAlbumContainer = css`
-    display: grid;
-    gap: 15px;
-    grid-template-columns: repeat(auto-fill, 174px); /* 기본 5개 */
-    margin-top: 10px;
-
-    div {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 1rem;
-        background-color: wheat;
-        height: 170px;
-        font-size: 18px;
-        font-weight: bold;
-        overflow: hidden;
-    }
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-`;
-
-const SSortingBox = css`
-    position: relative;
-    display: flex;
-    justify-content: right;
-    top: 15px;
-    cursor: pointer;
-`;

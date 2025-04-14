@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 
 export const SSortingBox = css`
     position: relative;
@@ -20,8 +20,12 @@ export const SFolder = css`
     position: relative;
     width: 100%;
 
-    .folderFrame { font-size: 265px; }
-    path { cursor: pointer; }
+    .folderFrame {
+        font-size: 265px;
+    }
+    path {
+        cursor: pointer;
+    }
 `;
 
 export const SFolderPhotoFrame = css`
@@ -43,15 +47,17 @@ export const SFolderPhotoFrame = css`
         opacity: 0.7;
     }
 
-    .infoBox {  //장소, 날짜 Box
+    .infoBox {
+        //장소, 날짜 Box
         position: absolute;
         text-align: center;
         z-index: 2;
         top: 50px;
         width: 100%;
     }
-    
-    h3 {      //장소
+
+    h3 {
+        //장소
         font-size: 2rem;
         font-weight: bold;
         margin-bottom: 30px;
@@ -76,41 +82,41 @@ export const SFolderMoreBtn = css`
         display: flex;
         justify-content: center;
         align-items: center;
-        
+
         border-radius: 10px;
         background-color: white;
-        box-shadow: 0 0 5px rgba(0,0,0,0.5);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
         width: 80px;
         height: 30px;
-    }
 
-    .folderMoreModal:hover {
-        background-color: #dff2f6;
+        &:hover {
+            background-color: #dff2f6;
+        }
     }
 `;
 
 export const SModalBackdrop = css`
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 999;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
 
 export const SModal = css`
-  position: relative;
-  background: white;
-  padding: 30px;
-  border-radius: 1rem;
-  width: 300px;
-  text-align: center;
+    position: relative;
+    background: white;
+    padding: 30px;
+    border-radius: 1rem;
+    width: 300px;
+    text-align: center;
 
-  .closeBtn {
+    .closeBtn {
         position: absolute;
         top: 10px;
         right: 10px;
@@ -118,7 +124,7 @@ export const SModal = css`
         border: none;
         font-size: 20px;
         cursor: pointer;
-  }
+    }
 
     .btnGroup {
         margin-top: 20px;
