@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 export const SLayout = css`
     display: flex;
     align-items: center;
-    margin: 0 10px 0 30px;
+    margin-right: 10px;
     height: 100%;
     transition: width 0.3s ease;
     cursor: pointer;

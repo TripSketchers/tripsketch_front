@@ -11,19 +11,25 @@ function TripPlaceBox(props) {
 			<img src={img} alt="" />
 			<div css={S.SContainer}>
 				<h2 css={S.STitle}>장소명</h2>
-				<div css={S.SInfoBox}>
-					<span css={S.SCategory}>카테고리</span>
-					<span>주소</span>
+				<div>
+					<span>명소</span>
+					<span css={S.SAddress}>
+						8459-8481 Kalanianaʻole Hwy, Honolulu, HI 96825, USA
+					</span>
 				</div>
 				<div css={S.SLikeBox}>
-                    <span css={S.SLike}><FaHeart /> 2.5</span>
-                    <span css={S.SStar}><FaStar /> 4.5</span>
+					<span css={S.SLike}>
+						<FaHeart /> 2.5
+					</span>
+					<span css={S.SStar}>
+						<FaStar /> 4.5
+					</span>
 				</div>
 			</div>
-            <button css={S.SButton}>
-                <FaPlus />
-                {/* <FaCheck /> */}
-            </button>
+			<button css={S.SButton}>
+				<FaPlus />
+				{/* <FaCheck /> */}
+			</button>
 		</div>
 	);
 }

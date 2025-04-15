@@ -17,6 +17,13 @@ function PlaceRightPanel(props) {
                 </div>
                 <div css={S.SContentBox}>
                     <StoredPlaceBox />
+                    <StoredPlaceBox />
+                    <StoredPlaceBox />
+                    <StoredPlaceBox />
+                    <StoredPlaceBox />
+                    <StoredPlaceBox />
+                    <StoredPlaceBox />
+                    <StoredPlaceBox />
                 </div>
             </div>
         </div>
