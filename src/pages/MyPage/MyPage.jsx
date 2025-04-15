@@ -6,7 +6,7 @@ import TripCard from "../../components/TripCard/TripCard";
 import ProfileContainer from "../../components/ProfileContainer/ProfileContainer";
 import { instance } from "../../api/config/instance";
 import { format, differenceInDays } from "date-fns";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function MyPage() {
 	const navigate = useNavigate();
@@ -51,8 +51,11 @@ function MyPage() {
 			<div css={S.SContainer}>
 				<ProfileContainer isMyPage={true} />
 				<div css={S.STripContainer}>
-					<div css={S.STitleBox}>
-						<h1>나의 여행</h1>
+					<div css={S.SHeader}>
+						<div css={S.STitleBox}>
+							<h1>나의 여행</h1>
+						</div>
+						<Link to={"/trip/create"}>여행 생성</Link>
 					</div>
 					<div css={S.STripBox}>
 						{tripList.map((trip) => (
