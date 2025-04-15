@@ -7,7 +7,7 @@ export const SLayout = (selectedStep) => css`
 	overflow: hidden;
 	${selectedStep === 1
 		? `min-width: 250px; max-width: 400px;`
-		: `min-width: 600px; max-width: 800px;`}
+		: `min-width: 600px; max-width: 600px;`}
 `;
 
 export const SContainer = css`
