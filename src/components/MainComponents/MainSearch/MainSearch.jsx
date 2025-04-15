@@ -15,6 +15,16 @@ function MainSearch(props) {
 		navigate("/auth/signin");
 	};
 
+	const handleKeyDown = (e) => {
+		if (e.key === "Enter") {
+			handleSearchBtn(); // Enter 키 누르면 검색 실행
+		}
+	};
+
+	const handleSearchBtn = () => {
+		console.log("검색어:", searchValue); // 검색 버튼 클릭 시 값 출력
+	};
+
 	return (
 		<div css={S.SLayout}>
 			<div css={S.SLeftContainer}>
@@ -28,9 +38,11 @@ function MainSearch(props) {
 						스케치 해보세요
 					</h1>
 					{principalState?.data?.data ? (
-						<SearchInput placeholder={"여행지 검색"}/>
+						<SearchInput placeholder={"여행지 검색"} />
 					) : (
-						<button css={S.SStartBtn} onClick={handleStartBtn}>시작하기</button>
+						<button css={S.SStartBtn} onClick={handleStartBtn}>
+							시작하기
+						</button>
 					)}
 				</div>
 			</div>

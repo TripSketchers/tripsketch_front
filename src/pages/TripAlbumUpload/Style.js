@@ -5,9 +5,9 @@ export const SLayout = css`
     justify-content: space-between;
     width: 100%;
     height: 100%;
-    gap: 30px;
+    gap: 20px;
 
-    @media (max-width: 1100px) { // SRightContainer 위치 조정
+    @media (max-width: 1300px) { // SRightContainer 위치 조정
         flex-direction: column;
     }
 
@@ -23,14 +23,33 @@ export const SLeftContainer = css`
 `;
 
 export const SRightContainer = css`
-    flex: 1;
+    flex: 0.6;
+
+    @media (max-width: 1350px) { // SRightContainer 위치 조정
+        flex: 0.7;
+    }
+
+    .titleBox {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    span {
+        font-size: 14px;
+    }
+`;
+
+export const STripBox = css`
+    padding: 4px;
+    background-color: #d9d9d9;
+    border-radius: 1rem;
+    overflow: hidden;
 `;
 
 export const STripTable = css`
     position: relative; //내부 요소 상대 위치
     display: flex;
-    border: 1px solid #ddd;
-    padding: 0px 5px 5px 5px;
     text-align: center;
     font-size: 18px;
 
@@ -41,12 +60,16 @@ export const STripTable = css`
     div:nth-child(2) {
         flex: 1;
     }
+
+    ul {
+        padding: 3px;
+    }
 `;
 
 export const SScroll = css`
     display: flex;
     flex-direction: column;
-    max-height: 150px; /* 최대 5개까지만 보이도록 제한 */
+    height: 535px;
     overflow-y: auto;
     list-style: none;
     width: 100%;
@@ -59,7 +82,7 @@ export const SScroll = css`
 export const SSelectSchedule = (isActive) => css`
     margin-bottom: 2px;
     padding: 8px 15px;
-    background-color: #f0f0f0;
+    background-color: white;
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
@@ -72,19 +95,18 @@ export const SSelectSchedule = (isActive) => css`
     }
 `;
 
-export const SContent = css`
-    textarea {
-        padding: 10px;
-        border-radius: 10px;
-        width: 100%;
-        height: 260px;
-        resize: none;
-    }
-`;
-
 export const SUploadButton = css`
-    display: flex;
-    justify-content: right;
     margin-top: 10px;
+    border-radius: 1rem;
+    width: 100%;
+    background-color: black;
+    color: white;
+    padding: 10px;
+    font-size: 1.3rem;
+    height: 100px;
+
+    @media (max-width: 1300px) { // SRightContainer 위치 조정
+        height: 50px;
+    }
 `;
 

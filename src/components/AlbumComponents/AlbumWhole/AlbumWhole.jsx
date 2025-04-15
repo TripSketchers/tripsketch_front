@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import AlbumPhoto from "../../../assets/AlbumPhoto.jpg";
+import AlbumDetailModal from '../AlbumDetailModal/AlbumDetailModal';
 
 function AlbumWhole(props) {
     const [ sorting, setSorting ] = useState(0); //최신순 : 0, 과거순: 1
+    const [ openDetailModal, setOpenDetailModal ] = useState(0);
     
     const handleSortingClick =(num) => {
         setSorting(num);
+    }
+
+    const handle = () => {
+        setOpenDetailModal(1);
     }
 
     return (
@@ -18,9 +25,10 @@ function AlbumWhole(props) {
             </div>
             <span>{"date"}&nbsp;{"place"}</span>
             <div css={SAlbumContainer}>
-                {/* div 삽입 */}
-                <div></div>
+                <div><img src={AlbumPhoto}/></div>
             </div>
+            <button onClick={handle}>임시버튼</button>
+            {openDetailModal && <AlbumDetailModal /> }
         </div>
     );
 }
@@ -38,11 +46,18 @@ const SAlbumContainer = css`
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 10px;
+        border-radius: 1rem;
+        background-color: wheat;
         height: 170px;
-        background-color: lightcoral;
         font-size: 18px;
         font-weight: bold;
+        overflow: hidden;
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
     }
 `;
 

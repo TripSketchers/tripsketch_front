@@ -66,7 +66,7 @@ export const SDropDown = css`
     background-color: #fff;
     width: 12rem;
     font-size: 16px;
-    z-index: 1;
+    z-index: 3;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s, transform 0.3s ease-out, visibility 0s linear 0.3s;
