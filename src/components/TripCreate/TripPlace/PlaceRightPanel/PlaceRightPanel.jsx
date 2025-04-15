@@ -5,20 +5,22 @@ import { FaCheck } from "react-icons/fa6";
 import StoredPlaceBox from "../StoredPlaceBox/StoredPlaceBox";
 
 function PlaceRightPanel(props) {
-	return (
-		<div css={S.SLayout}>
-			<div>보관함</div>
-			<div>
-				<div>
-                    <FaCheck /> 담긴 개수
+    return (
+        <div css={S.SLayout}>
+            <div css={S.SContainer}>
+                <h1>장소 보관함</h1>
+                <div css={S.SHeader}>
+                    <div css={S.SStoredNum}>
+                        <FaCheck /> <span>3</span>
+                    </div>
+                    <button>초기화</button>
                 </div>
-				<button>초기화</button>
-			</div>
-			<div>
-                <StoredPlaceBox/>
+                <div css={S.SContentBox}>
+                    <StoredPlaceBox />
+                </div>
             </div>
-		</div>
-	);
+        </div>
+    );
 }
 
 export default PlaceRightPanel;

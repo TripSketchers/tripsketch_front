@@ -1,45 +1,69 @@
 import { css } from "@emotion/react";
 
 export const SLayout = css`
-	display: flex;
-	padding: 40px;
-	width: 100%;
-	height: calc(100vh - 100px);
-	overflow: hidden;
-	background-color: rgb(239, 247, 248);
+    display: flex;
+    padding: 40px;
+    width: 100%;
+    height: calc(100vh - 100px);
+    overflow: hidden;
+    background-color: rgb(239, 247, 248);
 
-	.split-horizontal {
-		display: flex;
-		height: 100%;
-		width: 100%;
-	}
+    * {
+        ::-webkit-scrollbar {
+            width: 14px;
+            height: 14px;
+        }
 
-	.gutter {
-		position: relative;
-		cursor: col-resize;
-		border-radius: 30px;
-	}
+        ::-webkit-scrollbar-thumb {
+            outline: none;
+            border-radius: 10px;
+            border: 4px solid transparent;
+            box-shadow: inset 6px 6px 0 rgba(34, 34, 34, 0.15);
+        }
 
-	/* 가운데 점 3개 표시 */
-	.gutter::before {
-		content: "⋮";
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
+        ::-webkit-scrollbar-thumb:hover {
+            border: 4px solid transparent;
+            box-shadow: inset 6px 6px 0 rgba(34, 34, 34, 0.3);
+        }
 
-		display: flex;
-		align-items: center;
-		justify-content: center;
+        ::-webkit-scrollbar-track {
+            box-shadow: none;
+            background-color: transparent;
+        }
+    }
+`;
 
-		height: 40px;
-		width: 10px;
-		border-radius: 30px;
-		font-size: 18px;
+export const SContainer = css`
+    border-radius: 30px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    box-shadow: 0px 0px 10px #a7b5b9;
 
-		color: #888;
-		background-color: rgb(164, 193, 193);
-        box-shadow: 0px 0px 5px #a7b5b9;
-		pointer-events: none;
-	}
+    .split-horizontal {
+        display: flex;
+        height: 100%;
+        width: 100%;
+    }
+
+    .gutter {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: col-resize;
+        background-color: #d0e5ea;
+        transition: background-color 0.2s ease;
+    }
+
+    .gutter:hover {
+        background-color: #b8d8e0;
+    }
+
+    .gutter::before {
+        content: "";
+        width: 6px;
+        height: 30px;
+        border-radius: 3px;
+        background-color: #7a9fa8;
+    }
 `;
