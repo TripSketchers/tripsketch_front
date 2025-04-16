@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import * as S from './Style';
 import { IoBedOutline, IoCalendarClearOutline, IoLocationOutline, IoCreateOutline  } from "react-icons/io5";
 
-function TripStepSidebar({selectedStep, setSelectedStep}) {
+function Sidebar({selectedStep, setSelectedStep}) {
 
     const handleSaveBtnOnClick = () => {
         try {
@@ -39,4 +39,4 @@ function TripStepSidebar({selectedStep, setSelectedStep}) {
     );
 }
 
-export default TripStepSidebar;
+export default Sidebar;

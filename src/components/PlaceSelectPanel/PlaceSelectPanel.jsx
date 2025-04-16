@@ -4,7 +4,7 @@ import * as S from "./Style";
 import PlaceSelectContainer from "./PlaceSelectContainer/PlaceSelectContainer";
 import NewPlaceContainer from "./NewPlaceContainer/NewPlaceContainer";
 
-function PlaceLeftPanel({ selectedTab }) {
+function PlaceSelectPanel({ selectedTab }) {
 	return (
 		<div css={S.SLayout}>
 			{selectedTab === 1 ? (
@@ -16,4 +16,4 @@ function PlaceLeftPanel({ selectedTab }) {
 	);
 }
 
-export default PlaceLeftPanel;
+export default PlaceSelectPanel;

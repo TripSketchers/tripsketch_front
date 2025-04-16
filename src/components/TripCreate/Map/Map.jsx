@@ -1,7 +1,7 @@
 import { GoogleMap, Marker } from "@react-google-maps/api";
 import React from "react";
 
-function TripMap(props) {
+function Map(props) {
 	const containerStyle = {
 		width: "100%",
 		height: "100%",
@@ -19,4 +19,4 @@ function TripMap(props) {
 	);
 }
 
-export default TripMap;
+export default Map;

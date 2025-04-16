@@ -1,11 +1,11 @@
 import React from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import img from "../../../../assets/MainImg.jpg";
+import img from "../../../assets/MainImg.jpg";
 import { FaHeart, FaStar } from "react-icons/fa";
 import { FaPlus, FaCheck } from "react-icons/fa6";
 
-function TripPlaceBox(props) {
+function PlaceBox(props) {
 	return (
 		<div css={S.SLayout}>
 			<img src={img} alt="" />
@@ -34,4 +34,4 @@ function TripPlaceBox(props) {
 	);
 }
 
-export default TripPlaceBox;
+export default PlaceBox;

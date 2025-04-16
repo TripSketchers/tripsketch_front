@@ -5,7 +5,7 @@ import { FaCalendar } from "react-icons/fa";
 import { differenceInCalendarDays, format } from "date-fns";
 
 
-function TripHeader({ selectedStep, dateRange, onOpenModal }) {
+function Header({ selectedStep, dateRange, onOpenModal }) {
     const formatDateRange = (startDate, endDate) => {
 		if (!startDate || !endDate) return "";
 	  
@@ -34,4 +34,4 @@ function TripHeader({ selectedStep, dateRange, onOpenModal }) {
     );
 }
 
-export default TripHeader;
+export default Header;

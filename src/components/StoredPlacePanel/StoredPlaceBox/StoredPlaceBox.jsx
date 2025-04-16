@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import img from "../../../../assets/MainImg.jpg";
+import img from "../../../assets/MainImg.jpg";
 import { FaTrash } from "react-icons/fa6";
 
 function StoredPlaceBox(props) {

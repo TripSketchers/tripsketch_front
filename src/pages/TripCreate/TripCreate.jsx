@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import TripStepSidebar from "../../components/TripCreate/TripStepSidebar/TripStepSidebar";
+import Sidebar from "../../components/TripCreate/Sidebar/Sidebar";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import TripSelectContainer from "../../components/TripCreate/TripSelectContainer/TripSelectContainer";
-import TripMap from "../../components/TripCreate/TripMap/TripMap";
+import Map from "../../components/TripCreate/Map/Map";
 import Split from "react-split";
 import { FaGripLinesVertical } from "react-icons/fa6";
 
@@ -12,7 +12,7 @@ function TripCreate(props) {
 
     return (
         <div css={S.SLayout}>
-            <TripStepSidebar
+            <Sidebar
                 selectedStep={selectedStep}
                 setSelectedStep={setSelectedStep}
             />
@@ -25,7 +25,7 @@ function TripCreate(props) {
                     gutterSize={10} // 가운데 막대 두께
                 >
                     <TripSelectContainer selectedStep={selectedStep} />
-                    <TripMap />
+                    <Map />
                 </Split>
             </div>
         </div>

@@ -31,5 +31,8 @@ export const SBtnBox = css`
 export const SButton = css`
 	border-radius: 5px;
 	padding: 5px 10px;
-	background-color: #aaaaaa;
+	background-color:rgb(206, 226, 230);
+	:active {
+		background-color: rgb(181, 200, 204);
+	}
 `;

@@ -39,7 +39,7 @@ function CustomDatePicker({ dateRange, setDateRange }) {
                 minDate={new Date()}
                 maxDate={
                     dateRange.startDate && !dateRange.endDate
-                        ? addDays(dateRange.startDate, 10)
+                        ? addDays(dateRange.startDate, 9)
                         : undefined
                 }
             />

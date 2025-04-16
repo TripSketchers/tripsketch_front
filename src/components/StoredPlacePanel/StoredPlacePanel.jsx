@@ -2,9 +2,9 @@ import React from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import { FaCheck } from "react-icons/fa6";
-import StoredPlaceBox from "../StoredPlaceBox/StoredPlaceBox";
+import StoredPlaceBox from "./StoredPlaceBox/StoredPlaceBox";
 
-function PlaceRightPanel(props) {
+function StoredPlacePanel(props) {
     return (
         <div css={S.SLayout}>
             <div css={S.SContainer}>
@@ -30,4 +30,4 @@ function PlaceRightPanel(props) {
     );
 }
 
-export default PlaceRightPanel;
+export default StoredPlacePanel;

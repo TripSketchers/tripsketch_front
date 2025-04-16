@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TripHeader from "../TripHeader/TripHeader";
+import Header from "../Header/Header";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import TripDate from "../TripDate/TripDate";
@@ -16,7 +16,7 @@ function TripSelectContainer({ selectedStep }) {
 
     return (
         <div css={S.SLayout(selectedStep)}>
-            <TripHeader
+            <Header
                 selectedStep={selectedStep}
 				dateRange={dateRange}
                 onOpenModal={() => setShowModal(true)}
