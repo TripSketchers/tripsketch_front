@@ -4,7 +4,7 @@ import * as S from "./Style";
 import { FaCheck } from "react-icons/fa6";
 import StoredPlaceBox from "./StoredPlaceBox/StoredPlaceBox";
 
-function StoredPlacePanel(props) {
+function StoredPlacePanel({ type, dateRange }) {
     return (
         <div css={S.SLayout}>
             <div css={S.SContainer}>
@@ -16,14 +16,9 @@ function StoredPlacePanel(props) {
                     <button>초기화</button>
                 </div>
                 <div css={S.SContentBox}>
-                    <StoredPlaceBox />
-                    <StoredPlaceBox />
-                    <StoredPlaceBox />
-                    <StoredPlaceBox />
-                    <StoredPlaceBox />
-                    <StoredPlaceBox />
-                    <StoredPlaceBox />
-                    <StoredPlaceBox />
+                    <StoredPlaceBox type={type}/>
+                    <StoredPlaceBox type={type}/>
+                    <StoredPlaceBox type={type}/>
                 </div>
             </div>
         </div>

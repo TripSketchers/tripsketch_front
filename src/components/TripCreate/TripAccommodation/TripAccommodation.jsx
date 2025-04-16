@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import PlaceSelectPanel from "../../PlaceSelectPanel/PlaceSelectPanel";
 import StoredPlacePanel from "../../StoredPlacePanel/StoredPlacePanel";
 import Tab from "../Tab/Tab";
+import PlaceSelectPanel from "../../PlaceSelectPanel/PlaceSelectPanel";
+import NewPlacePanel from "../../NewPlacePanel/NewPlacePanel";
 
-function TripAccommodation(props) {
+function TripAccommodation({ dateRange }) {
     const [selectedTab, setSelectedTab] = useState(1);
     return (
         <div css={S.SLayout}>
@@ -14,8 +15,12 @@ function TripAccommodation(props) {
                 setSelectedTab={setSelectedTab}
                 text={"숙소"}
             >
-                <PlaceSelectPanel selectedTab={selectedTab} />
-                <StoredPlacePanel />
+                {selectedTab === 1 ? (
+                    <PlaceSelectPanel text="숙소" />
+                ) : (
+                    <NewPlacePanel />
+                )}
+                <StoredPlacePanel type="accommodation" dateRange={dateRange} />
             </Tab>
         </div>
     );

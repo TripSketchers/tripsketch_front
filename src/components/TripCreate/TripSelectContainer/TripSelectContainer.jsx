@@ -18,7 +18,7 @@ function TripSelectContainer({ selectedStep }) {
         <div css={S.SLayout(selectedStep)}>
             <Header
                 selectedStep={selectedStep}
-				dateRange={dateRange}
+                dateRange={dateRange}
                 onOpenModal={() => setShowModal(true)}
             />
             <div css={S.SContainer}>
@@ -31,7 +31,9 @@ function TripSelectContainer({ selectedStep }) {
                     />
                 )}
                 {selectedStep === 2 && <TripPlace />}
-                {selectedStep === 3 && <TripAccommodation />}
+                {selectedStep === 3 && (
+                    <TripAccommodation dateRange={dateRange} />
+                )}
             </div>
         </div>
     );

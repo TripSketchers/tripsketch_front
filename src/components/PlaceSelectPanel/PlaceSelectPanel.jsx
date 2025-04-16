@@ -1,17 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import PlaceSelectContainer from "./PlaceSelectContainer/PlaceSelectContainer";
-import NewPlaceContainer from "./NewPlaceContainer/NewPlaceContainer";
+import SearchInput from "../SearchInput/SearchInput";
+import PlaceBox from "./PlaceBox/PlaceBox";
 
-function PlaceSelectPanel({ selectedTab }) {
+function PlaceSelectPanel({text}) {
 	return (
 		<div css={S.SLayout}>
-			{selectedTab === 1 ? (
-				<PlaceSelectContainer />
-			) : (
-				<NewPlaceContainer />
-			)}
+			<div css={S.SSearchBox}>
+				<SearchInput placeholder={text + "명을 입력하세요"} />
+			</div>
+			<div css={S.SPlaceContainer}>
+				<PlaceBox />
+				<PlaceBox />
+				<PlaceBox />
+				<PlaceBox />
+				<PlaceBox />
+				<PlaceBox />
+				<PlaceBox />
+			</div>
 		</div>
 	);
 }

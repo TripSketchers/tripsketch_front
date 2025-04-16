@@ -61,6 +61,10 @@ export const STitle = css`
 	margin-bottom: 5px;
 	font-size: 14px;
 	font-weight: 500;
+	display: block;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 `;
 
 export const SCategory = css`
@@ -75,6 +79,18 @@ export const SAddress = css`
 `;
 
 export const STimeContainer = css`
+	display: flex;
+	flex-direction: column;
+	& > span {
+		font-size: 12px;
+		margin-bottom: 5px;
+	}
+`;
+
+export const STimeBox = css`
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	margin-right: 5px;
 	border-radius: 5px;
 	padding: 5px;
