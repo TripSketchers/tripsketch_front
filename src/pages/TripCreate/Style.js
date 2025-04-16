@@ -34,36 +34,10 @@ export const SLayout = css`
 `;
 
 export const SContainer = css`
+    display: flex;
     border-radius: 30px;
     width: 100%;
     height: 100%;
     overflow: hidden;
     box-shadow: 0px 0px 10px #a7b5b9;
-
-    .split-horizontal {
-        display: flex;
-        height: 100%;
-        width: 100%;
-    }
-
-    .gutter {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: col-resize;
-        background-color: #d0e5ea;
-        transition: background-color 0.2s ease;
-    }
-
-    .gutter:hover {
-        background-color: #b8d8e0;
-    }
-
-    .gutter::before {
-        content: "";
-        width: 6px;
-        height: 30px;
-        border-radius: 3px;
-        background-color: #7a9fa8;
-    }
 `;
