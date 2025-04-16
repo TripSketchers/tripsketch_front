@@ -6,9 +6,9 @@ import { MdEdit } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import AlbumPhoto from "../../../assets/AlbumPhoto.jpg";
 
-function AlbumDetailModal(props) {
+function AlbumDetailModal({photo, onClose}) {
     const handleBackdropClick = (e) => {
-        //onClose(); // 모달 바깥 클릭 시 닫기
+        onClose(); // 모달 바깥 클릭 시 닫기
     };
     
     const handleModalClick = (e) => {
@@ -22,14 +22,14 @@ function AlbumDetailModal(props) {
                     <button><IoClose /></button>
                 </div>
                 <div css={S.SPhotoContainer}>
-                    <img src={AlbumPhoto} alt="" />
+                    <img src={photo.photoUrl} draggable="false" />
                 </div>
                 <div>
                     <div css={S.SPhotoMemo} >
-                        오늘 너무 재밌었당
+                        {photo.memo}
                     </div>
                     <div css={S.SEditBox}>
-                        <span>{"날짜"} {"장소"}</span>
+                        <span>{photo.date} {photo.place}</span>
                         <div>
                             <button css={S.deleteBtn}><FaTrash /></button>
                             <button css={S.editBtn}><MdEdit /></button>

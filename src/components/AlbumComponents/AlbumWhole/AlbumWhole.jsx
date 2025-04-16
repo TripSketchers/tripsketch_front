@@ -1,25 +1,11 @@
-import React, { useState } from 'react';
-/** @jsxImportSource @emotion/react */
-import * as S from './Style';
-import AlbumPhoto from "../../../assets/AlbumPhoto.jpg";
-import AlbumDetailModal from '../AlbumDetailModal/AlbumDetailModal';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { instance } from '../../../api/config/instance';
+import AlbumPhotos from '../AlbumPhotos/AlbumPhotos';
 
 function AlbumWhole({tripId}) {
-    const [ sorting, setSorting ] = useState(0); //최신순 : 0, 과거순: 1
-    const [ openDetailModal, setOpenDetailModal ] = useState(0);
-    
-    const handleSortingClick =(num) => {
-        setSorting(num);
-    }
-
-    const handle = () => {
-        setOpenDetailModal(1);
-    }
-
     const getAlbum = useQuery({
-        queryKey: ["getAlbum"],
+        queryKey: ["getAlbum", tripId],
         queryFn: async () => {
             try {
                 const options = {
@@ -36,32 +22,14 @@ function AlbumWhole({tripId}) {
         refetchOnWindowFocus: false
     });
 
-    console.log(getAlbum?.data?.data.map(item => item.photos.map(photo => photo.memo)));
-
     return (
         <div>
-            <div css={S.SSortingBox}>
-                <span onClick={() => handleSortingClick(0) } >최신순</span>
-                &nbsp;&nbsp;|&nbsp;&nbsp;
-                <span onClick={() => handleSortingClick(1)} >오래된 순</span>
-            </div>
-            {getAlbum?.data?.data?.map(item => {
-                return (
-                <div css={S.SAlbumContainer}>
-                    <span>{item.album.date}&nbsp;{item.album.place}</span>
-                    <div css={S.SAlbumBox}>
-                        {item.photos.map(photo => {
-                            return (
-                                <div css={S.SAlbumImg}>
-                                    <img src={photo.photoUrl}/>
-                                </div>
-                            )
-                        })}
-                    </div>
-                </div>
-            )})}
-            <button onClick={handle}>임시버튼</button>
-            {openDetailModal && <AlbumDetailModal /> }
+            {getAlbum?.data?.data?.albums && (
+                <AlbumPhotos
+                    albums={getAlbum.data.data.albums}
+                    startDate={getAlbum.data.data.startDate}
+                />
+            )}
         </div>
     );
 }

@@ -18,17 +18,8 @@ export const backdrop = css`
 export const modal = css`
     background: #fff;
     padding: 10px;
-    width: 360px;
+    width: 440px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    h2 {
-        margin-bottom: 30px;
-        font-size: 20px;
-    }
-    p {
-        margin-bottom: 30px;
-        font-size: 14px;
-        color: #555;
-    }
 
     * {
         font-family: "Nanum Pen Script", cursive !important;
@@ -45,7 +36,7 @@ export const closeBtn = css`
 
 export const SPhotoContainer = css`
     width: 100%;
-    height: 340px;
+    height: 420px;
     background-color: black;
     overflow: hidden;
 

@@ -1,7 +1,21 @@
 import { css } from "@emotion/react";
 
+export const SSortingBox = css`
+    position: relative;
+    display: flex;
+    justify-content: right;
+    top: 15px;
+    cursor: pointer;
+`;
+
 export const SAlbumContainer = css`
     margin-bottom: 15px;
+`;
+
+export const SScheduleBox = css`
+    span {
+        font-weight: 600;
+    }
 `;
 
 export const SAlbumBox = css`
@@ -22,19 +36,11 @@ export const SAlbumImg = css`
     font-size: 18px;
     font-weight: bold;
     overflow: hidden;
+    cursor: pointer;
 
     img {
         width: 100%;
         height: 100%;
-        object-fit: contain;
+        object-fit: cover;
     }
-`;
-
-export const SSortingBox = css`
-    position: relative;
-    display: flex;
-    justify-content: right;
-    top: 15px;
-
-    span { cursor: pointer; }
 `;
