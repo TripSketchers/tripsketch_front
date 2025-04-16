@@ -10,21 +10,24 @@ export const SLayout = css`
     background-size: cover; /* 이미지가 꽉 차도록 */
     background-position: center; /* 가운데 정렬 */
     background-repeat: no-repeat; /* 반복 안 되게 */
-    height: 130px;
+    height: 135px;
     * {
         color: white;
     }
 `;
 
 export const STitle = css`
+    display: flex;
     font-size: 28px;
     font-weight: 600;
+    span {
+        margin-top: 6px;
+    }
 `;
 
 export const SInput = css`
     font-size: 28px;
     font-weight: 600;
-    line-height: 1;
     margin: 0;
     border: none;
     border-bottom: 2px solid #ccc;

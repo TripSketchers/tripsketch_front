@@ -29,7 +29,6 @@ function Header({ selectedStep, dateRange, onOpenModal }) {
             <div css={S.STitle} onClick={handleNameClick}>
                 {isEditing ? (
                     <input
-                        key={selectedStep}
                         type="text"
                         value={tripName}
                         onChange={(e) => setTripName(e.target.value)}
@@ -38,7 +37,7 @@ function Header({ selectedStep, dateRange, onOpenModal }) {
                         css={S.SInput}
                     />
                 ) : (
-                    tripName
+                    <span>{tripName}</span>
                 )}
             </div>
             <div>
