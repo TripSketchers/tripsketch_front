@@ -6,24 +6,38 @@ import Tab from "../Tab/Tab";
 import PlaceSelectPanel from "../../PlaceSelectPanel/PlaceSelectPanel";
 import NewPlacePanel from "../../NewPlacePanel/NewPlacePanel";
 
-function TripAccommodation({ dateRange }) {
-    const [selectedTab, setSelectedTab] = useState(1);
-    return (
-        <div css={S.SLayout}>
-            <Tab
-                selectedTab={selectedTab}
-                setSelectedTab={setSelectedTab}
-                text={"숙소"}
-            >
-                {selectedTab === 1 ? (
-                    <PlaceSelectPanel text="숙소" />
-                ) : (
-                    <NewPlacePanel />
-                )}
-                <StoredPlacePanel type="accommodation" dateRange={dateRange} />
-            </Tab>
-        </div>
-    );
+function TripAccommodation({
+	dateRange,
+	storedAccommodation,
+	setStoredAccommodation,
+}) {
+	const [selectedTab, setSelectedTab] = useState(1);
+	return (
+		<div css={S.SLayout}>
+			<Tab
+				selectedTab={selectedTab}
+				setSelectedTab={setSelectedTab}
+				text={"숙소"}
+			>
+				{selectedTab === 1 ? (
+					<PlaceSelectPanel
+						text="숙소"
+						categories={["숙소"]}
+						storedAccommodation={storedAccommodation}
+						setStoredAccommodation={setStoredAccommodation}
+					/>
+				) : (
+					<NewPlacePanel />
+				)}
+				<StoredPlacePanel
+					type="accommodation"
+					dateRange={dateRange}
+					storedAccommodation={storedAccommodation}
+					setStoredAccommodation={setStoredAccommodation}
+				/>
+			</Tab>
+		</div>
+	);
 }
 
 export default TripAccommodation;

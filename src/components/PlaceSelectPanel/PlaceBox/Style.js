@@ -8,7 +8,7 @@ export const SLayout = css`
 	padding: 10px 0;
 	font-size: 14px;
 	border-bottom: 1px solid #dbdbdb;
-    height: 100px;
+	height: 100px;
 	img {
 		border-radius: 10px;
 		width: 80px;
@@ -24,18 +24,32 @@ export const SContainer = css`
 	flex: 1;
 	margin: 0 10px;
 	width: 120px;
-    height: 100%;
+	height: 100%;
 	& span {
-        line-height: 14px;
+		line-height: 14px;
 		font-size: 12px;
-		color: #777777;
 	}
 `;
 
 export const STitle = css`
-    margin-bottom: 5px;
+	margin-bottom: 5px;
 	font-size: 16px;
 	font-weight: 600;
+	display: block;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+`;
+
+const colorMap = {
+	명소: "#4CAF50", // 초록
+	맛집: "#FF5722", // 주황
+	카페: "#9C27B0", // 보라
+	숙소: "#2196F3", // 파랑
+};
+
+export const SCategory = (category) => css`
+	color: ${colorMap[category]};
 `;
 
 export const SAddress = css`
@@ -43,6 +57,7 @@ export const SAddress = css`
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
+	color: #777777;
 `;
 
 export const SLikeBox = css`
@@ -67,13 +82,13 @@ export const SStar = css`
 	}
 `;
 
-export const SButton = css`
+export const SButton = (isAdded) => css`
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	border-radius: 50%;
 	padding: 5px;
-	background-color: rgb(188, 224, 228);
+	background-color: ${isAdded ? "rgb(51, 172, 185)" : "rgb(188, 224, 228)"};
 	box-shadow: 1px 1px 5px #a7b5b9;
 	& * {
 		font-size: 18px;

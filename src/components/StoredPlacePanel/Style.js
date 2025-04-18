@@ -40,8 +40,6 @@ export const SStoredNum = css`
 
 export const SContentBox = css`
 	flex: 1;
-	border-radius: 10px;
-	background-color: rgb(240, 240, 240);
 	height: 100%;
 	overflow-y: auto;
 `;
