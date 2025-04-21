@@ -6,10 +6,22 @@ import PlaceBox from "./PlaceBox/PlaceBox";
 import { instance } from "../../api/config/instance";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { FaPlus } from "react-icons/fa";
+import AccommodationModal from "../AccommodationModal/AccommodationModal";
+import { useTrip } from "../TripCreate/TripContext";
 
-function PlaceSelectPanel({ text, categories, storedPlaces, setStoredPlaces }) {
+function PlaceSelectPanel({ text, categories }) {
 	const [selectedCategory, setSelectedCategory] = useState(categories[0]);
 	const [query] = useState("부산 해운대");
+	const [selectedPlace, setSelectedPlace] = useState(null);
+	const [showModal, setShowModal] = useState(false);
+
+	const {
+		dateRange,
+		storedPlaces,
+		setStoredPlaces,
+		storedAccommodation,
+		setStoredAccommodation,
+	} = useTrip();
 
 	const {
 		data,
@@ -21,9 +33,7 @@ function PlaceSelectPanel({ text, categories, storedPlaces, setStoredPlaces }) {
 	} = useInfiniteQuery({
 		queryKey: ["places", query, selectedCategory],
 		queryFn: async ({ pageParam = "" }) => {
-			// pageParam이 false면 요청 생략 (예방용)
 			if (pageParam === false) return { results: [] };
-
 			const res = await instance.get("/places", {
 				params: {
 					destination: query,
@@ -41,7 +51,7 @@ function PlaceSelectPanel({ text, categories, storedPlaces, setStoredPlaces }) {
 		staleTime: 1000 * 60 * 5,
 	});
 
-	const handleTogglePlace = (place) => {
+	const togglePlace = (place) => {
 		setStoredPlaces((prev) => {
 			const exists = prev.some((p) => p.place_id === place.place_id);
 			if (exists) {
@@ -50,6 +60,25 @@ function PlaceSelectPanel({ text, categories, storedPlaces, setStoredPlaces }) {
 				return [...prev, { ...place, category: selectedCategory }];
 			}
 		});
+	};
+
+	const handleAccommodationConfirm = (selectedMap) => {
+		setStoredAccommodation((prev) => ({ ...prev, ...selectedMap }));
+		setShowModal(false);
+	};
+
+	const handleTogglePlace = (place) => {
+		if (text === "숙소") {
+			setSelectedPlace(place);
+			setShowModal(true);
+		} else {
+			togglePlace(place);
+		}
+	};
+
+	const isPlaceAdded = (place) => {
+		if (text === "숙소") return false; // 숙소는 날짜별이라 체크 없음
+		return storedPlaces.some((p) => p.place_id === place.place_id);
 	};
 
 	return (
@@ -87,7 +116,7 @@ function PlaceSelectPanel({ text, categories, storedPlaces, setStoredPlaces }) {
 								place={place}
 								category={selectedCategory}
 								onToggle={() => handleTogglePlace(place)}
-								isAdded={storedPlaces.some((p) => p.place_id === place.place_id)}
+								isAdded={isPlaceAdded(place)}
 							/>
 						))
 				)}
@@ -103,8 +132,7 @@ function PlaceSelectPanel({ text, categories, storedPlaces, setStoredPlaces }) {
 								"불러오는 중..."
 							) : (
 								<>
-									<FaPlus />
-									더보기
+									<FaPlus /> 더보기
 								</>
 							)}
 						</button>
@@ -115,6 +143,15 @@ function PlaceSelectPanel({ text, categories, storedPlaces, setStoredPlaces }) {
 					<div css={S.SEndMessage}>모든 장소를 불러왔습니다.</div>
 				)}
 			</div>
+
+			{text === "숙소" && showModal && selectedPlace && (
+				<AccommodationModal
+					onClose={() => setShowModal(false)}
+					onConfirm={handleAccommodationConfirm}
+					dateRange={dateRange}
+					selectedPlace={selectedPlace}
+				/>
+			)}
 		</div>
 	);
 }

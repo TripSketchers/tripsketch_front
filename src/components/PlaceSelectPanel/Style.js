@@ -4,6 +4,7 @@ export const SLayout = css`
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+	width: 50%;
 `;
 
 export const SSearchBox = css`

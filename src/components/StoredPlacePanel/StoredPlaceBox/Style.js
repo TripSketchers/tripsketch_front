@@ -4,7 +4,7 @@ export const SLayout = css`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin: 15px 5px;
+	margin: 10px 5px;
 	border-radius: 10px;
 	padding: 10px;
 	font-size: 14px;

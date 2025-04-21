@@ -6,12 +6,9 @@ import Tab from "../Tab/Tab";
 import PlaceSelectPanel from "../../PlaceSelectPanel/PlaceSelectPanel";
 import NewPlacePanel from "../../NewPlacePanel/NewPlacePanel";
 
-function TripAccommodation({
-	dateRange,
-	storedAccommodation,
-	setStoredAccommodation,
-}) {
+function TripAccommodation() {
 	const [selectedTab, setSelectedTab] = useState(1);
+
 	return (
 		<div css={S.SLayout}>
 			<Tab
@@ -23,18 +20,11 @@ function TripAccommodation({
 					<PlaceSelectPanel
 						text="숙소"
 						categories={["숙소"]}
-						storedAccommodation={storedAccommodation}
-						setStoredAccommodation={setStoredAccommodation}
 					/>
 				) : (
 					<NewPlacePanel />
 				)}
-				<StoredPlacePanel
-					type="accommodation"
-					dateRange={dateRange}
-					storedAccommodation={storedAccommodation}
-					setStoredAccommodation={setStoredAccommodation}
-				/>
+				<StoredPlacePanel type="accommodation" />
 			</Tab>
 		</div>
 	);

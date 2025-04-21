@@ -6,7 +6,7 @@ import Tab from "../Tab/Tab";
 import PlaceSelectPanel from "../../PlaceSelectPanel/PlaceSelectPanel";
 import NewPlacePanel from "../../NewPlacePanel/NewPlacePanel";
 
-function TripPlace({ storedPlaces, setStoredPlaces }) {
+function TripPlace() {
 	const [selectedTab, setSelectedTab] = useState(1);
 
 	return (
@@ -20,17 +20,11 @@ function TripPlace({ storedPlaces, setStoredPlaces }) {
 					<PlaceSelectPanel
 						text="장소"
 						categories={["명소", "맛집", "카페"]}
-						storedPlaces={storedPlaces}
-						setStoredPlaces={setStoredPlaces}
 					/>
 				) : (
 					<NewPlacePanel />
 				)}
-				<StoredPlacePanel
-					type={"place"}
-					storedPlaces={storedPlaces}
-					setStoredPlaces={setStoredPlaces}
-				/>
+				<StoredPlacePanel type="place" />
 			</Tab>
 		</div>
 	);

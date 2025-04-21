@@ -6,6 +6,7 @@ import { FaStar } from "react-icons/fa";
 import { FaPlus, FaCheck } from "react-icons/fa6";
 
 function PlaceBox({ place, category, onToggle, isAdded }) {
+
 	const handleImageError = (e) => {
 		e.target.src = img;
 	};

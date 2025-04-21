@@ -3,13 +3,8 @@ import { css } from "@emotion/react";
 export const SLayout = css`
 	display: flex;
 	flex-direction: column;
-	margin: 15px 5px;
+	margin: 10px 5px;
 	cursor: pointer;
-`;
-
-export const SDate = css`
-	font-size: 14px;
-	margin-bottom: 10px;
 `;
 
 export const SBox = css`

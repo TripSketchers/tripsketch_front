@@ -9,19 +9,10 @@ import TripAccommodation from "../TripAccommodation/TripAccommodation";
 function TripSelectContainer({ selectedStep }) {
 	const [showModal, setShowModal] = useState(true);
 
-	const [dateRange, setDateRange] = useState({
-		startDate: null,
-		endDate: null,
-	});
-
-	const [storedPlaces, setStoredPlaces] = useState([]);
-	const [storedAccommodation, setStoredAccommodation] = useState([]);
-
 	return (
 		<div css={S.SLayout(selectedStep)}>
 			<Header
 				selectedStep={selectedStep}
-				dateRange={dateRange}
 				onOpenModal={() => setShowModal(true)}
 			/>
 			<div css={S.SContainer}>
@@ -29,23 +20,10 @@ function TripSelectContainer({ selectedStep }) {
 					<TripDate
 						showModal={showModal}
 						setShowModal={setShowModal}
-						dateRange={dateRange}
-						setDateRange={setDateRange}
 					/>
 				)}
-				{selectedStep === 2 && (
-					<TripPlace
-						storedPlaces={storedPlaces}
-						setStoredPlaces={setStoredPlaces}
-					/>
-				)}
-				{selectedStep === 3 && (
-					<TripAccommodation
-						dateRange={dateRange}
-						storedAccommodation={storedAccommodation}
-						setStoredAccommodation={setStoredAccommodation}
-					/>
-				)}
+				{selectedStep === 2 && <TripPlace />}
+				{selectedStep === 3 && <TripAccommodation />}
 			</div>
 		</div>
 	);

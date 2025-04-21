@@ -38,6 +38,12 @@ export const SStoredNum = css`
 	}
 `;
 
+export const SDate = css`
+	margin-top: 10px;
+	padding: 0 10px;
+	font-size: 14px;
+`;
+
 export const SContentBox = css`
 	flex: 1;
 	height: 100%;
