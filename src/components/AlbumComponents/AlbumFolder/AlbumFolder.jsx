@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import AlbumPhotos from "../AlbumPhotos/AlbumPhotos";
 import { useQuery } from "@tanstack/react-query";
 import { instance } from "../../../api/config/instance";
 import AlbumFolderItem from "./AlbumFolderItem/AlbumFolderItem";
+import { IoIosReturnLeft } from "react-icons/io";
 
 function AlbumFolder({ tripId }) {
     const [selectedAlbumId, setSelectedAlbumId] = useState(0);  //폴더(앨범) 클릭시 albumId 저장
@@ -59,8 +60,8 @@ function AlbumFolder({ tripId }) {
         <div>
             {getAlbumPhotos.data ? (
                 <div>
-                    <button onClick={() => setSelectedAlbumId(null)}>
-                        뒤로가기
+                    <button css={S.SBackButton} onClick={() => setSelectedAlbumId(null)}>
+                        <IoIosReturnLeft /> 돌아가기
                     </button>
                     <AlbumPhotos
                         albums={getAlbumPhotos.data?.data.albums}

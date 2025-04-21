@@ -17,8 +17,8 @@ export const backdrop = css`
 
 export const modal = css`
     background: #fff;
-    padding: 10px;
-    width: 440px;
+    padding: 10px 15px;
+    width: 400px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
 
     * {
@@ -36,7 +36,7 @@ export const closeBtn = css`
 
 export const SPhotoContainer = css`
     width: 100%;
-    height: 420px;
+    aspect-ratio: 3/3.75;
     background-color: black;
     overflow: hidden;
 
@@ -52,21 +52,31 @@ export const SPhotoMemo = css`
     height: 70px;
     margin: 8px 0;
     font-size: 22px;
-    overflow-y: auto;
 
-    &::-webkit-scrollbar {
+    * {
+        overflow-y: auto;
+    }
+
+    & > ::-webkit-scrollbar {
         width: 4px; /* 세로 스크롤일 경우 */
     }
 
-    &::-webkit-scrollbar-track {
+    & > ::-webkit-scrollbar-track {
         background-color: #dbdbdb;
         border-radius: 1rem;
     }
 
     /* 스크롤바 thumb */
-    &::-webkit-scrollbar-thumb {
+    & > ::-webkit-scrollbar-thumb {
         background-color: black;
         border-radius: 1rem;
+    }
+
+    textArea {
+        width: 100%;
+        height: 100%;
+        resize: none;
+        font-size: 18px;
     }
 `;
 
@@ -100,4 +110,22 @@ export const editBtn = css`
     & path:hover {
         color: #3731db;
     }
+`;
+
+export const SEditClickBtn = css`
+    button {
+        border-radius: 5px;
+        padding: 5px;
+        font-size: 16px;
+    }
+    .cancel {
+        background-color: #dbdbdb;
+        color: black;
+    }
+    .edit {
+        margin-left: 5px;
+        color: white;
+        background-color: black;
+    }
+
 `;

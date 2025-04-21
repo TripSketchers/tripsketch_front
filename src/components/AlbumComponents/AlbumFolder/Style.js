@@ -8,6 +8,16 @@ export const SSortingBox = css`
     cursor: pointer;
 `;
 
+export const SBackButton = css`
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    svg {
+        font-size: 20px;
+        margin-right: 5px;
+    }
+`;
+
 export const SFolderContainer = css`
     position: relative;
     display: grid;

@@ -28,7 +28,7 @@ function AlbumPhotos({ albums, startDate }) {
         );
         return {
             ...item,
-            dayDiff: daysDiff >= 0 ? `${daysDiff + 1}일차` : ''
+            dayDiff: `${daysDiff + 1}일차`
         };
     })
 
