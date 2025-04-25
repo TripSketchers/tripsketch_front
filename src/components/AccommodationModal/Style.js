@@ -57,7 +57,7 @@ export const SDateTag = css`
 	font-size: 14px;
 `;
 
-export const SImageBox = (isSelected, backgroundUrl) => css`
+export const SImageBox = (isSelected, backgroundUrl, fallbackImg) => css`
 	display: flex;
 	justify-content: center;
 	align-items: center;
