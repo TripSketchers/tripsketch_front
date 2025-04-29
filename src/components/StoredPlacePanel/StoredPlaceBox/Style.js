@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import { getColorByCategory } from "../../../utils/CategoryUtils";
 
 export const SLayout = css`
 	display: flex;
@@ -6,10 +7,11 @@ export const SLayout = css`
 	align-items: center;
 	margin: 10px 5px;
 	border-radius: 10px;
-	padding: 10px;
+	padding: 10px 10px 10px 5px;
 	font-size: 14px;
 	box-shadow: 3px -2px 8px rgb(203, 203, 203);
     height: 70px;
+	cursor: pointer;
 	img {
 		border-radius: 10px;
 		width: 50px;
@@ -20,6 +22,14 @@ export const SLayout = css`
 
 export const SContainer = css`
 	display: flex;
+`;
+
+export const SIndexBox = css`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-right: 5px;
+	color:rgb(170, 170, 170);
 `;
 
 export const SInfoContainer = css`
@@ -45,16 +55,8 @@ export const STitle = css`
 	overflow: hidden;
 `;
 
-const colorMap = {
-	명소: "#4CAF50",   // 초록
-	맛집: "#FF5722",   // 주황
-	카페: "#9C27B0",   // 보라
-	숙소: "#2196F3",   // 파랑
-};
-
-
 export const SCategory = (category) => css`
-	color: ${colorMap[category]};
+	color: ${getColorByCategory(category)};
 `;
 
 export const SAddress = css`

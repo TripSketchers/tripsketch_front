@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import { getColorByCategory } from "../../../utils/CategoryUtils";
 
 export const SLayout = css`
 	display: flex;
@@ -9,6 +10,7 @@ export const SLayout = css`
 	font-size: 14px;
 	border-bottom: 1px solid #dbdbdb;
 	height: 100px;
+	cursor: pointer;
 	img {
 		border-radius: 10px;
 		width: 80px;
@@ -41,15 +43,8 @@ export const STitle = css`
 	overflow: hidden;
 `;
 
-const colorMap = {
-	명소: "#4CAF50", // 초록
-	맛집: "#FF5722", // 주황
-	카페: "#9C27B0", // 보라
-	숙소: "#2196F3", // 파랑
-};
-
 export const SCategory = (category) => css`
-	color: ${colorMap[category]};
+	color: ${getColorByCategory(category)};
 `;
 
 export const SAddress = css`
@@ -67,12 +62,6 @@ export const SLikeBox = css`
 		display: flex;
 		align-items: center;
 		margin-right: 5px;
-	}
-`;
-
-export const SLike = css`
-	path {
-		color: rgb(255, 96, 96);
 	}
 `;
 

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import * as S from "./Style";
 import { IoSearch } from "react-icons/io5";
 
-function SearchInput({ placeholder }) {
+function SearchInput({ placeholder, onSearch }) {
 	const [searchValue, setSearchValue] = useState(null);
 
 	const handleChange = (e) => {
@@ -17,7 +17,7 @@ function SearchInput({ placeholder }) {
 	};
 
 	const handleSearchBtn = () => {
-		console.log("검색어:", searchValue); // 검색 버튼 클릭 시 값 출력
+		onSearch(searchValue);
 	};
 
 	return (

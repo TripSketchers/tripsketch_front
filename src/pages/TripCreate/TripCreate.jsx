@@ -5,6 +5,7 @@ import * as S from "./Style";
 import TripSelectContainer from "../../components/TripCreate/TripSelectContainer/TripSelectContainer";
 import Map from "../../components/TripCreate/Map/Map";
 import { TripProvider } from "../../components/TripCreate/TripContext";
+import PlaceDetailModal from "../../components/PlaceDetailModal/PlaceDetailModal";
 
 function TripCreate(props) {
 	const [selectedStep, setSelectedStep] = useState(1);
@@ -18,7 +19,8 @@ function TripCreate(props) {
 				/>
 				<div css={S.SContainer}>
 					<TripSelectContainer selectedStep={selectedStep} />
-					<Map />
+					<Map selectedStep={selectedStep} />
+					<PlaceDetailModal />
 				</div>
 			</div>
 		</TripProvider>
