@@ -1,5 +1,30 @@
 import { css } from '@emotion/react';
 
+export const SLayout = css`
+    position: relative;
+    top: -2px;
+
+    display: flex;
+    justify-content: center;
+    
+    & > div {
+        margin: 0 20%;
+        border-radius: 10px;
+        padding: 30px 40px;
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.7);
+        background-color: white;
+        
+        width: 100%;
+        min-width: 430px;
+    }
+    
+    h1 {
+        font-size: 30px;
+        font-weight: 600;
+    }
+`;
+
+
 export const SViewTypeBox = css`
     display: flex;
     justify-content: space-between;
@@ -46,7 +71,7 @@ export const SViewTypeBox = css`
         bottom: 0;
         width: 50%;
         padding: 0.15rem;
-        z-index: 3;
+        z-index: 1;
         transition: transform 0.3s cubic-bezier(0.77, 0, 0.175, 1);
     }
 
