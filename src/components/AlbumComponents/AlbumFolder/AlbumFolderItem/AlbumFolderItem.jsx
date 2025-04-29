@@ -4,77 +4,64 @@ import * as S from "./Style";
 import { FaFolder } from "react-icons/fa";
 import { IoMdMore, IoMdTrash } from "react-icons/io";
 import ConfirmModal from "../../../ConfirmModal/ConfirmModal";
+import TogglePanel from "../../../TogglePanel/TogglePanel";
+import { instance } from "../../../../api/config/instance";
+import { useParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
-function AlbumFolderItem({ album, photos, onClickFolder }) {
-    const [openModal, setOpenModal] = useState(false);
-    const [openDelete, setOpenDelete] = useState(false);
-    const modalRef = useRef();
+function AlbumFolderItem({ album, photo, onClickFolder }) {
+    const { tripId } = useParams();
+    const queryClient = useQueryClient();
 
-    const handleToggleMore = (e) => {
-        e.stopPropagation();
-        setOpenModal((prev) => !prev);
+    const handleDelete = async () => {
+        try {
+            const option = {
+                headers: {
+                    Authorization: localStorage.getItem("accessToken"),
+                },
+            };
+            await instance.delete(
+                `/trips/${tripId}/albums/${album.albumId}`,
+                option
+            );
+            alert(`폴더 ${album.albumId} 삭제 완료`);
+            queryClient.invalidateQueries(["getAlbum", tripId]);
+            // setIsModalOpen(fasle);
+        } catch (error) {
+            console.log(error);
+        }
     };
-
-    const handleOpenDelete = (e) => {
-        e.stopPropagation();
-        setOpenDelete(true);
-        setOpenModal(false);
-    };
-
-    const handleCloseDelete = () => {
-        setOpenDelete(false);
-    };
-
-    const handleDelete = () => {
-        alert(`폴더 ${album.albumId} 삭제 요청!`);
-        setOpenDelete(false);
-    };
-
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (modalRef.current && !modalRef.current.contains(e.target)) {
-                setOpenModal(false);
-            }
-        };
-        // 마운트될 때 실행 (add)
-        document.addEventListener("mousedown", handleClickOutside);
-      
-        return () => {
-          // 언마운트될 때 실행 (remove)
-          document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
 
     return (
         <div css={S.SFolder} onClick={() => onClickFolder(album.albumId)}>
             <FaFolder className="folderFrame" />
-            <div css={S.SFolderMoreBtn} ref={modalRef}>
-                <IoMdMore className="folderMoreBtn" onClick={handleToggleMore} />
-                {openModal && (
-                    <div className="folderMoreModal" onClick={handleOpenDelete}>
-                        <IoMdTrash /> <span>삭제</span>
-                    </div>
-                )}
-            </div>
             <div css={S.SFolderPhotoFrame}>
-                <img src={photos[0]?.photoUrl} alt="앨범" />
-                <div className="infoBox">
-                    <div>
-                        <h3>{album.place}</h3>
+                <img src={photo} alt="앨범" />
+            </div>
+            <div css={S.SFolderInner}>
+                <div className="innerBox">
+                    <TogglePanel
+                        triggerIcon={<IoMdMore style={{fontSize:"34px", color:"white"}}/>}
+                        menuItems={[
+                            {
+                                icon: <IoMdTrash />,
+                                label: "삭제",
+                                action: handleDelete,
+                                confirm: {
+                                    title: "폴더를 삭제하시겠어요?",
+                                    message:
+                                        "삭제 시 복구할 수 없습니다.",
+                                    confirmText: "삭제",
+                                },
+                            },
+                        ]}
+                    />
+                    <div className="infoBox">
+                        <h3>{album.placeName}</h3>
                         <span>{album.date}</span>
                     </div>
                 </div>
             </div>
-
-            {openDelete && (
-                <ConfirmModal
-                    title="폴더를 삭제하시겠어요?"
-                    message="삭제 시 복구할 수 없습니다."
-                    confirmText="삭제"
-                    onClose={handleCloseDelete}
-                    onConfirm={handleDelete}
-                />
-            )}
         </div>
     );
 }

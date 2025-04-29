@@ -1,13 +1,5 @@
 import { css } from "@emotion/react";
 
-export const SSortingBox = css`
-    position: relative;
-    display: flex;
-    justify-content: right;
-    top: 15px;
-    cursor: pointer;
-`;
-
 export const SAlbumContainer = css`
     margin-bottom: 15px;
 `;
@@ -31,7 +23,7 @@ export const SAlbumImg = css`
     align-items: center;
     justify-content: center;
     border-radius: 1rem;
-    background-color: wheat;
+    background-color: transparent;
     height: 170px;
     font-size: 18px;
     font-weight: bold;

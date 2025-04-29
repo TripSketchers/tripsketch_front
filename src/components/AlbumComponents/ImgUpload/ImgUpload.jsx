@@ -24,23 +24,25 @@ function ImgUpload({ memos, setMemos }) {
         }
 
         for (const file of files) {
-            const reader = new FileReader();
-            reader.onload = async (event) => {
-                const base64Url = event.target.result;
-                await addPhoto(base64Url);
-                fetchPhotos(); // 새로 가져오기
-            };
-            reader.readAsDataURL(file);
+            await addPhoto(file);  // Blob 자체 저장
         }
+    
+        fetchPhotos(); // 새로 가져오기
     };
 
     // IndexedDB에서 사진 가져오기
     const fetchPhotos = async () => {
         const allPhotos = await getAllPhotos();
-        setPhotos(allPhotos);
+
+        // 미리보기용 URL을 만들어서 상태에 넣어줌
+        const photoWithPreview  = allPhotos.map(photo => ({
+            ...photo,
+            previewUrl: URL.createObjectURL(photo.file)// Blob → URL
+        }));
+        setPhotos(photoWithPreview);
     };
 
-    useEffect(() => {
+    useEffect(() => {   //임시
         fetchPhotos();
     }, []);
 
@@ -94,7 +96,7 @@ function ImgUpload({ memos, setMemos }) {
                     )}
                     <div css={S.SImgBox}>
                         {photos.length > 0 && currentPhoto ? (
-                            <img src={currentPhoto.photoUrl} alt="preview" />
+                            <img src={currentPhoto.previewUrl} alt="preview" />
                         ) : (
                             <label htmlFor="fileInput" css={S.SAddImg}>
                                 <LuImagePlus />

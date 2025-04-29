@@ -1,33 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
+/** @jsxImportSource @emotion/react */
+import * as S from "./Style";
 import { useQuery } from '@tanstack/react-query';
 import { instance } from '../../../api/config/instance';
 import AlbumPhotos from '../AlbumPhotos/AlbumPhotos';
 
-function AlbumWhole({tripId}) {
-    const getAlbum = useQuery({
-        queryKey: ["getAlbum", tripId],
-        queryFn: async () => {
-            try {
-                const options = {
-                    headers: {
-                        Authorization: localStorage.getItem("accessToken")
-                    }
-                }
-                return await instance.get(`/trips/${1}/album/photos`, options);
-            }catch (error) {
-                console.error(error);
-            }
-        },
-        retry: 0,
-        refetchOnWindowFocus: false
-    });
+function AlbumWhole({ albums, startDate }) {
+    const [ sorting, setSorting ] = useState(0); //최신순 : 0, 과거순: 1
+
+    const handleSortingClick = (num) => {
+        setSorting(num);
+    };
 
     return (
         <div>
-            {getAlbum?.data?.data?.albums && (
+            <div css={S.SSortingBox}>
+                <span onClick={() => handleSortingClick(0)}>최신순</span>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <span onClick={() => handleSortingClick(1)}>오래된 순</span>
+            </div>
+            {albums && (
                 <AlbumPhotos
-                    albums={getAlbum.data.data.albums}
-                    startDate={getAlbum.data.data.startDate}
+                    albums={albums}
+                    startDate={startDate}
                 />
             )}
         </div>

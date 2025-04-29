@@ -1,83 +1,146 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 /** @jsxImportSource @emotion/react */
-import * as S from './Style';
+import * as S from "./Style";
 import { FaTrash } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
-import { instance } from '../../../api/config/instance';
+import { instance } from "../../../api/config/instance";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+import ConfirmModal from "../../ConfirmModal/ConfirmModal";
 
-function AlbumDetailModal({photo, onClose}) {
-    const [ editPhotoMemo, setEditPhotoMemo ] = useState(null); //수정 상태 저장
-    const [ memo, setMemo ] = useState(photo.memo);     //메모 저장
+function AlbumDetailModal({ photo, onClose }) {
+    const { tripId } = useParams();
+    const queryClient = useQueryClient();
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [memo, setMemo] = useState(photo.memo); // 메모 상태
+    const [isEditing, setIsEditing] = useState(false); // 편집 모드
 
     const handleBackdropClick = (e) => {
         onClose(); // 모달 바깥 클릭 시 닫기
     };
-    
+
     const handleModalClick = (e) => {
         e.stopPropagation(); // 모달 내부 클릭 시 전파 차단
     };
 
     const handleEditBtn = () => {
-        setEditPhotoMemo(photo.photoId);
-    }
+        setIsEditing(true);
+    };
 
     const handleMemoChange = (e) => {
-        setMemo(e.target.value)
-    }
+        setMemo(e.target.value);
+    };
+
+    const handleDelete = async () => {
+        try {
+            const option = {
+                headers: {
+                    Authorization: localStorage.getItem("accessToken"),
+                },
+            };
+            await instance.delete(
+                `/trips/${tripId}/album/photos/${photo.photoId}`,
+                option
+            );
+            alert(`사진 ${photo.photoId} 삭제 완료`);
+            setIsEditing(false); // 편집 모드 종료
+            onClose();
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const handleEditClick = async () => {
         try {
-        const option = {
-            headers: {
-                "Content-Type": "text/plain",
-                Authorization: localStorage.getItem("accessToken")
-            }
-        }
-            await instance.put(`/trips/${1}/album/${editPhotoMemo}`, memo, option);
+            const option = {
+                headers: {
+                    "Content-Type": "text/plain",
+                    Authorization: localStorage.getItem("accessToken"),
+                },
+            };
+            await instance.put(
+                `/trips/${tripId}/album/${photo.photoId}`,
+                memo,
+                option
+            );
             alert("사진 메모 수정 완료!");
-            setEditPhotoMemo(null);
-        }catch (error) {
+            setIsEditing(false); // 편집 모드 종료
+        } catch (error) {
             alert(error.response.data.sendFail);
         }
-    }
-    
+    };
+
     return (
-        <div css={S.backdrop} onClick={handleBackdropClick}>
+        <div css={S.backdrop} onClick={handleBackdropClick} >
             <div css={S.modal} onClick={handleModalClick}>
                 <div css={S.closeBtn} onClick={handleBackdropClick}>
-                    <button><IoClose /></button>
+                    <button>
+                        <IoClose />
+                    </button>
                 </div>
                 <div css={S.SPhotoContainer}>
                     <img src={photo.photoUrl} draggable="false" />
                 </div>
                 <div>
-                    <div css={S.SPhotoMemo} >
-                        {editPhotoMemo === null ? 
-                            <div>
-                                {photo.memo}
-                            </div>
-                            : <textarea
+                    <div css={S.SPhotoMemo}>
+                        {!isEditing ? (
+                            <div>{memo}</div>
+                        ) : (
+                            <textarea
+                            autoFocus
                                 value={memo}
                                 onChange={handleMemoChange}
                                 placeholder="사진에 대한 추억을 적어보세요!"
                             />
-                        }
+                        )}
                     </div>
                     <div css={S.SEditBox}>
-                        <span>{photo.date} {photo.place}</span>
-                        {editPhotoMemo === null ? 
+                        <span>
+                            {photo.date} {photo.place}
+                        </span>
+                        {!isEditing ? (
                             <div>
-                                <button css={S.deleteBtn} ><FaTrash /></button>
-                                <button css={S.editBtn} onClick={handleEditBtn}><MdEdit /></button>
+                                <button
+                                    css={S.deleteBtn}
+                                    onClick={()=>setIsModalOpen(true)}
+                                >
+                                    <FaTrash />
+                                </button>
+                                <button css={S.editBtn} onClick={handleEditBtn}>
+                                    <MdEdit />
+                                </button>
                             </div>
-                            :<div css={S.SEditClickBtn}>
-                                <button className='cancel' onClick={() => {setEditPhotoMemo(null)}}>취소</button>
-                                <button className='edit' onClick={handleEditClick}>수정 완료</button>
-                            </div> 
-                        }
+                        ) : (
+                            <div css={S.SEditClickBtn}>
+                                <button
+                                    className="cancel"
+                                    onClick={() => {
+                                        setIsEditing(false)
+                                    }}
+                                >
+                                    취소
+                                </button>
+                                <button
+                                    className="edit"
+                                    onClick={handleEditClick}
+                                >
+                                    수정 완료
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
+                {isModalOpen && (
+                    <ConfirmModal
+                        title="사진을 삭제하시겠어요?"
+                        message="삭제 시 복구할 수 없습니다."
+                        confirmText="삭제"
+                        onClose={() => setIsModalOpen(false)}
+                        onConfirm={handleDelete}
+                    />
+                )}
             </div>
         </div>
     );

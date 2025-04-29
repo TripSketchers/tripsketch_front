@@ -1,65 +1,135 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import AlbumDetailModal from "../AlbumDetailModal/AlbumDetailModal";
-import { differenceInDays } from 'date-fns';
+import { differenceInDays } from "date-fns";
+import { instance } from "../../../api/config/instance";
+import { useQueries } from "@tanstack/react-query";
 
 function AlbumPhotos({ albums, startDate }) {
-    const [ sorting, setSorting ] = useState(0); //최신순 : 0, 과거순: 1
-    const [ selectedPhoto, setSelectedPhoto ] = useState(null);
+    const observerRef = useRef({});
+    const [visibleAlbums, setVisibleAlbums] = useState(new Set());
 
-    const handleSortingClick = (num) => {
-        setSorting(num);
-    };
+    const [selectedPhoto, setSelectedPhoto] = useState(null);
 
     const handlePhotoClick = (photo, album) => {
         setSelectedPhoto({
             ...photo,
             date: album.date,
-            place: album.place
+            placeName: album.placeName,
         });
-    }
+    };
 
-    // 여기서 날짜 차이 + 정렬까지 가공
-    const sortedAlbums = [...albums].map(item => {
+    // 여기서 n일차 가공
+    const sortedAlbums = [...albums].map((item) => {
         const daysDiff = differenceInDays(
-            new Date(item.album.date),
+            new Date(item.date),
             new Date(startDate)
         );
         return {
             ...item,
-            dayDiff: `${daysDiff + 1}일차`
+            dayDiff: `${daysDiff + 1}일차`,
         };
-    })
+    });
+
+    useEffect(() => {
+        if (albums.length === 0) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) {
+                        const albumId =
+                            entry.target.getAttribute("data-album-id");
+
+                        setVisibleAlbums((prev) => {
+                            if (!prev.has(albumId)) {
+                                const newSet = new Set(prev);
+                                newSet.add(albumId);
+                                return newSet;
+                            }
+                            return prev;
+                        });
+                    }
+                }
+            },
+            {
+                rootMargin: "300px",
+                threshold: 0.1,
+            }
+        );
+
+        albums.forEach((album) => {
+            const ref = observerRef.current[album.albumId];
+            if (ref) observer.observe(ref);
+        });
+
+        return () => {
+            albums.forEach((album) => {
+                const ref = observerRef.current[album.albumId];
+                if (ref) observer.unobserve(ref);
+            });
+        };
+    }, [albums]);
+
+    // 개별 앨범 사진 로딩 useQuery
+    const albumPhotoQueries = useQueries({
+        queries: albums.map((album) => ({
+            queryKey: ["getAlbumPhotos", album.albumId],
+            queryFn: async () => {
+                const options = {
+                    headers: {
+                        Authorization: localStorage.getItem("accessToken"),
+                    },
+                };
+                const response = await instance.get(
+                    `/trips/album/${album.albumId}/photos`,
+                    options
+                );
+                return response.data.photos;
+            },
+            enabled: visibleAlbums.has(String(album.albumId)), // lazy load
+            staleTime: Infinity,
+        })),
+    });
 
     return (
         <>
-            <div css={S.SSortingBox}>
-                <span onClick={() => handleSortingClick(0)}>최신순</span>
-                &nbsp;&nbsp;|&nbsp;&nbsp;
-                <span onClick={() => handleSortingClick(1)}>오래된 순</span>
-            </div>
-            {sortedAlbums.map((item) => (
-                <div css={S.SAlbumContainer} key={item.album.albumId}>
-                    <div css={S.SScheduleBox}>
-                        <span>{item.dayDiff}</span> &nbsp;| &nbsp;
-                        {item.album.date} {item.album.place}
+            {sortedAlbums.map((album, index) => {
+                const photos = albumPhotoQueries[index]?.data || [];
+
+                return (
+                    <div
+                        key={album.albumId}
+                        ref={(el) => (observerRef.current[album.albumId] = el)}
+                        data-album-id={album.albumId}
+                        css={S.SAlbumContainer}
+                    >
+                        <div css={S.SScheduleBox}>
+                            <span>{album.dayDiff}</span> &nbsp;|&nbsp;{" "}
+                            {album.date} {album.placeName}
+                        </div>
+                        <div css={S.SAlbumBox}>
+                            {photos.map((photo) => (
+                                <div
+                                    key={photo.photoId}
+                                    css={S.SAlbumImg}
+                                    onClick={() =>
+                                        handlePhotoClick(photo, album)
+                                    }
+                                >
+                                    <img
+                                        src={photo?.photoUrl}
+                                        draggable="false"
+                                    />
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                    <div css={S.SAlbumBox}>
-                        {item.photos.map((photo) => (
-                            <div
-                                css={S.SAlbumImg}
-                                key={photo.photoId}
-                                onClick={() => handlePhotoClick(photo, item.album)}
-                            >
-                                <img src={photo.photoUrl} draggable="false" />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            ))}
+                );
+            })}
             {selectedPhoto && (
-                <AlbumDetailModal 
+                <AlbumDetailModal
                     photo={selectedPhoto}
                     onClose={() => setSelectedPhoto(null)}
                 />

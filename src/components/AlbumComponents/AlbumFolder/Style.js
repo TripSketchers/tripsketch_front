@@ -5,16 +5,26 @@ export const SSortingBox = css`
     display: flex;
     justify-content: right;
     top: 15px;
+    width: 100%;
     cursor: pointer;
+`;
+
+export const SDateBox = css`
+    span {
+        font-weight: 600;
+    }
 `;
 
 export const SBackButton = css`
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
     font-size: 16px;
+
     svg {
-        font-size: 20px;
         margin-right: 5px;
+        border-radius: 50%;
+        color:rgb(255, 255, 255);
     }
 `;
 
@@ -22,6 +32,5 @@ export const SFolderContainer = css`
     position: relative;
     display: grid;
     gap: 15px 70px;
-    margin-top: 20px;
     grid-template-columns: repeat(auto-fill, 265px); /* 기본 3개 */
 `;

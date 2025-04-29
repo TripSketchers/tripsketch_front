@@ -1,19 +1,14 @@
 import Dexie from "dexie";
-/*
-++id : 자동 증가 id
-photoUrl : 사진 URL (혹은 파일 자체를 Blob으로 넣어도 됨)
-memo : 메모 
-*/
 
 export const AlbumDB = new Dexie("TripSketchDB");
 
 AlbumDB.version(1).stores({
-    photos: "++id, photoUrl",
+    photos: "++id",
 });
 
 // 데이터 추가 함수
-export const addPhoto = async (photoUrl) => {
-    await AlbumDB.photos.add({ photoUrl });
+export const addPhoto = async (file) => {
+    await AlbumDB.photos.add({ file });     //blob저장
 };
 
 // 데이터 전체 조회

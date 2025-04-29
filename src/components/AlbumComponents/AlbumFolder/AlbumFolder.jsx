@@ -2,70 +2,33 @@ import React, { useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import AlbumPhotos from "../AlbumPhotos/AlbumPhotos";
-import { useQuery } from "@tanstack/react-query";
-import { instance } from "../../../api/config/instance";
 import AlbumFolderItem from "./AlbumFolderItem/AlbumFolderItem";
-import { IoIosReturnLeft } from "react-icons/io";
+import { RiArrowGoBackFill } from "react-icons/ri";
+import { groupBy } from "lodash";
 
-function AlbumFolder({ tripId }) {
-    const [selectedAlbumId, setSelectedAlbumId] = useState(0);  //폴더(앨범) 클릭시 albumId 저장
+function AlbumFolder({ albums, startDate }) {
+    const [selectedAlbumId, setSelectedAlbumId] = useState(null);  //폴더(앨범) 클릭시 albumId 저장
 
-    // 폴더 리스트 불러오기
-    const getAlbumFolder = useQuery({
-        queryKey: ["getAlbumFolder", tripId],
-        queryFn: async () => {
-            try {
-                const options = {
-                    headers: {
-                        Authorization: localStorage.getItem("accessToken"),
-                    },
-                };
-                return await instance.get(`/trips/${1}/album/folders`, options);
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        retry: 0,
-        refetchOnWindowFocus: false,
-    });
+    // 선택한 albumId에 맞는 앨범 하나 찾기
+    const selectedAlbum = albums.find(item => item.albumId === selectedAlbumId);
 
-    // 클릭한 폴더의 사진만 가져오기
-    const getAlbumPhotos = useQuery({
-        queryKey: ["getAlbumPhotos", selectedAlbumId],
-        queryFn: async () => {
-            try {
-                const options = {
-                    headers: {
-                        Authorization: localStorage.getItem("accessToken"),
-                    },
-                };
-                return await instance.get(
-                    `/trips/${1}/albums/${selectedAlbumId}`,
-                    options
-                );
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        enabled: !!selectedAlbumId, // 선택했을 때만 실행
-        retry: 0,
-        refetchOnWindowFocus: false,
-    });
+    // 날짜별로 albums 그룹화
+    const albumsByDate = groupBy(albums, item => item.date);
 
-    if (getAlbumPhotos.isLoading) return <div>로딩 중...</div>;
-
-    console.log(getAlbumPhotos?.data?.data);
-    
     return (
         <div>
-            {getAlbumPhotos.data ? (
+            {selectedAlbum ? (
                 <div>
-                    <button css={S.SBackButton} onClick={() => setSelectedAlbumId(null)}>
-                        <IoIosReturnLeft /> 돌아가기
+                    <button css={S.SBackButton} onClick={() => setSelectedAlbumId(0)}>
+                        <RiArrowGoBackFill /> 돌아가기
                     </button>
                     <AlbumPhotos
-                        albums={getAlbumPhotos.data?.data.albums}
-                        startDate={getAlbumPhotos.data?.data.startDate}
+                        albums={[{
+                            albumId: selectedAlbum.albumId,
+                            date: selectedAlbum.date,
+                            place: selectedAlbum.placeName,
+                        }]}
+                        startDate={startDate}
                     />
                 </div>
             ) : (
@@ -74,16 +37,21 @@ function AlbumFolder({ tripId }) {
                         <span>최신순</span>&nbsp;&nbsp;|&nbsp;&nbsp;
                         <span>오래된 순</span>
                     </div>
-                    <div css={S.SFolderContainer}>
-                        {getAlbumFolder?.data?.data.albums.map((item) => (
-                            <AlbumFolderItem
-                                key={item.album.albumId}
-                                album={item.album}
-                                photos={item.photos}
-                                onClickFolder={(id) => setSelectedAlbumId(id)}
-                            />
-                        ))}
-                    </div>
+                    {Object.entries(albumsByDate).map(([date, items], index) => (
+                        <div key={date}>
+                            <div css={S.SDateBox}><span>{index + 1}일차</span> | {date}</div>
+                            <div css={S.SFolderContainer}>
+                                {items.map((item) => (
+                                    <AlbumFolderItem
+                                        key={item.albumId}
+                                        album={item}
+                                        photo={item.photoUrl}
+                                        onClickFolder={(id) => setSelectedAlbumId(id)}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    ))}
                 </>
             )}
         </div>

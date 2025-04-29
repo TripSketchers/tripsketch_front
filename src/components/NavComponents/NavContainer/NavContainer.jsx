@@ -20,14 +20,16 @@ const SLayout = css`
 
     display: flex;
     justify-content: center;
+    margin-bottom: 50px;
     
     & > div {
+        margin: 0 20%;
         border-radius: 10px;
         padding: 30px 40px;
         box-shadow: 0 0 6px rgba(0, 0, 0, 0.7);
         background-color: white;
         
-        width: 60%; //부모 요소 대비 적절한 크기로 설정
+        width: 100%;
         min-width: 430px;
     }
     
