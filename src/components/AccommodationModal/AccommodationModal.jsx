@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import { addDays, eachDayOfInterval, format } from "date-fns";
@@ -6,11 +6,9 @@ import { FaPlus } from "react-icons/fa6";
 import ReactDOM from "react-dom";
 import { useTrip } from "../TripCreate/TripContext";
 import fallbackImg from "../../assets/fallbackImg.png";
-import { instance } from "../../api/config/instance";
 
 function AccommodationModal({ onClose, onConfirm, dateRange, selectedPlace }) {
 	const { storedAccommodation } = useTrip();
-	const [imgSrc, setImgSrc] = useState(fallbackImg);
 
 	const stayDays = eachDayOfInterval({
 		start: dateRange.startDate,
@@ -27,27 +25,6 @@ function AccommodationModal({ onClose, onConfirm, dateRange, selectedPlace }) {
 		});
 		return initMap;
 	});
-
-	// 대표 숙소 이미지 가져오기
-	useEffect(() => {
-		const fetchImage = async () => {
-			if (selectedPlace?.photos?.[0]?.name) {
-				try {
-					const res = await instance.get(`/photo?ref=${selectedPlace.photos[0].name}`, {
-						headers: {
-							Authorization: localStorage.getItem("accessToken"),
-						},
-						responseType: "blob",
-					});
-					const blobUrl = URL.createObjectURL(res.data);
-					setImgSrc(blobUrl);
-				} catch (error) {
-					console.error("숙소 대표 이미지 로딩 실패", error);
-				}
-			}
-		};
-		fetchImage();
-	}, [selectedPlace]);
 
 	const handleBackdropClick = () => onClose();
 	const handleModalClick = (e) => e.stopPropagation();
@@ -84,7 +61,8 @@ function AccommodationModal({ onClose, onConfirm, dateRange, selectedPlace }) {
 						const isSelected = !!selectedDateMap[dateStr];
 						const targetPlace = selectedDateMap[dateStr];
 						const placeName = targetPlace?.displayName?.text || "";
-						const photoUrl = imgSrc || fallbackImg; // 모든 날짜는 동일 숙소이므로 대표 이미지를 사용
+						const photoUrl =
+							selectedDateMap[dateStr]?.imageUrl || fallbackImg;
 
 						return (
 							<div

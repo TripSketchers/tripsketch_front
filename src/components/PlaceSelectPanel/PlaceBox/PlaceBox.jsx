@@ -10,7 +10,7 @@ import { getCategoryFromTypes } from "../../../utils/CategoryUtils";
 
 function PlaceBox({ place, onToggle, isAdded }) {
 	const imgRef = useRef();
-	const [imgSrc, setImgSrc] = useState(null);
+	const [imgSrc, setImgSrc] = useState(place.imageUrl || null); // ✅ place.imageUrl 먼저 확인
 	const { setPlaceModalInfo } = useTrip();
 
 	// ✅ 백엔드를 통해서 blob 이미지를 가져오는 함수
@@ -31,6 +31,9 @@ function PlaceBox({ place, onToggle, isAdded }) {
 	};
 
 	useEffect(() => {
+		if (imgSrc) return; // ✅ imageUrl 이미 있으면 요청 X
+		if (!imgRef.current) return;
+
 		const observer = new IntersectionObserver(
 			([entry]) => {
 				if (entry.isIntersecting) {
@@ -38,10 +41,12 @@ function PlaceBox({ place, onToggle, isAdded }) {
 						if (place.photos?.[0]?.name) {
 							const blobUrl = await getImageBlobUrl(
 								place.photos[0].name
-							); // ✅ name을 ref처럼 넘긴다
+							);
 							setImgSrc(blobUrl);
+							place.imageUrl = blobUrl; // ✅ place 객체에 저장
 						} else {
 							setImgSrc(fallbackImg);
+							place.imageUrl = fallbackImg;
 						}
 					};
 					loadImage();
@@ -51,9 +56,9 @@ function PlaceBox({ place, onToggle, isAdded }) {
 			{ threshold: 0.5 }
 		);
 
-		if (imgRef.current) observer.observe(imgRef.current);
+		observer.observe(imgRef.current);
 		return () => observer.disconnect();
-	}, [place]);
+	}, [place, imgSrc]);
 
 	const category = getCategoryFromTypes(place.types);
 

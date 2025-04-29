@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import fallbackImg from "../../../assets/fallbackImg.png";
 import { FaTrash } from "react-icons/fa6";
 import TimeInputEditor from "../../TimeInputEditer/TimeInputEditer";
 import { useTrip } from "../../TripCreate/TripContext";
-import { instance } from "../../../api/config/instance";
 import { getCategoryFromTypes } from "../../../utils/CategoryUtils";
 
 function StoredPlaceBox({ index, type, place, onRemove }) {
@@ -13,34 +12,9 @@ function StoredPlaceBox({ index, type, place, onRemove }) {
 	const [hour, setHour] = useState(type === "place" ? 2 : 18);
 	const [minute, setMinute] = useState(0);
 	const { setFocusedPlace } = useTrip();
-	const [imgSrc, setImgSrc] = useState(fallbackImg);
-	const imgRef = useRef();
 
 	const formatTime = (num) => String(num).padStart(2, "0");
 	const category = getCategoryFromTypes(place.types);
-
-	useEffect(() => {
-		if (place.photos?.[0]?.name) {
-			const fetchImage = async () => {
-				try {
-					const res = await instance.get(`/photo?ref=${place.photos[0].name}`, {
-						headers: {
-							Authorization: localStorage.getItem("accessToken"),
-						},
-						responseType: "blob",
-					});
-					const blobUrl = URL.createObjectURL(res.data);
-					setImgSrc(blobUrl);
-				} catch (error) {
-					console.error("이미지 로딩 실패", error);
-					setImgSrc(fallbackImg);
-				}
-			};
-			fetchImage();
-		} else {
-			setImgSrc(fallbackImg);
-		}
-	}, [place]);
 
 	return (
 		<div css={S.SLayout} onClick={() => setFocusedPlace(place)}>
@@ -58,8 +32,7 @@ function StoredPlaceBox({ index, type, place, onRemove }) {
 					<div css={S.SContainer}>
 						{type === "place" && <div css={S.SIndexBox}>{index}</div>}
 						<img
-							ref={imgRef}
-							src={imgSrc}
+							src={place.imageUrl}
 							alt={place.displayName?.text || "장소 이미지"}
 							loading="lazy"
 							onError={(e) => (e.target.src = fallbackImg)}
