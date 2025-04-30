@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import fallbackImg from "../../../assets/fallbackImg.png";

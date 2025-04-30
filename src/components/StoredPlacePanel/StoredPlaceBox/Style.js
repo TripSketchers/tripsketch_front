@@ -37,7 +37,7 @@ export const SInfoContainer = css`
     flex-direction: column;
     justify-content: space-between;
 	margin: 0 5px 0 10px;
-	width: 75px;
+	width: 70px;
     height: 100%;
 	span {
         line-height: 16px;
@@ -87,6 +87,7 @@ export const STimeBox = css`
 	padding: 5px;
 	font-size: 12px;
 	background-color: rgb(230, 230, 230);
+	white-space: nowrap;
     cursor: pointer;
 `;
 
