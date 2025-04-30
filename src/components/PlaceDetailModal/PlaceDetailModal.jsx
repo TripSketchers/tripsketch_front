@@ -5,6 +5,7 @@ import { useTrip } from "../TripCreate/TripContext";
 import { FaStar } from "react-icons/fa";
 import fallbackImg from "../../assets/fallbackImg.png";
 import { getCategoryFromTypes } from "../../utils/CategoryUtils";
+import ModalLayout from "../ModalLayout/ModalLayout";
 
 function PlaceDetailModal() {
 	const { placeModalInfo, setPlaceModalInfo } = useTrip();
@@ -13,8 +14,8 @@ function PlaceDetailModal() {
 	const category = getCategoryFromTypes(placeModalInfo.types);
 
 	return (
-		<div css={S.SBackdrop} onClick={() => setPlaceModalInfo(null)}>
-			<div css={S.SModalWrapper} onClick={(e) => e.stopPropagation()}>
+		<ModalLayout onClose={() => setPlaceModalInfo(null)}>
+			<div css={S.SModalWrapper}>
 				<div css={S.SInfoBox}>
 					<h2 css={S.STitle}>
 						{placeModalInfo.displayName?.text || "이름 없음"}
@@ -24,13 +25,16 @@ function PlaceDetailModal() {
 							<FaStar css={S.SStar} /> {placeModalInfo.rating}
 						</div>
 					)}
-					<img src={placeModalInfo.imageUrl || fallbackImg} alt="장소 이미지" css={S.SImage} />
+					<img
+						src={placeModalInfo.imageUrl || fallbackImg}
+						alt="장소 이미지"
+						css={S.SImage}
+					/>
 					<p css={S.SCategory(category)}>
 						📌 {category || "카테고리 없음"}
 					</p>
 					<p css={S.SAddress}>
-						주소 :{" "}
-						{placeModalInfo.formattedAddress || "주소 정보 없음"}
+						주소 : {placeModalInfo.formattedAddress || "주소 정보 없음"}
 					</p>
 					<button
 						css={S.SCloseBtn}
@@ -40,7 +44,7 @@ function PlaceDetailModal() {
 					</button>
 				</div>
 			</div>
-		</div>
+		</ModalLayout>
 	);
 }
 

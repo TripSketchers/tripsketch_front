@@ -1,27 +1,8 @@
 import { css } from "@emotion/react";
 import { getColorByCategory } from "../../utils/CategoryUtils";
 
-export const SBackdrop = css`
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.4);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	z-index: 999;
-`;
-
 export const SModalWrapper = css`
-	display: flex;
-	margin: 20%;
-	padding: 25px 40px;
-	background: white;
-	border-radius: 10px;
-	overflow: hidden;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+	text-align: left;
 `;
 
 export const SImage = css`
@@ -62,6 +43,7 @@ export const SStar = css`
 `;
 
 export const SCategory = (category) => css`
+	margin-bottom: 10px;
 	color: ${getColorByCategory(category)};
 `;
 
@@ -72,7 +54,7 @@ export const SAddress = css`
 export const SCloseBtn = css`
 	margin-top: 16px;
 	align-self: center;
-	padding: 6px 12px;
+	padding: 6px 20px;
 	background-color: #1976d2;
 	color: white;
 	border: none;
