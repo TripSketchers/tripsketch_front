@@ -20,12 +20,6 @@ export const modal = css`
     padding: 10px 15px;
     width: 400px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-
-    * {
-        font-family: "Nanum Pen Script", cursive !important;
-        font-weight: 400;
-        font-style: normal;
-    }
 `;
 
 export const closeBtn = css`
@@ -55,6 +49,9 @@ export const SPhotoMemo = css`
 
     * {
         overflow-y: auto;
+        font-family: "Nanum Pen Script", cursive !important;
+        font-weight: 400;
+        font-style: normal;
     }
 
     & > ::-webkit-scrollbar {

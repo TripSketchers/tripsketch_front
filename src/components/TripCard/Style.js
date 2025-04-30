@@ -2,10 +2,6 @@ import { css } from "@emotion/react";
 
 export const SLayout = css`
 	position: relative;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
 	margin: auto;
 	border: 2px solid #dbdbdb;
 	border-radius: 10px;
@@ -56,40 +52,4 @@ export const SLocation = css`
 export const SDateRange = css`
 	padding: 5px;
 	font-size: 12px;
-`;
-
-export const STogglePanel = css`
-	position: absolute;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	top: -5px;
-	right: -75px;
-	border: 1px solid #dbdbdb;
-	border-radius: 5px;
-	background-color: white;
-	box-shadow: 0 0 10px #dbdbdb;
-	z-index: 2;
-	overflow: hidden;
-	div:first-of-type {
-		border-bottom: 1px solid #dbdbdb;
-	}
-`;
-
-export const SToggleMenu = css`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 8px 10px;
-	svg {
-		margin-right: 8px;
-		font-size: 14px;
-	}
-	span {
-		font-size: 14px;
-	}
-	:hover {
-		background-color: rgb(239, 239, 239);
-	}
 `;

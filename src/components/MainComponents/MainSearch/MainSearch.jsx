@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import MainImg from "../../../assets/MainImg.jpg";
@@ -10,6 +10,8 @@ function MainSearch(props) {
 	const queryClient = useQueryClient();
 	const principalState = queryClient.getQueryState(["getPrincipal"]);
 	const navigate = useNavigate();
+
+    const [ isShow, setIsShow ] = useState(false);
 
 	const handleStartBtn = () => {
 		navigate("/auth/signin");
@@ -28,12 +30,17 @@ function MainSearch(props) {
 						스케치 해보세요
 					</h1>
 					{principalState?.data?.data ? (
-						<SearchInput placeholder={"여행지 검색"} />
+						<SearchInput placeholder={"여행지 검색"} setIsShow={setIsShow}/>
 					) : (
 						<button css={S.SStartBtn} onClick={handleStartBtn}>
 							시작하기
 						</button>
 					)}
+                    {isShow && 
+                        <div>
+                            등장
+                        </div>
+                    }
 				</div>
 			</div>
 		</div>
