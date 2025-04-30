@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import * as S from "./Style";
 import { IoSearch } from "react-icons/io5";
 
-function SearchInput({ placeholder, onSearch }) {
+function SearchInput({ placeholder, onSearch, setIsShow }) {
 	const [searchValue, setSearchValue] = useState(null);
 
 	const handleChange = (e) => {
@@ -29,6 +29,8 @@ function SearchInput({ placeholder, onSearch }) {
 				placeholder={placeholder}
 				onKeyDown={handleKeyDown}
 				onChange={handleChange}
+				onFocus={()=>setIsShow(true)}
+				onBlur={()=>setIsShow(false)}
 			/>
 			<button css={S.SButton} onClick={handleSearchBtn}>
 				<IoSearch />
