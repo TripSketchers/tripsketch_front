@@ -7,9 +7,7 @@ function Navbar() {
 	const { tripId } = useParams();
 	const location = useLocation();
 	const currentPath = location.pathname;
-    console.log(tripId);
     
-
 	return (
 		<div css={S.SNav}>
 			<NavLink
@@ -22,7 +20,7 @@ function Navbar() {
 				to={`/trip/album/${tripId}`}
 				css={S.SNavItem(
 					currentPath === `/trip/album/${tripId}` ||
-						currentPath === "/trip/album/:trip_id/upload"
+						currentPath === `/trip/album/${tripId}/upload`
 				)}
 			>
 				여행 앨범

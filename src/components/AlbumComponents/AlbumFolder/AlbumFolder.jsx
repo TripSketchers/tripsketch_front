@@ -1,92 +1,61 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 /** @jsxImportSource @emotion/react */
-import AlbumPhoto from "../../../assets/AlbumPhoto.jpg";
 import * as S from "./Style";
-import { FaFolder } from "react-icons/fa";
-import { IoMdMore, IoMdTrash } from "react-icons/io";
-import ConfirmModal from '../../ConfirmModal/ConfirmModal';
+import AlbumPhotos from "../AlbumPhotos/AlbumPhotos";
+import AlbumFolderItem from "./AlbumFolderItem/AlbumFolderItem";
+import { RiArrowGoBackFill } from "react-icons/ri";
+import { groupBy } from "lodash";
 
-function AlbumFolder() {
-    const [openModalId, setOpenModalId] = useState(null);
-    const [openDeleteId, setOpenDeleteId] = useState(null);
-    const modalRef = useRef();
+function AlbumFolder({ albums, startDate }) {
+    const [selectedAlbumId, setSelectedAlbumId] = useState(null);  //폴더(앨범) 클릭시 albumId 저장
 
-    const dummyData = [
-        { id: 1, date: "2024.03.01", place: "서울", img: AlbumPhoto },
-        { id: 2, date: "2024.02.15", place: "부산", img: AlbumPhoto },
-        { id: 3, date: "2024.01.20", place: "제주", img: AlbumPhoto },
-        { id: 4, date: "2024.01.20", place: "제주", img: AlbumPhoto },
-    ];
+    // 선택한 albumId에 맞는 앨범 하나 찾기
+    const selectedAlbum = albums.find(item => item.albumId === selectedAlbumId);
 
-    const toggleMoreModal = (id) => {
-        setOpenModalId((prev) => (prev === id ? null : id));
-      };
-    
-      const openDeleteModal = (id) => {
-        setOpenDeleteId(id);
-        setOpenModalId(null);
-      };
-    
-      const closeDeleteModal = () => {
-        setOpenDeleteId(null);
-      };
-    
-      const handleDelete = (id) => {
-        alert(`폴더 ${id} 삭제 요청!`);
-        closeDeleteModal();
-      };
-    
-      useEffect(() => {
-        const handleClickOutside = (e) => {
-          if (modalRef.current && !modalRef.current.contains(e.target)) {
-            setOpenModalId(null);
-          }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-      }, []);
+    // 날짜별로 albums 그룹화
+    const albumsByDate = groupBy(albums, item => item.date);
 
-  return (
-    <div>
-      <div css={S.SSortingBox}>
-        <span>최신순</span>&nbsp;&nbsp;|&nbsp;&nbsp;
-        <span>오래된 순</span>
-      </div>
-
-      <div css={S.SFolderContainer}>
-      	{dummyData.map(({ id, date, place, img }) => (
-          	<div key={id} css={S.SFolder}>
-				<FaFolder className="folderFrame" />
-				<div css={S.SFolderMoreBtn} ref={openModalId === id ? modalRef : null}>
-				<IoMdMore className="folderMoreBtn"
-					onClick={(e) => { e.stopPropagation(); toggleMoreModal(id);}}/>
-				{openModalId === id && (
-					<div className="folderMoreModal" onClick={() => openDeleteModal(id)}>
-						<IoMdTrash /> <span>삭제</span>
-					</div>
-			)}
-			</div>
-            <div css={S.SFolderPhotoFrame}>
-              <img src={img} alt="앨범" />
-              <div className="infoBox">
-                <h3>{place}</h3>
-                <span>{date}</span>
-              </div>
-            </div>
-            {/* 삭제 확인 모달 */}
-            {openDeleteId === id && (
-				<ConfirmModal
-					title="폴더를 삭제하시겠어요?"
-					message="삭제 시 복구할 수 없습니다."
-					confirmText="삭제"
-					onClose={closeDeleteModal}
-					onConfirm={() => handleDelete(id)} />
+    return (
+        <div>
+            {selectedAlbum ? (
+                <div>
+                    <button css={S.SBackButton} onClick={() => setSelectedAlbumId(0)}>
+                        <RiArrowGoBackFill /> 돌아가기
+                    </button>
+                    <AlbumPhotos
+                        albums={[{
+                            albumId: selectedAlbum.albumId,
+                            date: selectedAlbum.date,
+                            place: selectedAlbum.placeName,
+                        }]}
+                        startDate={startDate}
+                    />
+                </div>
+            ) : (
+                <>
+                    <div css={S.SSortingBox}>
+                        <span>최신순</span>&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <span>오래된 순</span>
+                    </div>
+                    {Object.entries(albumsByDate).map(([date, items], index) => (
+                        <div key={date}>
+                            <div css={S.SDateBox}><span>{index + 1}일차</span> | {date}</div>
+                            <div css={S.SFolderContainer}>
+                                {items.map((item) => (
+                                    <AlbumFolderItem
+                                        key={item.albumId}
+                                        album={item}
+                                        photo={item.photoUrl}
+                                        onClickFolder={(id) => setSelectedAlbumId(id)}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </>
             )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+        </div>
+    );
 }
 
 export default AlbumFolder;

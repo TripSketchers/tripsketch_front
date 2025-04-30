@@ -17,11 +17,11 @@ export const SLayout = css`
 `;
 
 export const SHeader = css`
-	width: 100%;
 	display: flex;
 	justify-content: center; /* 좌우 끝 정렬 */
 	align-items: flex-start;
 	position: relative;
+	width: 100%;
 `;
 
 export const SDday = css`
@@ -36,17 +36,9 @@ export const SDday = css`
 	font-size: 14px;
 `;
 
-export const SMenu = css`
-	position: absolute;
-	top: 0px;
-	right: -5px;
-	* {
-		font-size: 22px;
-	}
-`;
-
 export const STitle = css`
 	display: block;
+	text-align: center;
 	padding: 20px 5px;
 	font-size: 24px;
 	font-weight: bold;
@@ -58,6 +50,7 @@ export const STitle = css`
 
 export const SLocation = css`
 	padding: 5px;
+	text-align: center;
 `;
 
 export const SDateRange = css`
