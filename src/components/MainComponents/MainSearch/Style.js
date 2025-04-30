@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 
 export const SLayout = css`
     display: flex;
@@ -8,7 +8,8 @@ export const SLayout = css`
     width: 100%;
     padding: 0 20%;
 
-    @media (max-width: 1000px) { // SRightContainer 위치 조정
+    @media (max-width: 1000px) {
+        // SRightContainer 위치 조정
         flex-direction: column;
     }
 `;
@@ -27,11 +28,12 @@ export const SRightContainer = css`
     flex: 1;
     display: flex;
     align-items: center;
-    
-    @media (max-width: 1100px) { // SRightContainer 위치 조정
+
+    @media (max-width: 1100px) {
+        // SRightContainer 위치 조정
         margin: 20px 0;
     }
-    
+
     & > div {
         display: flex;
         justify-content: center;
@@ -41,7 +43,8 @@ export const SRightContainer = css`
         width: 100%;
     }
 
-    h1 {    //문구
+    h1 {
+        //문구
         margin-bottom: 20px;
         font-size: 34px;
         line-height: 38px;
@@ -49,21 +52,80 @@ export const SRightContainer = css`
     }
 `;
 
+export const SRightBottomBox = css`
+    position: relative;
+    width: 100%;
+`;
+
 export const SStartBtn = css`
     display: flex;
-	justify-content: center;
-	align-items: center;
-	border-radius: 10px;
-	padding: 10px;
-	width: 30%;
-	min-width: 110px;
-	height: 100%;
-	font-size: 20px;
-	background-color: #6ec4d3;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px;
+    width: 30%;
+    min-width: 110px;
+    height: 100%;
+    font-size: 20px;
+    background-color: #6ec4d3;
     box-shadow: 2px 2px 5px #a7b5b9;
-	transition: all 0.2s ease;
+    transition: all 0.2s ease;
     color: white;
-	:hover {
-		transform: scale(0.95);
-	}
+    :hover {
+        transform: scale(0.95);
+    }
+`;
+
+export const STripDestinations = css`
+    position: absolute;
+    top: 45px;
+    left: 0;
+    z-index: 4;
+    width: 100%;
+    height: 250px;
+    background-color: white;
+    overflow: auto;
+
+    ::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: rgb(240, 240, 240);
+        border-radius: 1rem;
+    }
+
+    /* 스크롤바 thumb */
+    ::-webkit-scrollbar-thumb {
+        background-color: black;
+        border-radius: 1rem;
+    }
+`;
+
+export const STripDestinationBox = css`
+    display: flex;
+    align-items: center;
+    height: 50px;
+    cursor: pointer;
+
+    svg {
+        margin: 0 10px;
+    }
+
+    :hover {
+        background-color: rgba(110, 196, 211, 0.2);
+    }
+`;
+
+export const STripDestinationName = css`
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    font-size: 12px;
+    
+    span {
+        margin-bottom: 5px;
+        font-size: 16px;
+        font-weight: 500;
+    }
 `;

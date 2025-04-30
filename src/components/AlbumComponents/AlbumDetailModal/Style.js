@@ -1,13 +1,17 @@
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 // 폰트 링크 동적 추가
-const link = document.createElement('link');
-link.href = 'https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap';
-link.rel = 'stylesheet';
+const link = document.createElement("link");
+link.href =
+    "https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap";
+link.rel = "stylesheet";
 document.head.appendChild(link);
 
 export const backdrop = css`
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
@@ -19,13 +23,15 @@ export const modal = css`
     background: #fff;
     padding: 10px 15px;
     width: 400px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 `;
 
 export const closeBtn = css`
     display: flex;
     justify-content: right;
-    button { font-size: 1.2rem; }
+    button {
+        font-size: 1.2rem;
+    }
 `;
 
 export const SPhotoContainer = css`
@@ -41,39 +47,42 @@ export const SPhotoContainer = css`
     }
 `;
 
+export const SMemoContainer = css`
+    * {
+        font-family: "Nanum Pen Script", cursive !important;
+        font-weight: 400;
+        font-style: normal;
+    }
+`;
+
 export const SPhotoMemo = css`
     width: 100%;
     height: 70px;
     margin: 8px 0;
     font-size: 22px;
 
-    * {
-        overflow-y: auto;
-        font-family: "Nanum Pen Script", cursive !important;
-        font-weight: 400;
-        font-style: normal;
-    }
-
-    & > ::-webkit-scrollbar {
-        width: 4px; /* 세로 스크롤일 경우 */
-    }
-
-    & > ::-webkit-scrollbar-track {
-        background-color: #dbdbdb;
-        border-radius: 1rem;
-    }
-
-    /* 스크롤바 thumb */
-    & > ::-webkit-scrollbar-thumb {
-        background-color: black;
-        border-radius: 1rem;
-    }
-
-    textArea {
+    div, textarea {
         width: 100%;
-        height: 100%;
+        height: 65px;
         resize: none;
         font-size: 18px;
+        overflow-y: auto;
+        white-space: break-spaces;
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #dbdbdb;
+            border-radius: 1rem;
+        }
+
+        /* 스크롤바 thumb */
+        ::-webkit-scrollbar-thumb {
+            background-color: black;
+            border-radius: 1rem;
+        }
     }
 `;
 
@@ -94,8 +103,10 @@ export const deleteBtn = css`
     font-size: 19px;
     margin-right: 5px;
 
-    svg { padding-bottom: 2px; }
-    
+    svg {
+        padding-bottom: 2px;
+    }
+
     & path:hover {
         color: #da2a2a;
     }
@@ -124,5 +135,4 @@ export const SEditClickBtn = css`
         color: white;
         background-color: black;
     }
-
 `;
