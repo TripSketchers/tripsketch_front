@@ -47,56 +47,23 @@ export const SRightContainer = css`
         line-height: 38px;
         font-weight: 700;
     }
-
-    button {
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
-        border-radius: 2rem;
-        font-size: 1.1rem;
-        width: 30%;
-        padding: 6px;
-        font-weight: 500;
-        background-color: #dff2f6;
-        transition: all 0.2s ease;
-    }
-
-    button:hover {
-        transform: scale(0.95);
-    }
 `;
 
-export const SSearchBox = css`
+export const SStartBtn = css`
     display: flex;
-    align-items: center;
-    border: 1px solid #dbdbdb;
-    border-radius: 2rem;
-    padding: 0 5px 0 10px;
-    width: 100%;
-    height: 2.5rem;
-    box-shadow: 2px 2px 6px #666;
-    
-    input {
-        margin: 0 6px;
-        border: none;
-        flex: 1;
-        width: 70%;
-        height: 90%;
-        font-size: 16px;
-    }
-
-    input:focus {
-        outline: none;
-    }
-
-    button {
-        border-radius: 2rem;
-        width: 20%;
-        height: 80%;
-        font-size: 16px;
-        background-color: #dff2f6;
-        transition: all 0.2s ease;
-    }
-
-    /* button:hover {
-        transform: scale(0.95);
-    } */
+	justify-content: center;
+	align-items: center;
+	border-radius: 10px;
+	padding: 10px;
+	width: 30%;
+	min-width: 110px;
+	height: 100%;
+	font-size: 20px;
+	background-color: #6ec4d3;
+    box-shadow: 2px 2px 5px #a7b5b9;
+	transition: all 0.2s ease;
+    color: white;
+	:hover {
+		transform: scale(0.95);
+	}
 `;

@@ -18,8 +18,21 @@ export const STripContainer = css`
     padding: 10px 20px;
 `;
 
-export const STitleBox = css`
+export const SHeader = css`
     margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    a {
+        border-radius: 10px;
+        padding: 10px 15px;
+        color: white;
+        font-size: 16px;
+        background-color: rgb(0, 175, 206);
+    }
+`;
+
+export const STitleBox = css`
     border-bottom: 4px solid #5C86B3;
     padding: 10px 0;
     width: max-content;
