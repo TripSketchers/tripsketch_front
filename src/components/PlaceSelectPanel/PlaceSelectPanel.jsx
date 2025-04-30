@@ -12,7 +12,6 @@ import { getCategoryFromTypes } from "../../utils/CategoryUtils";
 
 function PlaceSelectPanel({ text, categories }) {
 	const [selectedCategory, setSelectedCategory] = useState(categories[0]);
-	const [query] = useState("부산 해운대");
 	const [selectedPlace, setSelectedPlace] = useState(null);
 	const [showModal, setShowModal] = useState(false);
 	const [searchKeyword, setSearchKeyword] = useState("");
@@ -39,12 +38,12 @@ function PlaceSelectPanel({ text, categories }) {
 		isLoading,
 		error,
 	} = useInfiniteQuery({
-		queryKey: ["places", query, selectedCategory, searchKeyword],
+		queryKey: ["places", selectedCategory, searchKeyword],
 		queryFn: async ({ pageParam = "" }) => {
 			const res = await instance.get("/places", {
 				params: {
 					type: categoryTypeMap[selectedCategory] || "",
-					keyword: searchKeyword || "",
+					keyword: searchKeyword || categoryTypeMap[selectedCategory],
 					pagetoken: pageParam, // ✅ pagetoken 보내기
 				},
 				headers: {
