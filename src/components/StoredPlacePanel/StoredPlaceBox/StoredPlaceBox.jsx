@@ -5,7 +5,6 @@ import fallbackImg from "../../../assets/fallbackImg.png";
 import { FaTrash } from "react-icons/fa6";
 import TimeInputEditor from "../../TimeInputEditer/TimeInputEditer";
 import { useTrip } from "../../TripCreate/TripContext";
-import { getCategoryFromTypes } from "../../../utils/CategoryUtils";
 
 function StoredPlaceBox({ index, type, place, onRemove }) {
 	const [isEditing, setIsEditing] = useState(false);
@@ -14,7 +13,6 @@ function StoredPlaceBox({ index, type, place, onRemove }) {
 	const { setFocusedPlace } = useTrip();
 
 	const formatTime = (num) => String(num).padStart(2, "0");
-	const category = getCategoryFromTypes(place.types);
 
 	return (
 		<div css={S.SLayout} onClick={() => setFocusedPlace(place)}>
@@ -40,7 +38,7 @@ function StoredPlaceBox({ index, type, place, onRemove }) {
 						<div css={S.SInfoContainer}>
 							<h2 css={S.STitle}>{place.displayName?.text || "이름 없음"}</h2>
 							<div>
-								<span css={S.SCategory(category)}>{category}</span>
+								<span css={S.SCategory(place.category)}>{place.category}</span>
 								<span css={S.SAddress}>{place.formattedAddress}</span>
 							</div>
 						</div>

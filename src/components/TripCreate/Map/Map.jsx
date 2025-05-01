@@ -1,7 +1,7 @@
 import { GoogleMap, Marker } from "@react-google-maps/api";
 import React, { useEffect, useRef } from "react";
 import { useTrip } from "../TripContext";
-import { getCategoryFromTypes, getColorByCategory } from "../../../utils/CategoryUtils";
+import { getColorByCategory } from "../../../utils/CategoryUtils";
 
 function Map({ selectedStep }) {
 	const mapRef = useRef(null);
@@ -91,7 +91,7 @@ function Map({ selectedStep }) {
 							}}
 							icon={createPinMarkerIcon(
 								idx + 1,
-								getColorByCategory(getCategoryFromTypes(place.types))
+								getColorByCategory(place.category)
 							)}
 							onClick={() => {
 								setPlaceModalInfo(place);
@@ -112,7 +112,7 @@ function Map({ selectedStep }) {
 								lng: place.location.longitude,
 							}}
 							icon={createBedMarkerIcon(
-								getColorByCategory(getCategoryFromTypes(place.types))
+								getColorByCategory(place.category)
 							)}
 							onClick={() => {
 								setPlaceModalInfo(place);

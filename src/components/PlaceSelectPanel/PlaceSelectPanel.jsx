@@ -8,7 +8,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { FaPlus } from "react-icons/fa";
 import AccommodationModal from "../AccommodationModal/AccommodationModal";
 import { useTrip } from "../TripCreate/TripContext";
-import { getCategoryFromTypes } from "../../utils/CategoryUtils";
 
 function PlaceSelectPanel({ text, categories }) {
 	const [selectedCategory, setSelectedCategory] = useState(categories[0]);
@@ -121,7 +120,7 @@ function PlaceSelectPanel({ text, categories }) {
 							return (
 								!selectedCategory || // ✅ 카테고리 선택 안 됐으면 무조건 통과
 								selectedCategory ===
-									getCategoryFromTypes(place.types)
+									place.category
 							);
 						})
 						.map((place, i) => (
