@@ -11,8 +11,8 @@ function TripDate({ showModal, setShowModal }) {
 	const {
 		dateRange,
 		setDateRange,
-		storedAccommodation,
-		setStoredAccommodation,
+		storedAccommodations,
+		setStoredAccommodations,
 	} = useTrip();
 
 	const tripDays =
@@ -30,12 +30,12 @@ function TripDate({ showModal, setShowModal }) {
 		}).map((day) => format(day, "yyyy-MM-dd"));
 
 		const filteredAccommodation = Object.fromEntries(
-			Object.entries(storedAccommodation).filter(([key]) =>
+			Object.entries(storedAccommodations).filter(([key]) =>
 				validDates.includes(key)
 			)
 		);
 
-		setStoredAccommodation(filteredAccommodation);
+		setStoredAccommodations(filteredAccommodation);
 		setDateRange({ startDate, endDate });
 		setShowModal(false);
 		console.log("선택한 기간:", startDate, endDate);
@@ -47,8 +47,8 @@ function TripDate({ showModal, setShowModal }) {
 				{tripDays.map((day, idx) => (
 					<TripDateBox
 						key={idx}
+						index={idx}
 						date={format(day, "MM/dd(eee)", { locale: ko })}
-						startTime="10:00"
 					/>
 				))}
 			</div>

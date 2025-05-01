@@ -12,8 +12,8 @@ function StoredPlacePanel({ text }) {
 		dateRange,
 		storedPlaces,
 		setStoredPlaces,
-		storedAccommodation,
-		setStoredAccommodation,
+		storedAccommodations,
+		setStoredAccommodations,
 	} = useTrip();
 
 	const stayDays =
@@ -34,7 +34,7 @@ function StoredPlacePanel({ text }) {
 						<span>
 							{text === "숙소"
 								? `${
-										Object.keys(storedAccommodation).length
+										Object.keys(storedAccommodations).length
 								  } / ${stayDays.length}`
 								: storedPlaces.length}
 						</span>
@@ -43,7 +43,7 @@ function StoredPlacePanel({ text }) {
 					<button
 						onClick={() => {
 							if (text === "숙소") {
-								setStoredAccommodation({});
+								setStoredAccommodations({});
 							} else {
 								setStoredPlaces([]);
 							}
@@ -62,7 +62,7 @@ function StoredPlacePanel({ text }) {
 									day,
 									"MM.dd"
 								)} ~ ${format(nextDay, "MM.dd")}`;
-								const place = storedAccommodation[dateStr];
+								const place = storedAccommodations[dateStr];
 
 								return (
 									<div key={dateStr}>
@@ -74,10 +74,10 @@ function StoredPlacePanel({ text }) {
 												place={place}
 												onRemove={() => {
 													const copy = {
-														...storedAccommodation,
+														...storedAccommodations,
 													};
 													delete copy[dateStr];
-													setStoredAccommodation(copy);
+													setStoredAccommodations(copy);
 												}}
 											/>
 										) : (

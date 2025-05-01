@@ -16,13 +16,14 @@ export const SLayout = css`
     }
 `;
 
-export const STitle = css`
-    display: flex;
+export const STitle = (isEditing) => css`
+    display: block;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
     font-size: 28px;
     font-weight: 600;
-    span {
-        margin-top: 6px;
-    }
+    padding-top: ${isEditing ? "0" : "6px"};
 `;
 
 export const SInput = css`

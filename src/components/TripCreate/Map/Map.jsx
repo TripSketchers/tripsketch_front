@@ -7,7 +7,7 @@ function Map({ selectedStep }) {
 	const mapRef = useRef(null);
 	const {
 		storedPlaces,
-		storedAccommodation,
+		storedAccommodations,
 		setPlaceModalInfo,
 		focusedPlace,
 		setFocusedPlace,
@@ -59,7 +59,7 @@ function Map({ selectedStep }) {
 		const places =
 			selectedStep === 2
 				? storedPlaces
-				: Object.values(storedAccommodation);
+				: Object.values(storedAccommodations);
 
 		if (!mapRef.current) return;
 
@@ -68,7 +68,7 @@ function Map({ selectedStep }) {
 
 		const { latitude, longitude } = targetPlace.location;
 		mapRef.current.panTo({ lat: latitude, lng: longitude });
-	}, [selectedStep, storedPlaces, storedAccommodation, focusedPlace]);
+	}, [selectedStep, storedPlaces, storedAccommodations, focusedPlace]);
 
 	return (
 		<GoogleMap
@@ -103,7 +103,7 @@ function Map({ selectedStep }) {
 			}
 
 			{selectedStep === 3 &&
-				Object.values(storedAccommodation).map((place) => (
+				Object.values(storedAccommodations).map((place) => (
 					place.location && (
 						<Marker
 							key={place.id}

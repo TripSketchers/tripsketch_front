@@ -25,7 +25,7 @@ function PlaceSelectPanel({ text, categories }) {
 		dateRange,
 		storedPlaces,
 		setStoredPlaces,
-		setStoredAccommodation,
+		setStoredAccommodations,
 		setFocusedPlace,
 	} = useTrip();
 
@@ -58,7 +58,7 @@ function PlaceSelectPanel({ text, categories }) {
 	});
 
 	const handleAccommodationConfirm = (selectedMap) => {
-		setStoredAccommodation((prev) => ({ ...prev, ...selectedMap }));
+		setStoredAccommodations((prev) => ({ ...prev, ...selectedMap }));
 		setShowModal(false);
 	};
 
