@@ -43,9 +43,6 @@ function MainSearch(props) {
         refetchOnWindowFocus: false,
     });
 
-    console.log(getTripDestinations?.data?.tripDestinations);
-    console.log(searchKeyword);
-
     const handleDestinationClick = (item) => {
         navigate(`/trip/create`, { state: item })
     }

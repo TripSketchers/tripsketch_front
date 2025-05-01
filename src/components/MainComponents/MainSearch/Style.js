@@ -43,8 +43,7 @@ export const SRightContainer = css`
         width: 100%;
     }
 
-    h1 {
-        //문구
+    h1 {    //문구
         margin-bottom: 20px;
         font-size: 34px;
         line-height: 38px;
@@ -54,13 +53,13 @@ export const SRightContainer = css`
 
 export const SRightBottomBox = css`
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
 `;
 
 export const SStartBtn = css`
-    display: flex;
-    justify-content: center;
-    align-items: center;
     border-radius: 10px;
     padding: 10px;
     width: 30%;
