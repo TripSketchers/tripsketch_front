@@ -10,29 +10,63 @@ import {
 import TransportModal from "../TransportModal/TransportModal";
 import { instance } from "../../../api/config/instance";
 import { useTrip } from "../TripContext";
+import { convertStoredAccommodationMapToArray } from "../../../utils/StoredAccommdationsUtils";
 
 function Sidebar({ selectedStep, setSelectedStep }) {
     const [showModal, setShowModal] = useState(false);
-    const { tripName, dateRange, storedPlaces, storedAccommodations } =
-        useTrip();
+    const {
+        tripName,
+        dateRange,
+        storedPlaces,
+        storedAccommodations,
+    } = useTrip();
 
     const handleSaveBtnOnClick = () => {
         setShowModal(true);
     };
+
     const handleTransportSelect = async (selectedTransport) => {
         try {
+            const mergedAccommodations = convertStoredAccommodationMapToArray(
+                storedAccommodations
+            );
+
             const reqData = {
                 trip: {
                     title: tripName,
                     startDate: dateRange.startDate,
                     endDate: dateRange.endDate,
-                    tripDestinationId: 101,
+                    tripDestinationId: 101, // 임시 고정값
                     transportType: selectedTransport,
                 },
-                storedPlaces: storedPlaces,
-                storedAccommodations: storedAccommodations,
+                storedPlaces: storedPlaces.map((place) => ({
+                    place: {
+                        googlePlaceId: place.id,
+                        name: place.displayName?.text,
+                        address: place.formattedAddress,
+                        latitude: place.location.latitude,
+                        longitude: place.location.longitude,
+                        category: place.category,
+                        rating: place.rating,
+                        photoReference: place.photos?.[0]?.name || "",
+                    },
+                    stayTime: place.stayTime ?? 120, // 기본값 2시간
+                })),
+                storedAccommodations: mergedAccommodations.map((item) => ({
+                    place: {
+                        googlePlaceId: item.place.id,
+                        name: item.place.displayName?.text,
+                        address: item.place.formattedAddress,
+                        latitude: item.place.location.latitude,
+                        longitude: item.place.location.longitude,
+                        category: item.place.category,
+                        rating: item.place.rating,
+                        photoReference: item.place.photos?.[0]?.name || "",
+                    },
+                    checkInDate: item.checkInDate,
+                    checkOutDate: item.checkOutDate,
+                })),
             };
-
             await instance.post("/trip", reqData);
             alert("여행이 생성되었습니다!");
         } catch (err) {
@@ -72,7 +106,7 @@ function Sidebar({ selectedStep, setSelectedStep }) {
                         <IoBedOutline />
                         <span className="step-label">
                             STEP 3<br />
-                            숙소 선택
+                            수소 선택
                         </span>
                     </div>
                 </div>

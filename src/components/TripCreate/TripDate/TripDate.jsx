@@ -38,7 +38,6 @@ function TripDate({ showModal, setShowModal }) {
 		setStoredAccommodations(filteredAccommodation);
 		setDateRange({ startDate, endDate });
 		setShowModal(false);
-		console.log("선택한 기간:", startDate, endDate);
 	};
 
 	return (
