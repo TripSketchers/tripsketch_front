@@ -8,7 +8,7 @@ function TransportModal({ onClose, onSelect }) {
     const [selected, setSelected] = useState(null);
 
     const handleConfirm = async () => {
-        if (selected) {
+        if (selected !== null) {
             onSelect(selected);
             onClose();
         }
@@ -22,15 +22,15 @@ function TransportModal({ onClose, onSelect }) {
             </span>
             <div css={S.optionList}>
                 <div
-                    css={S.option(selected === "대중교통")}
-                    onClick={() => setSelected("대중교통")}
+                    css={S.option(selected === 0)}
+                    onClick={() => setSelected(0)}
                 >
                     <FaBus css={S.icon} />
                     <span>대중교통</span>
                 </div>
                 <div
-                    css={S.option(selected === "자동차")}
-                    onClick={() => setSelected("자동차")}
+                    css={S.option(selected === 1)}
+                    onClick={() => setSelected(1)}
                 >
                     <FaCar css={S.icon} />
                     <span>자동차</span>
@@ -39,7 +39,7 @@ function TransportModal({ onClose, onSelect }) {
             <button
                 css={S.confirmBtn}
                 onClick={handleConfirm}
-                disabled={!selected}
+                disabled={selected === null}
             >
                 여행 생성
             </button>

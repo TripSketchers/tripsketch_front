@@ -11,15 +11,13 @@ import TransportModal from "../TransportModal/TransportModal";
 import { instance } from "../../../api/config/instance";
 import { useTrip } from "../TripContext";
 import { convertStoredAccommodationMapToArray } from "../../../utils/StoredAccommdationsUtils";
+import { useNavigate } from "react-router-dom";
 
 function Sidebar({ selectedStep, setSelectedStep }) {
+    const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
-    const {
-        tripName,
-        dateRange,
-        storedPlaces,
-        storedAccommodations,
-    } = useTrip();
+    const { tripName, dateRange, storedPlaces, storedAccommodations } =
+        useTrip();
 
     const handleSaveBtnOnClick = () => {
         setShowModal(true);
@@ -27,9 +25,8 @@ function Sidebar({ selectedStep, setSelectedStep }) {
 
     const handleTransportSelect = async (selectedTransport) => {
         try {
-            const mergedAccommodations = convertStoredAccommodationMapToArray(
-                storedAccommodations
-            );
+            const mergedAccommodations =
+                convertStoredAccommodationMapToArray(storedAccommodations);
 
             const reqData = {
                 trip: {
@@ -67,8 +64,13 @@ function Sidebar({ selectedStep, setSelectedStep }) {
                     checkOutDate: item.checkOutDate,
                 })),
             };
-            await instance.post("/trip", reqData);
+            await instance.post("/trip", reqData, {
+                headers: {
+                    Authorization: localStorage.getItem("accessToken"),
+                },
+            });
             alert("여행이 생성되었습니다!");
+            navigate("/account/mypage");
         } catch (err) {
             console.error(err);
             alert("여행 생성에 실패했습니다.");

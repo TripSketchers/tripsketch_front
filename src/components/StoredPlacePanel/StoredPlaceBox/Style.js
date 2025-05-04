@@ -37,7 +37,7 @@ export const SInfoContainer = (isPlace) => css`
     flex-direction: column;
     justify-content: space-between;
     margin: 0 5px 0 10px;
-    width: ${isPlace ? "70px" : "170px"};
+    width: ${isPlace ? "70px" : "150px"};
     height: 100%;
     span {
         line-height: 16px;
