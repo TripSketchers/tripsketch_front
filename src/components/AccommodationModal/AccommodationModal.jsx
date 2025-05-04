@@ -9,7 +9,7 @@ import fallbackImg from "../../assets/fallbackImg.png";
 import ModalLayout from "../ModalLayout/ModalLayout";
 
 function AccommodationModal({ onClose, onConfirm, dateRange, selectedPlace }) {
-	const { storedAccommodation } = useTrip();
+	const { storedAccommodations } = useTrip();
 
 	const stayDays = eachDayOfInterval({
 		start: dateRange.startDate,
@@ -20,8 +20,8 @@ function AccommodationModal({ onClose, onConfirm, dateRange, selectedPlace }) {
 		const initMap = {};
 		stayDays.forEach((day) => {
 			const dateStr = format(day, "yyyy-MM-dd");
-			if (storedAccommodation[dateStr]) {
-				initMap[dateStr] = storedAccommodation[dateStr];
+			if (storedAccommodations[dateStr]) {
+				initMap[dateStr] = storedAccommodations[dateStr];
 			}
 		});
 		return initMap;

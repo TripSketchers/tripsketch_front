@@ -1,19 +1,3 @@
-export const getCategoryFromTypes = (types = []) => {
-	const typeToCategoryMap = {
-		tourist_attraction: "명소",
-		restaurant: "맛집",
-		cafe: "카페",
-		lodging: "숙소",
-	};
-
-	for (const type of types) {
-		if (typeToCategoryMap[type]) {
-			return typeToCategoryMap[type];
-		}
-	}
-	return "기타";
-};
-
 export const getColorByCategory = (category) => {
 	switch (category) {
 		case "명소":

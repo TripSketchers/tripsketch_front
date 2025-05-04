@@ -4,14 +4,12 @@ import * as S from "./Style";
 import { useTrip } from "../TripCreate/TripContext";
 import { FaStar } from "react-icons/fa";
 import fallbackImg from "../../assets/fallbackImg.png";
-import { getCategoryFromTypes } from "../../utils/CategoryUtils";
 import ModalLayout from "../ModalLayout/ModalLayout";
 
 function PlaceDetailModal() {
 	const { placeModalInfo, setPlaceModalInfo } = useTrip();
 
 	if (!placeModalInfo) return null;
-	const category = getCategoryFromTypes(placeModalInfo.types);
 
 	return (
 		<ModalLayout onClose={() => setPlaceModalInfo(null)}>
@@ -30,8 +28,8 @@ function PlaceDetailModal() {
 						alt="장소 이미지"
 						css={S.SImage}
 					/>
-					<p css={S.SCategory(category)}>
-						📌 {category || "카테고리 없음"}
+					<p css={S.SCategory(placeModalInfo.category)}>
+						📌 {placeModalInfo.category || "카테고리 없음"}
 					</p>
 					<p css={S.SAddress}>
 						주소 : {placeModalInfo.formattedAddress || "주소 정보 없음"}

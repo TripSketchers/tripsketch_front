@@ -30,7 +30,7 @@ function MainSearch(props) {
 						스케치 해보세요
 					</h1>
 					{principalState?.data?.data ? (
-						<SearchInput placeholder={"여행지 검색"} setIsShow={setIsShow}/>
+						<SearchInput placeholder={"여행지 검색"} />
 					) : (
 						<button css={S.SStartBtn} onClick={handleStartBtn}>
 							시작하기

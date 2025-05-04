@@ -1,13 +1,13 @@
 import { GoogleMap, Marker } from "@react-google-maps/api";
 import React, { useEffect, useRef } from "react";
 import { useTrip } from "../TripContext";
-import { getCategoryFromTypes, getColorByCategory } from "../../../utils/CategoryUtils";
+import { getColorByCategory } from "../../../utils/CategoryUtils";
 
 function Map({ selectedStep }) {
 	const mapRef = useRef(null);
 	const {
 		storedPlaces,
-		storedAccommodation,
+		storedAccommodations,
 		setPlaceModalInfo,
 		focusedPlace,
 		setFocusedPlace,
@@ -59,7 +59,7 @@ function Map({ selectedStep }) {
 		const places =
 			selectedStep === 2
 				? storedPlaces
-				: Object.values(storedAccommodation);
+				: Object.values(storedAccommodations);
 
 		if (!mapRef.current) return;
 
@@ -68,7 +68,7 @@ function Map({ selectedStep }) {
 
 		const { latitude, longitude } = targetPlace.location;
 		mapRef.current.panTo({ lat: latitude, lng: longitude });
-	}, [selectedStep, storedPlaces, storedAccommodation, focusedPlace]);
+	}, [selectedStep, storedPlaces, storedAccommodations, focusedPlace]);
 
 	return (
 		<GoogleMap
@@ -91,7 +91,7 @@ function Map({ selectedStep }) {
 							}}
 							icon={createPinMarkerIcon(
 								idx + 1,
-								getColorByCategory(getCategoryFromTypes(place.types))
+								getColorByCategory(place.category)
 							)}
 							onClick={() => {
 								setPlaceModalInfo(place);
@@ -103,7 +103,7 @@ function Map({ selectedStep }) {
 			}
 
 			{selectedStep === 3 &&
-				Object.values(storedAccommodation).map((place) => (
+				Object.values(storedAccommodations).map((place) => (
 					place.location && (
 						<Marker
 							key={place.id}
@@ -112,7 +112,7 @@ function Map({ selectedStep }) {
 								lng: place.location.longitude,
 							}}
 							icon={createBedMarkerIcon(
-								getColorByCategory(getCategoryFromTypes(place.types))
+								getColorByCategory(place.category)
 							)}
 							onClick={() => {
 								setPlaceModalInfo(place);
