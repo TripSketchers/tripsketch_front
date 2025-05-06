@@ -11,6 +11,7 @@ import ConfirmModal from "../../ConfirmModal/ConfirmModal";
 
 function AlbumDetailModal({ photo, onClose }) {
     const { tripId } = useParams();
+    const queryClient = useQueryClient();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [memo, setMemo] = useState(photo.memo); // 메모 상태
     const [isEditing, setIsEditing] = useState(false); // 편집 모드
@@ -37,6 +38,7 @@ function AlbumDetailModal({ photo, onClose }) {
             alert(`사진 ${photo.photoId} 삭제 완료`);
             setIsEditing(false); // 편집 모드 종료
             onClose();
+            queryClient.invalidateQueries(["getAlbum", tripId]);
         } catch (error) {
             console.log(error);
         }

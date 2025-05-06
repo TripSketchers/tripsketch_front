@@ -50,6 +50,11 @@ function ScheduleTable({ selectedPlaceId, setSelectedPlaceId }) {
         setSelectedPlaceId(id);
     };
 
+    
+    if (getTripSchedule.isLoading) {
+        return <div>일정을 불러오는 중입니다...</div>;
+    }
+
     return (
         <div css={S.STripTable}>
             {/* 날짜 목록 (가로 스크롤 가능) */}

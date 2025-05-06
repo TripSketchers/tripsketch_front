@@ -11,7 +11,6 @@ import { instance } from '../../api/config/instance';
 
 function TripAlbum( props ) {
     const { tripId } = useParams();
-
     const [ viewType, setViewType ] = useState(0);     
     
     const handleRadioChange = (event) => {
@@ -37,6 +36,14 @@ function TripAlbum( props ) {
         retry: 0,
         refetchOnWindowFocus: false
     });
+
+    // if (isLoading) {
+    //     return <div>로딩 중...</div>;
+    // }
+
+    // if (error) {
+    //     return <div>앨범 데이터를 불러오는 데 실패했습니다.</div>;
+    // }
 
     console.log(getAlbum.data);
 

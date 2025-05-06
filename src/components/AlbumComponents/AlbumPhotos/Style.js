@@ -4,6 +4,13 @@ export const SAlbumContainer = css`
     margin-bottom: 15px;
 `;
 
+export const SSelectMode = css`
+    position: relative;
+    display: flex;
+    align-items: center;
+    button {font-size: 16px;}
+`;
+
 export const SScheduleBox = css`
     span {
         font-weight: 600;
@@ -35,4 +42,12 @@ export const SAlbumImg = css`
         height: 100%;
         object-fit: cover;
     }
+`;
+
+export const SImgCheckBox = css`
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 15px;
+    height: 15px;
 `;

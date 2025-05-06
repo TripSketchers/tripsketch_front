@@ -15,7 +15,7 @@ function TripAlbumUpload() {
     const { tripId } = useParams();
 
     const navigate = useNavigate();
-    const [selectedPlaceId, setSelectedPlaceId] = useState(null);
+    const [selectedPlaceId, setSelectedPlaceId] = useState([]);
     const [memos, setMemos] = useState({});
 
     const handleUploadBtn = async () => {
