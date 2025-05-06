@@ -33,7 +33,7 @@ function Sidebar({ selectedStep, setSelectedStep }) {
                     title: tripName,
                     startDate: dateRange.startDate,
                     endDate: dateRange.endDate,
-                    tripDestinationId: 101, // 임시 고정값
+                    tripDestinationId: 5, // 임시 고정값
                     transportType: selectedTransport,
                 },
                 storedPlaces: storedPlaces.map((place) => ({
