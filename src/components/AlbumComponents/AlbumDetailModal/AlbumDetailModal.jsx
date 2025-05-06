@@ -73,13 +73,13 @@ function AlbumDetailModal({ photo, onClose }) {
                 <div css={S.SPhotoContainer}>
                     <img src={photo.photoUrl} draggable="false" />
                 </div>
-                <div>
+                <div css={S.SMemoContainer}>
                     <div css={S.SPhotoMemo}>
                         {!isEditing ? (
                             <div>{memo}</div>
                         ) : (
                             <textarea
-                            autoFocus
+                            	autoFocus
                                 value={memo}
                                 onChange={handleMemoChange}
                                 placeholder="사진에 대한 추억을 적어보세요!"
