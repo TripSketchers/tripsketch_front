@@ -7,6 +7,8 @@ function Navbar() {
 	const { tripId } = useParams();
 	const location = useLocation();
 	const currentPath = location.pathname;
+
+	if (!tripId) return null;
     
 	return (
 		<div css={S.SNav}>

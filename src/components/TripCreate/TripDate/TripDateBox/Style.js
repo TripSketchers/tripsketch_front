@@ -13,32 +13,19 @@ export const SLayout = css`
 
 export const SContainer = css`
 	display: flex;
-	flex-direction: column;
+	align-items: center;
 	justify-content: space-between;
+	width: 100%;
 	height: 40px;
 `;
 
 export const SLabel = css`
-	font-size: 14px;
+	font-size: 16px;
 	color: #888;
 `;
 
 export const SValue = css`
-	font-size: 16px;
+	font-size: 18px;
 	font-weight: 500;
 	color: #333;
-`;
-
-export const STimeInput = css`
-	width: 90px;
-	
-	font-size: 16px;
-	border: none;
-	outline: none;
-	line-height: 16px;
-
-	&::-webkit-calendar-picker-indicator {
-		display: none;
-		-webkit-appearance: none;
-	}
 `;

@@ -3,12 +3,11 @@ import React, { useState } from "react";
 import * as S from "./Style";
 import { FaCalendar } from "react-icons/fa";
 import { differenceInCalendarDays, format } from "date-fns";
-import { useTrip } from "../TripContext"; // ✅ Context 불러오기
+import { useTrip } from "../TripContext";
 
 function Header({ selectedStep, onOpenModal }) {
-	const { dateRange } = useTrip(); // ✅ dateRange를 Context에서 가져오기
+	const { dateRange, tripName, setTripName } = useTrip();
 	const [isEditing, setIsEditing] = useState(false);
-	const [tripName, setTripName] = useState("여행 이름");
 
 	const handleNameClick = () => {
 		setIsEditing(true);
@@ -28,7 +27,7 @@ function Header({ selectedStep, onOpenModal }) {
 
 	return (
 		<div css={S.SLayout}>
-			<div css={S.STitle} onClick={handleNameClick}>
+			<div css={S.STitle(isEditing)} onClick={handleNameClick}>
 				{isEditing ? (
 					<input
 						type="text"

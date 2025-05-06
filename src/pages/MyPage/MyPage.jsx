@@ -24,10 +24,6 @@ function MyPage() {
 		refetchOnWindowFocus: false,
 	});
 
-	useEffect(() => {
-		getTripsQuery.refetch();
-	}, []);
-
 	if (getTripsQuery.isLoading || !getTripsQuery.data?.data?.tripList)
 		return <div>로딩 중...</div>;
 
