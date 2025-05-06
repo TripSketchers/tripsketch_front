@@ -5,8 +5,9 @@ import { getColorByCategory } from "../../../utils/CategoryUtils";
 
 function Map({ selectedStep }) {
 	const { isLoaded } = useJsApiLoader({
-		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
 		libraries: ["places"],
+		language: "ko",
 	});
 
 	const mapRef = useRef(null);
