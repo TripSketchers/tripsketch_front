@@ -3,10 +3,12 @@ import React, { useEffect, useRef } from "react";
 import { useTrip } from "../TripContext";
 import { getColorByCategory } from "../../../utils/CategoryUtils";
 
+const GOOGLE_MAP_LIBRARIES = ["places"];
+
 function Map({ selectedStep }) {
 	const { isLoaded } = useJsApiLoader({
 		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
-		libraries: ["places"],
+		libraries: GOOGLE_MAP_LIBRARIES,
 		language: "ko",
 	});
 
