@@ -7,29 +7,30 @@ import DropZone from "../DropZone/DropZone";
 
 const MORNING_BOUNDARY = 360; // 새벽 6시 (6 * 60)
 
-// 일정 분할 함수 (새벽 6시 전후로 나누는 로직)
 function splitSchedule(schedule) {
     const [sh, sm] = schedule.start_time.split(":").map(Number);
     const [eh, em] = schedule.end_time.split(":").map(Number);
     const startTotal = sh * 60 + sm;
     const endTotal = eh * 60 + em;
-
     const prevDate = format(subDays(new Date(schedule.date), 1), "yyyy.MM.dd");
 
-    // 새벽 6시 경계에 걸칠 때
+    const commonViewTimes = {
+        view_start_time: schedule.view_start_time || schedule.start_time,
+        view_end_time: schedule.view_end_time || schedule.end_time,
+    };
+
     if (startTotal < MORNING_BOUNDARY && endTotal > MORNING_BOUNDARY) {
         return [
-            { ...schedule, date: prevDate, end_time: "06:00:00", view_start_time: schedule.start_time, view_end_time: schedule.end_time, is_split: true },
-            { ...schedule, start_time: "06:00:00", view_start_time: schedule.start_time, view_end_time: schedule.end_time, is_split: true },
+            { ...schedule, date: prevDate, end_time: "06:00:00", is_split: true, ...commonViewTimes },
+            { ...schedule, start_time: "06:00:00", is_split: true, ...commonViewTimes },
         ];
     }
 
-    // 새벽 6시 이전에 종료할 때
     if (endTotal <= MORNING_BOUNDARY) {
-        return [{ ...schedule, date: prevDate, view_start_time: schedule.start_time, view_end_time: schedule.end_time, is_split: true }];
+        return [{ ...schedule, date: prevDate, is_split: true, ...commonViewTimes }];
     }
 
-    return [schedule];
+    return [{ ...schedule, ...commonViewTimes }];
 }
 
 function PlanTable() {
@@ -38,11 +39,14 @@ function PlanTable() {
         { trip_schedule_id: "sch1", place_store_id: 101, start_time: "07:30:00", end_time: "08:50:00", stay_time: 80, travel_time: 10, is_locked: 1, date: "2025.04.25", label: "조식" },
         { trip_schedule_id: "sch2", place_store_id: 102, start_time: "12:00:00", end_time: "14:00:00", stay_time: 120, travel_time: 5, is_locked: 0, date: "2025.04.25", label: "돼지국밥" },
         { trip_schedule_id: "sch3", place_store_id: 103, start_time: "13:10:00", end_time: "14:10:00", stay_time: 60, travel_time: null, is_locked: 0, date: "2025.04.26", label: "광안리 해수욕장" },
-        { trip_schedule_id: "sch4", place_store_id: 103, start_time: "09:50:00", end_time: "10:00:00", stay_time: 10, travel_time: null, is_locked: 0, date: "2025.04.26", label: "44444444444444444444444" },
+        { trip_schedule_id: "sch4", place_store_id: 103, start_time: "09:50:00", end_time: "10:00:00", stay_time: 10, travel_time: null, is_locked: 0, date: "2025.04.27", label: "44444444444444444444444" },
         { trip_schedule_id: "sch5", place_store_id: 103, start_time: "04:00:00", end_time: "08:00:00", stay_time: 240, travel_time: null, is_locked: 0, date: "2025.04.26", label: "55555555555555555555" },
     ]);
 
     const dates = ["2025.04.25", "2025.04.26", "2025.04.27"];
+    // ⏰ 시간 라벨 생성 (6시~24시, 1시~5시)
+    const hours = [...Array.from({ length: 19 }, (_, i) => i + 6), ...Array.from({ length: 5 }, (_, i) => i + 1)];
+    const formatHour = (h) => `${(h <= 24 ? h : h % 24).toString().padStart(2, "0")}:00`;
 
     // 🖱 드롭 이벤트 처리
     const handleDrop = (schedule, dropDate, dropStartTime) => {
@@ -51,26 +55,29 @@ function PlanTable() {
         const startDate = new Date(2025, 0, 1, h, m);
         const endDate = new Date(startDate.getTime() + duration * 60000);
         const newEnd = endDate.toTimeString().slice(0, 8);
-
+    
         const dropStartMinutes = h * 60 + m;
         const dropEndMinutes = dropStartMinutes + duration;
         const prevDate = format(subDays(new Date(dropDate), 1), "yyyy.MM.dd");
-
+    
         const updatedSchedule = {
             ...schedule,
             start_time: dropStartTime,
             end_time: newEnd,
-            view_start_time: dropStartTime,
-            view_end_time: newEnd,
             stay_time: duration,
+            view_start_time: schedule.view_start_time || dropStartTime,
+            view_end_time: schedule.view_end_time || newEnd,
         };
-
+    
         if (dropStartMinutes < MORNING_BOUNDARY && dropEndMinutes > MORNING_BOUNDARY) {
             const splitSchedules = [
                 { ...updatedSchedule, date: prevDate, end_time: "06:00:00", is_split: true },
                 { ...updatedSchedule, date: dropDate, start_time: "06:00:00", is_split: true },
             ];
-            setSchedules((prev) => [...prev.filter((s) => s.trip_schedule_id !== schedule.trip_schedule_id), ...splitSchedules]);
+            setSchedules((prev) => [
+                ...prev.filter((s) => s.trip_schedule_id !== schedule.trip_schedule_id),
+                ...splitSchedules,
+            ]);
         } else {
             const targetDate = dropEndMinutes <= MORNING_BOUNDARY ? prevDate : dropDate;
             setSchedules((prev) =>
@@ -82,10 +89,7 @@ function PlanTable() {
             );
         }
     };
-
-    // ⏰ 시간 라벨 생성 (6시~24시, 1시~5시)
-    const hours = [...Array.from({ length: 19 }, (_, i) => i + 6), ...Array.from({ length: 5 }, (_, i) => i + 1)];
-    const formatHour = (h) => `${(h <= 24 ? h : h % 24).toString().padStart(2, "0")}:00`;
+    
 
     return (
         <div css={S.SWrapper}>

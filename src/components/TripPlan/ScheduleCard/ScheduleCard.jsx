@@ -21,8 +21,6 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
 	const [stayHour, setStayHour] = useState(Math.floor(stay_time / 60));
 	const [stayMinute, setStayMinute] = useState(stay_time % 60);
 
-	const editorRef = useRef(null);
-
 	// 카드 위치 계산 (6시 기준 시작, 새벽 보정)
 	const [h, m] = start_time.split(":").map(Number);
 	let totalMinutes = h * 60 + m;
@@ -94,14 +92,16 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
 				{compactView ? (
 					<div css={S.SCompactText}>
 						<span>
-							{start_time.slice(0, 5)} - {end_time.slice(0, 5)}
+							{schedule.view_start_time.slice(0, 5)} -{" "}
+							{schedule.view_end_time.slice(0, 5)}
 						</span>
 						{label}
 					</div>
 				) : (
 					<>
 						<div css={S.SCardTime}>
-							{start_time.slice(0, 5)} - {end_time.slice(0, 5)}
+							{schedule.view_start_time.slice(0, 5)} -{" "}
+							{schedule.view_end_time.slice(0, 5)}
 							<span>
 								{" "}
 								({Math.floor(stay_time / 60)}시간{" "}
