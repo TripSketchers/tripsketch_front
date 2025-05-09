@@ -4,7 +4,7 @@ import * as S from "./Style";
 import fallbackImg from "../../../assets/fallbackImg.png";
 import { FaTrash } from "react-icons/fa6";
 import TimeInputEditor from "../../TimeInputEditer/TimeInputEditer";
-import { useTrip } from "../../TripCreate/TripContext";
+import { useTrip } from "../../Routes/TripContext";
 
 function StoredPlaceBox({ index, type, place, onRemove }) {
     const [isEditing, setIsEditing] = useState(false);

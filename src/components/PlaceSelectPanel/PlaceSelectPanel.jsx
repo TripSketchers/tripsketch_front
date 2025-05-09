@@ -7,7 +7,7 @@ import { instance } from "../../api/config/instance";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { FaPlus } from "react-icons/fa";
 import AccommodationModal from "../AccommodationModal/AccommodationModal";
-import { useTrip } from "../TripCreate/TripContext";
+import { useTrip } from "../Routes/TripContext";
 
 function PlaceSelectPanel({ text, categories }) {
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);

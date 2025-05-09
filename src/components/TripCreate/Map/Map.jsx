@@ -1,6 +1,6 @@
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import React, { useEffect, useRef } from "react";
-import { useTrip } from "../TripContext";
+import { useTrip } from "../../Routes/TripContext";
 import { getColorByCategory } from "../../../utils/CategoryUtils";
 
 const GOOGLE_MAP_LIBRARIES = ["places"];

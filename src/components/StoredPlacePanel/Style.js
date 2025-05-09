@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 export const SLayout = css`
 	display: flex;
 	flex-direction: column;
-	width: 50%;
+	min-width: 300px;
 	height: 100%;
 	h1 {
 		font-size: 18px;
@@ -17,6 +17,25 @@ export const SContainer = css`
 	padding: 10px;
 	flex: 1;
 	height: 100%;
+`;
+
+export const STitleBox = css`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 5px;
+		border-radius: 8px;
+		padding: 4px 8px;
+		background-color:rgb(87, 87, 87);
+		color: white;
+		* {
+			color: white;
+		}
+	}
 `;
 
 export const SHeader = css`

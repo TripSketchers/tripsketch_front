@@ -4,7 +4,7 @@ import * as S from "./Style";
 import { addDays, eachDayOfInterval, format } from "date-fns";
 import { FaPlus } from "react-icons/fa6";
 import ReactDOM from "react-dom";
-import { useTrip } from "../TripCreate/TripContext";
+import { useTrip } from "../Routes/TripContext";
 import fallbackImg from "../../assets/fallbackImg.png";
 import ModalLayout from "../ModalLayout/ModalLayout";
 

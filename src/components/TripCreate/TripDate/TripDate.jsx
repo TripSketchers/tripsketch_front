@@ -5,7 +5,7 @@ import { eachDayOfInterval, format, addDays } from "date-fns";
 import { ko } from "date-fns/locale";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import { useTrip } from "../TripContext";
+import { useTrip } from "../../Routes/TripContext";
 
 function TripDate({ showModal, setShowModal }) {
 	const {

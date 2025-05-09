@@ -5,7 +5,7 @@ import fallbackImg from "../../../assets/fallbackImg.png";
 import { FaStar } from "react-icons/fa";
 import { FaPlus, FaCheck } from "react-icons/fa6";
 import { instance } from "../../../api/config/instance";
-import { useTrip } from "../../TripCreate/TripContext";
+import { useTrip } from "../../Routes/TripContext";
 
 function PlaceBox({ place, onToggle, isAdded }) {
 	const imgRef = useRef();

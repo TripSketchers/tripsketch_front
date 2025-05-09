@@ -9,7 +9,7 @@ import {
 } from "react-icons/io5";
 import TransportModal from "../TransportModal/TransportModal";
 import { instance } from "../../../api/config/instance";
-import { useTrip } from "../TripContext";
+import { useTrip } from "../../Routes/TripContext";
 import { convertStoredAccommodationMapToArray } from "../../../utils/StoredAccommdationsUtils";
 import { useNavigate } from "react-router-dom";
 
