@@ -6,6 +6,7 @@ export const SDayColumn = css`
 	min-width: 200px;
 	background-color: #f8f8f8;
 	border-left: 1px solid #ccc;
+    flex-grow: 1;
 `;
 
 export const SDayHeader = css`
