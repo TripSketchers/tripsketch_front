@@ -1,20 +1,22 @@
 import React, { useState } from "react";
-import { addDays, subDays, format } from "date-fns";
+import { subDays, format } from "date-fns";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import ScheduleCard from "../ScheduleCard/ScheduleCard";
 import DropZone from "../DropZone/DropZone";
 
-const MORNING_BOUNDARY = 360; // 새벽 6시 기준 (분 단위)
+const MORNING_BOUNDARY = 360; // 새벽 6시 (6 * 60)
 
-// 일정 분할 (새벽 6시 전후)
+// 일정 분할 함수 (새벽 6시 전후로 나누는 로직)
 function splitSchedule(schedule) {
     const [sh, sm] = schedule.start_time.split(":").map(Number);
     const [eh, em] = schedule.end_time.split(":").map(Number);
     const startTotal = sh * 60 + sm;
     const endTotal = eh * 60 + em;
+
     const prevDate = format(subDays(new Date(schedule.date), 1), "yyyy.MM.dd");
 
+    // 새벽 6시 경계에 걸칠 때
     if (startTotal < MORNING_BOUNDARY && endTotal > MORNING_BOUNDARY) {
         return [
             { ...schedule, date: prevDate, end_time: "06:00:00", view_start_time: schedule.start_time, view_end_time: schedule.end_time, is_split: true },
@@ -22,6 +24,7 @@ function splitSchedule(schedule) {
         ];
     }
 
+    // 새벽 6시 이전에 종료할 때
     if (endTotal <= MORNING_BOUNDARY) {
         return [{ ...schedule, date: prevDate, view_start_time: schedule.start_time, view_end_time: schedule.end_time, is_split: true }];
     }
@@ -31,6 +34,7 @@ function splitSchedule(schedule) {
 
 function PlanTable() {
     const [schedules, setSchedules] = useState([
+        // 🗂 초기 스케줄 데이터 (예시용)
         { trip_schedule_id: "sch1", place_store_id: 101, start_time: "07:30:00", end_time: "08:50:00", stay_time: 80, travel_time: 10, is_locked: 1, date: "2025.04.25", label: "조식" },
         { trip_schedule_id: "sch2", place_store_id: 102, start_time: "12:00:00", end_time: "14:00:00", stay_time: 120, travel_time: 5, is_locked: 0, date: "2025.04.25", label: "돼지국밥" },
         { trip_schedule_id: "sch3", place_store_id: 103, start_time: "13:10:00", end_time: "14:10:00", stay_time: 60, travel_time: null, is_locked: 0, date: "2025.04.26", label: "광안리 해수욕장" },
@@ -40,25 +44,7 @@ function PlanTable() {
 
     const dates = ["2025.04.25", "2025.04.26", "2025.04.27"];
 
-    // 🔧 일정 잠금/해제 처리
-    const toggleLock = (id) => {
-        setSchedules((prev) =>
-            prev.map((sch) =>
-                sch.trip_schedule_id === id ? { ...sch, is_locked: sch.is_locked ? 0 : 1 } : sch
-            )
-        );
-    };
-
-    // 🔧 일정 업데이트 처리
-    const updateSchedule = (id, updates) => {
-        setSchedules((prev) =>
-            prev.map((item) =>
-                item.trip_schedule_id === id ? { ...item, ...updates } : item
-            )
-        );
-    };
-
-    // 📦 드롭 이벤트 처리
+    // 🖱 드롭 이벤트 처리
     const handleDrop = (schedule, dropDate, dropStartTime) => {
         const duration = schedule.stay_time;
         const [h, m] = dropStartTime.split(":").map(Number);
@@ -97,7 +83,7 @@ function PlanTable() {
         }
     };
 
-    // ⏰ 시간 라벨 생성
+    // ⏰ 시간 라벨 생성 (6시~24시, 1시~5시)
     const hours = [...Array.from({ length: 19 }, (_, i) => i + 6), ...Array.from({ length: 5 }, (_, i) => i + 1)];
     const formatHour = (h) => `${(h <= 24 ? h : h % 24).toString().padStart(2, "0")}:00`;
 
@@ -124,8 +110,20 @@ function PlanTable() {
                                     <ScheduleCard
                                         key={`${s.trip_schedule_id}_${s.start_time}_${i}`}
                                         schedule={s}
-                                        onToggleLock={toggleLock}
-                                        onUpdate={updateSchedule}
+                                        onToggleLock={(id) => {
+                                            setSchedules((prev) =>
+                                                prev.map((sch) =>
+                                                    sch.trip_schedule_id === id ? { ...sch, is_locked: sch.is_locked ? 0 : 1 } : sch
+                                                )
+                                            );
+                                        }}
+                                        onUpdate={(id, updates) => {
+                                            setSchedules((prev) =>
+                                                prev.map((item) =>
+                                                    item.trip_schedule_id === id ? { ...item, ...updates } : item
+                                                )
+                                            );
+                                        }}
                                     />
                                 ))}
                             </DropZone>
