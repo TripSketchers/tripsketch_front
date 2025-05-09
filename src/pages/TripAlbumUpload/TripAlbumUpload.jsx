@@ -30,7 +30,7 @@ function TripAlbumUpload() {
             const uploadPromises = photos.map(async (photo) => {
                 const storageRef = ref(
                     storage,
-                    `tripsketch/trip/${tripId}/albums/${selectedPlaceId}/${photo.id}.jpg`
+                    `tripsketch/trip-${tripId}/album-${selectedPlaceId}/${photo.id}.jpg`
                 );
                 await uploadBytes(storageRef, photo.file);
                 const downloadUrl = await getDownloadURL(storageRef);
@@ -52,7 +52,6 @@ function TripAlbumUpload() {
                 tripScheduleId: selectedPlaceId,
                 photos: uploadedPhotos
             }
-            console.log(album);
             // 이제 DB에 메타데이터 저장
             await instance.post(`/trips/${tripId}/album`, album, option);
             await clearPhotos(); // 업로드 완료 후 초기화

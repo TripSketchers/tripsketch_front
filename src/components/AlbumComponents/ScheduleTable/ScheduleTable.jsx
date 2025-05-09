@@ -49,7 +49,6 @@ function ScheduleTable({ selectedPlaceId, setSelectedPlaceId }) {
     const handlePlaceClick = (id) => {
         setSelectedPlaceId(id);
     };
-
     
     if (getTripSchedule.isLoading) {
         return <div>일정을 불러오는 중입니다...</div>;
@@ -77,7 +76,7 @@ function ScheduleTable({ selectedPlaceId, setSelectedPlaceId }) {
                 {/* 장소 목록 (세로 스크롤 가능) */}
                 <div className="title">장소</div>
                 <ul css={S.SScroll}>
-                    {selectedPlaces.map((item) => (
+                    {selectedPlaces?.map((item) => (
                         <li
                             key={item.tripScheduleId}
                             css={S.SSelectSchedule( item.tripScheduleId === selectedPlaceId)}

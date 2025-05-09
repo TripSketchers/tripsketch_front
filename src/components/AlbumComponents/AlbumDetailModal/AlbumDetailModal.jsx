@@ -90,7 +90,7 @@ function AlbumDetailModal({ photo, onClose }) {
                     </div>
                     <div css={S.SEditBox}>
                         <span>
-                            {photo.date} {photo.place}
+                            {photo.date} {photo.placeName}
                         </span>
                         {!isEditing ? (
                             <div>

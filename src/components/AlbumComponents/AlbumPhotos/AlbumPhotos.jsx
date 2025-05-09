@@ -7,37 +7,18 @@ import { instance } from "../../../api/config/instance";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { FaTrash } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
+import PhotoBox from "./PhotoBox/PhotoBox";
 
-function AlbumPhotos({ albums, startDate }) {
+function AlbumPhotos({ albums }) {
     const { tripId } = useParams();
     const queryClient = useQueryClient();
     const observerRef = useRef({});
     const [visibleAlbums, setVisibleAlbums] = useState(new Set());
 
-    const [selectedPhoto, setSelectedPhoto] = useState(null);
-
+    // 선택 삭제에 사용
     const [selectMode, setSelectMode] = useState(false);
+    const [isAllChecked, setIsAllChecked] = useState(false);
     const [checkedPhoto, setCheckedPhoto] = useState(new Set());
-
-    const handlePhotoClick = (photo, album) => {
-        setSelectedPhoto({
-            ...photo,
-            date: album.date,
-            placeName: album.placeName,
-        });
-    };
-
-    // 여기서 n일차 가공
-    const sortedAlbums = [...albums].map((item) => {
-        const daysDiff = differenceInDays(
-            new Date(item.date),
-            new Date(startDate)
-        );
-        return {
-            ...item,
-            dayDiff: `${daysDiff + 1}일차`,
-        };
-    });
 
     useEffect(() => {
         if (albums.length === 0) return;
@@ -95,27 +76,12 @@ function AlbumPhotos({ albums, startDate }) {
                     `/trips/album/${album.albumId}/photos`,
                     options
                 );
-                return response.data.photos;
+                return response.data;
             },
             enabled: visibleAlbums.has(String(album.albumId)), // lazy load: viewport에 들어왔을 때만 실행
             staleTime: Infinity,
         })),
     });
-
-    const handleCheckboxChange = (photoId, albumId) => {
-        setCheckedPhoto((prev) => {
-            const newSet = new Set(prev);
-            const photoKey = `${albumId}-${photoId}`; // albumId와 photoId를 조합한 고유 키
-            if (newSet.has(photoKey)) {
-                newSet.delete(photoKey);
-            } else {
-                newSet.add(photoKey);
-            }
-            return newSet;
-        });
-        console.log(checkedPhoto);
-    };
-
     const handleDeleteSelected = async () => {
         try {
             const option = {
@@ -128,7 +94,7 @@ function AlbumPhotos({ albums, startDate }) {
                         photoId: parseInt(photoId),
                         albumId: parseInt(albumId),
                     };
-                })
+                }),
             };
             await instance.delete(`/trips/${tripId}/album/photos`, option);
             alert(`사진  삭제 완료`);
@@ -141,23 +107,60 @@ function AlbumPhotos({ albums, startDate }) {
         setSelectMode(false);
     };
 
+    const handlePhotoSelectAll = () => {
+        const newSet = new Set();
+
+        if (!isAllChecked) {
+            // 모든 사진 선택 (보이는 앨범만)
+            albumPhotoQueries.forEach((query, index) => {
+                const photos = query.data || [];
+                const albumId = albums[index].albumId;
+                photos.forEach((photo) => {
+                    newSet.add(`${albumId}-${photo.photoId}`);
+                });
+            });
+        }
+        setCheckedPhoto(newSet);
+        setIsAllChecked(!isAllChecked);
+    };
+
+    useEffect(() => {
+        const totalPhotoCount = albumPhotoQueries.reduce((total, query) => {
+            const photos = query.data || [];
+            return total + photos.length;
+        }, 0);
+
+        setIsAllChecked(
+            checkedPhoto.size > 0 && checkedPhoto.size === totalPhotoCount
+        );
+    }, [checkedPhoto, albumPhotoQueries]);
+
+
     return (
-        <>
+        <div css={S.SLayout}>
             <div css={S.SSelectMode}>
-                {!!selectMode && sortedAlbums ? (
-                    <>
-                        <button onClick={handleDeleteSelected}>선택삭제</button>
-                        <button onClick={() => setSelectMode(false)}>
-                            취소
+                {albums.length > 0 &&
+                    (selectMode ? (
+                        <>
+                            <input
+                                type="checkbox"
+                                checked={isAllChecked}
+                                onClick={handlePhotoSelectAll}
+                            />
+                            <button onClick={handleDeleteSelected}>
+                                <FaTrash /> 삭제
+                            </button>
+                            <button className="cancel" onClick={() => setSelectMode(false)}>
+                                취소
+                            </button>
+                        </>
+                    ) : (
+                        <button onClick={() => setSelectMode(true)}>
+                            <FaTrash /> 선택 삭제
                         </button>
-                    </>
-                ) : (
-                    <button onClick={() => setSelectMode(true)}>
-                        <FaTrash />
-                    </button>
-                )}
+                    ))}
             </div>
-            {sortedAlbums.map((album, index) => {
+            {albums.map((album, index) => {
                 const photos = albumPhotoQueries[index]?.data || [];
 
                 return (
@@ -168,59 +171,22 @@ function AlbumPhotos({ albums, startDate }) {
                         css={S.SAlbumContainer}
                     >
                         <div css={S.SScheduleBox}>
-                            <span>{album.dayDiff}</span> &nbsp;|&nbsp;{" "}
+                            <span>{album.dayDiff}</span> &nbsp;|&nbsp;&nbsp;
                             {album.date} {album.placeName}
                         </div>
                         <div css={S.SAlbumBox}>
-                            {photos ? (
-                                photos.map((photo) => (
-                                    <div key={photo.photoId} css={S.SAlbumImg}>
-                                        {selectMode && (
-                                            <input
-                                                css={S.SImgCheckBox}
-                                                type="checkbox"
-                                                checked={checkedPhoto.has(
-                                                    `${album.albumId}-${photo.photoId}`
-                                                )}
-                                                onChange={() =>
-                                                    handleCheckboxChange(
-                                                        photo.photoId,
-                                                        album.albumId
-                                                    )
-                                                }
-                                            />
-                                        )}
-                                        <img
-                                            onClick={() =>
-                                                handlePhotoClick(photo, album)
-                                            }
-                                            src={photo?.photoUrl}
-                                            draggable="false"
-                                        />
-                                    </div>
-                                ))
-                            ) : (
-                                <div
-                                    style={{
-                                        height: "200px",
-                                        textAlign: "center",
-                                        paddingTop: "50px",
-                                    }}
-                                >
-                                    사진 불러오는 중...
-                                </div>
-                            )}
+                            <PhotoBox
+                                photos={photos}
+                                album={album}
+                                checkedPhoto={checkedPhoto}
+                                setCheckedPhoto={setCheckedPhoto}
+                                selectMode={selectMode}
+                            />
                         </div>
                     </div>
                 );
             })}
-            {selectedPhoto && (
-                <AlbumDetailModal
-                    photo={selectedPhoto}
-                    onClose={() => setSelectedPhoto(null)}
-                />
-            )}
-        </>
+        </div>
     );
 }
 
