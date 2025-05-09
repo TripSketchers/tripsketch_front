@@ -31,6 +31,7 @@ const SLayout = css`
         
         width: 100%;
         min-width: 430px;
+        min-height: 600px;
     }
     
     h1 {

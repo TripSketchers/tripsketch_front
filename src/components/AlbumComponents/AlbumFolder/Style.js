@@ -1,12 +1,18 @@
 import { css } from "@emotion/react";
 
 export const SSortingBox = css`
+    float: right;
     position: relative;
-    display: flex;
-    justify-content: right;
-    top: 15px;
-    width: 100%;
-    cursor: pointer;
+    top: -35px;
+
+    span {
+        cursor: pointer;
+        
+        &:hover {
+            text-decoration: underline;
+            font-weight: 500;
+        }
+    }
 `;
 
 export const SDateBox = css`

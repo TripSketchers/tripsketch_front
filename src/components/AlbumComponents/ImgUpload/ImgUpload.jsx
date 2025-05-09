@@ -128,7 +128,6 @@ function ImgUpload({ memos, setMemos }) {
                     ></textarea>
                 </div>
             </div>
-            {/* <button onClick={handleUploadBtn}>임시 업로드 버튼</button> */}
         </div>
     );
 }
