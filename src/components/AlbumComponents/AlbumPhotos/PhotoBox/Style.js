@@ -1,4 +1,5 @@
-import { css } from "@emotion/react";
+import { css, keyframes } from "@emotion/react";
+/** @jsxImportSource @emotion/react */
 
 export const SAlbumContainer = css`
     margin-bottom: 15px;
@@ -8,7 +9,9 @@ export const SSelectMode = css`
     position: relative;
     display: flex;
     align-items: center;
-    button {font-size: 16px;}
+    button {
+        font-size: 16px;
+    }
 `;
 
 export const SScheduleBox = css`
@@ -24,24 +27,42 @@ export const SAlbumBox = css`
     margin-top: 10px;
 `;
 
-export const SAlbumImg = css`
+export const SAlbumImgBox = css`
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     border-radius: 1rem;
     background-color: transparent;
-    height: 170px;
-    font-size: 18px;
-    font-weight: bold;
+    height: 174px;
     overflow: hidden;
-    cursor: pointer;
+`;
 
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+export const shimmer = keyframes`
+  0% { background-color: #eee; }
+  50% { background-color: #ddd; }
+  100% { background-color: #eee; }
+`;
+
+export const wrapper = css`
+    position: relative;
+    width: 100%;
+    height: 100%;
+`;
+
+export const placeholder = css`
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    animation: ${shimmer} 0.7s infinite;
+`;
+
+export const image = (isLoaded) => css`
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+    opacity: ${isLoaded ? 1 : 0};
+    transition: opacity 0.5s ease;
+    position: relative;
 `;
 
 export const SImgCheckBox = css`
@@ -50,4 +71,6 @@ export const SImgCheckBox = css`
     left: 5px;
     width: 15px;
     height: 15px;
+    z-index: 1;
 `;
+

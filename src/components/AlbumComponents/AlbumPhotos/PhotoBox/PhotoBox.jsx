@@ -8,9 +8,11 @@ function PhotoBox({
     album,
     checkedPhoto,
     setCheckedPhoto,
-    selectMode
+    selectMode,
 }) {
     const [selectedPhoto, setSelectedPhoto] = useState(null);
+    const [loadedMap, setLoadedMap] = useState({}); // 각 이미지별 로딩 상태 저장
+
     const handlePhotoClick = (photo, album) => {
         setSelectedPhoto({
             ...photo,
@@ -28,14 +30,24 @@ function PhotoBox({
             } else {
                 newSet.add(photoKey);
             }
+            console.log(newSet);
             return newSet;
         });
     };
+
+    const handleImageLoad = (photoId) => {
+        setLoadedMap((prev) => ({
+            ...prev,
+            [photoId]: true,
+        }));
+    };
+
     return (
         <>
-            {photos ? (
-                photos.map((photo) => (
-                    <div key={photo.photoId} css={S.SAlbumImg}>
+            {photos.map((photo) => {
+                const isLoaded = loadedMap[photo.photoId];
+                return (
+                    <div key={photo.photoId} css={S.SAlbumImgBox}>
                         {selectMode && (
                             <input
                                 css={S.SImgCheckBox}
@@ -51,24 +63,22 @@ function PhotoBox({
                                 }
                             />
                         )}
-                        <img
+                        <div
+                            css={S.wrapper}
                             onClick={() => handlePhotoClick(photo, album)}
-                            src={photo?.photoUrl}
-                            draggable="false"
-                        />
+                        >
+                            {!isLoaded && <div css={S.placeholder} />}
+                            <img
+                                src={photo.photoUrl}
+                                alt=""
+                                css={S.image(isLoaded)}
+                                onLoad={() => handleImageLoad(photo.photoId)}
+                                draggable="false"
+                            />
+                        </div>
                     </div>
-                ))
-            ) : (
-                <div
-                    style={{
-                        height: "200px",
-                        textAlign: "center",
-                        paddingTop: "50px",
-                    }}
-                >
-                    사진 불러오는 중...
-                </div>
-            )}
+                );
+            })}
             {selectedPhoto && (
                 <AlbumDetailModal
                     photo={selectedPhoto}
