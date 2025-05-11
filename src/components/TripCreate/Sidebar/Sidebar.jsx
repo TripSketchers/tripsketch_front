@@ -16,8 +16,7 @@ import { useNavigate } from "react-router-dom";
 function Sidebar({ selectedStep, setSelectedStep }) {
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
-    const { tripName, dateRange, storedPlaces, storedAccommodations } =
-        useTrip();
+    const { tripInfo, storedPlaces, storedAccommodations } = useTrip();
 
     const handleSaveBtnOnClick = () => {
         setShowModal(true);
@@ -25,15 +24,14 @@ function Sidebar({ selectedStep, setSelectedStep }) {
 
     const handleTransportSelect = async (selectedTransport) => {
         try {
-            const mergedAccommodations =
-                convertStoredAccommodationMapToArray(storedAccommodations);
+            const mergedAccommodations = convertStoredAccommodationMapToArray(storedAccommodations);
 
             const reqData = {
                 trip: {
-                    title: tripName,
-                    startDate: dateRange.startDate,
-                    endDate: dateRange.endDate,
-                    tripDestinationId: 5, // 임시 고정값
+                    title: tripInfo?.title || "여행 이름을 입력하세요",
+                    startDate: tripInfo?.startDate,
+                    endDate: tripInfo?.endDate,
+                    tripDestinationId: tripInfo?.tripDestinationId || 5, // 필요에 따라 tripInfo에서 가져오거나 기본값 사용
                     transportType: selectedTransport,
                 },
                 storedPlaces: storedPlaces.map((place) => ({
@@ -47,7 +45,6 @@ function Sidebar({ selectedStep, setSelectedStep }) {
                         rating: place.rating,
                         photoReference: place.photos?.[0]?.name || "",
                     },
-                    stayTime: place.stayTime ?? 120, // 기본값 2시간
                 })),
                 storedAccommodations: mergedAccommodations.map((item) => ({
                     place: {
@@ -64,11 +61,13 @@ function Sidebar({ selectedStep, setSelectedStep }) {
                     checkOutDate: item.checkOutDate,
                 })),
             };
+
             await instance.post("/trip", reqData, {
                 headers: {
                     Authorization: localStorage.getItem("accessToken"),
                 },
             });
+
             alert("여행이 생성되었습니다!");
             navigate("/account/mypage");
         } catch (err) {
@@ -108,7 +107,7 @@ function Sidebar({ selectedStep, setSelectedStep }) {
                         <IoBedOutline />
                         <span className="step-label">
                             STEP 3<br />
-                            수소 선택
+                            숙소 선택
                         </span>
                     </div>
                 </div>

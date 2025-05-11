@@ -1,101 +1,146 @@
-import React, { useState } from "react";
-import { subDays, format } from "date-fns";
+import React from "react";
+import { subDays, format, eachDayOfInterval } from "date-fns";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import ScheduleCard from "../ScheduleCard/ScheduleCard";
 import DropZone from "../DropZone/DropZone";
+import { useTrip } from "../../Routes/TripContext";
 
-const MORNING_BOUNDARY = 360; // 새벽 6시 (6 * 60)
+const MORNING_BOUNDARY = 360; // 새벽 6시
 
 function splitSchedule(schedule) {
-    const [sh, sm] = schedule.start_time.split(":").map(Number);
-    const [eh, em] = schedule.end_time.split(":").map(Number);
+    const startTime = schedule.startTime;
+    const endTime = schedule.endTime;
+
+    if (!startTime || !endTime) return [];
+
+    const [sh, sm] = startTime.split(":").map(Number);
+    const [eh, em] = endTime.split(":").map(Number);
     const startTotal = sh * 60 + sm;
     const endTotal = eh * 60 + em;
     const prevDate = format(subDays(new Date(schedule.date), 1), "yyyy.MM.dd");
 
     const commonViewTimes = {
-        view_start_time: schedule.view_start_time || schedule.start_time,
-        view_end_time: schedule.view_end_time || schedule.end_time,
+        viewStartTime: schedule.viewStartTime || startTime,
+        viewEndTime: schedule.viewEndTime || endTime,
     };
 
     if (startTotal < MORNING_BOUNDARY && endTotal > MORNING_BOUNDARY) {
         return [
-            { ...schedule, date: prevDate, end_time: "06:00:00", is_split: true, ...commonViewTimes },
-            { ...schedule, start_time: "06:00:00", is_split: true, ...commonViewTimes },
+            {
+                ...schedule,
+                date: prevDate,
+                endTime: "06:00:00",
+                isSplit: true,
+                ...commonViewTimes,
+            },
+            {
+                ...schedule,
+                startTime: "06:00:00",
+                isSplit: true,
+                ...commonViewTimes,
+            },
         ];
     }
 
     if (endTotal <= MORNING_BOUNDARY) {
-        return [{ ...schedule, date: prevDate, is_split: true, ...commonViewTimes }];
+        return [
+            { ...schedule, date: prevDate, isSplit: true, ...commonViewTimes },
+        ];
     }
 
     return [{ ...schedule, ...commonViewTimes }];
 }
 
 function PlanTable() {
-    const [schedules, setSchedules] = useState([
-        // 🗂 초기 스케줄 데이터 (예시용)
-        { trip_schedule_id: "sch1", place_store_id: 101, start_time: "07:30:00", end_time: "08:50:00", stay_time: 80, travel_time: 10, is_locked: 1, date: "2025.04.25", label: "조식" },
-        { trip_schedule_id: "sch2", place_store_id: 102, start_time: "12:00:00", end_time: "14:00:00", stay_time: 120, travel_time: 5, is_locked: 0, date: "2025.04.25", label: "돼지국밥" },
-        { trip_schedule_id: "sch3", place_store_id: 103, start_time: "13:10:00", end_time: "14:10:00", stay_time: 60, travel_time: null, is_locked: 0, date: "2025.04.26", label: "광안리 해수욕장" },
-        { trip_schedule_id: "sch4", place_store_id: 103, start_time: "09:50:00", end_time: "10:00:00", stay_time: 10, travel_time: null, is_locked: 0, date: "2025.04.27", label: "44444444444444444444444" },
-        { trip_schedule_id: "sch5", place_store_id: 103, start_time: "04:00:00", end_time: "08:00:00", stay_time: 240, travel_time: null, is_locked: 0, date: "2025.04.26", label: "55555555555555555555" },
-    ]);
+    const { tripInfo, schedules, setSchedules } = useTrip();
 
-    const dates = ["2025.04.25", "2025.04.26", "2025.04.27"];
-    // ⏰ 시간 라벨 생성 (6시~24시, 1시~5시)
-    const hours = [...Array.from({ length: 19 }, (_, i) => i + 6), ...Array.from({ length: 5 }, (_, i) => i + 1)];
-    const formatHour = (h) => `${(h <= 24 ? h : h % 24).toString().padStart(2, "0")}:00`;
+    const startDate = tripInfo?.startDate || tripInfo?.trip?.startDate;
+    const endDate = tripInfo?.endDate || tripInfo?.trip?.endDate;
 
-    // 🖱 드롭 이벤트 처리
+    const tripDates =
+        startDate && endDate
+            ? eachDayOfInterval({
+                  start: new Date(startDate),
+                  end: new Date(endDate),
+              }).map((d) => format(d, "yyyy.MM.dd"))
+            : [];
+
+    const hours = [
+        ...Array.from({ length: 19 }, (_, i) => i + 6),
+        ...Array.from({ length: 5 }, (_, i) => i + 1),
+    ];
+    const formatHour = (h) =>
+        `${(h <= 24 ? h : h % 24).toString().padStart(2, "0")}:00`;
+
     const handleDrop = (schedule, dropDate, dropStartTime) => {
-        const duration = schedule.stay_time;
+        const duration = schedule.stayTime;
         const [h, m] = dropStartTime.split(":").map(Number);
-        const startDate = new Date(2025, 0, 1, h, m);
-        const endDate = new Date(startDate.getTime() + duration * 60000);
-        const newEnd = endDate.toTimeString().slice(0, 8);
-    
+        const startDateTime = new Date(2025, 0, 1, h, m);
+        const endDateTime = new Date(
+            startDateTime.getTime() + duration * 60000
+        );
+        const newEnd = endDateTime?.toTimeString().slice(0, 8);
+
         const dropStartMinutes = h * 60 + m;
         const dropEndMinutes = dropStartMinutes + duration;
         const prevDate = format(subDays(new Date(dropDate), 1), "yyyy.MM.dd");
-    
+
         const updatedSchedule = {
             ...schedule,
-            start_time: dropStartTime,
-            end_time: newEnd,
-            stay_time: duration,
-            view_start_time: schedule.view_start_time || dropStartTime,
-            view_end_time: schedule.view_end_time || newEnd,
+            startTime: dropStartTime,
+            endTime: newEnd,
+            stayTime: duration,
+            viewStartTime: schedule.viewStartTime || dropStartTime,
+            viewEndTime: schedule.viewEndTime || newEnd,
         };
-    
-        if (dropStartMinutes < MORNING_BOUNDARY && dropEndMinutes > MORNING_BOUNDARY) {
+
+        if (
+            dropStartMinutes < MORNING_BOUNDARY &&
+            dropEndMinutes > MORNING_BOUNDARY
+        ) {
             const splitSchedules = [
-                { ...updatedSchedule, date: prevDate, end_time: "06:00:00", is_split: true },
-                { ...updatedSchedule, date: dropDate, start_time: "06:00:00", is_split: true },
+                {
+                    ...updatedSchedule,
+                    date: prevDate,
+                    endTime: "06:00:00",
+                    isSplit: true,
+                },
+                {
+                    ...updatedSchedule,
+                    date: dropDate,
+                    startTime: "06:00:00",
+                    isSplit: true,
+                },
             ];
             setSchedules((prev) => [
-                ...prev.filter((s) => s.trip_schedule_id !== schedule.trip_schedule_id),
+                ...prev.filter(
+                    (s) => s.tripScheduleId !== schedule.tripScheduleId
+                ),
                 ...splitSchedules,
             ]);
         } else {
-            const targetDate = dropEndMinutes <= MORNING_BOUNDARY ? prevDate : dropDate;
+            const targetDate =
+                dropEndMinutes <= MORNING_BOUNDARY ? prevDate : dropDate;
             setSchedules((prev) =>
                 prev.map((s) =>
-                    s.trip_schedule_id === schedule.trip_schedule_id
-                        ? { ...updatedSchedule, date: targetDate, is_split: dropEndMinutes <= MORNING_BOUNDARY }
+                    s.tripScheduleId === schedule.tripScheduleId
+                        ? {
+                              ...updatedSchedule,
+                              date: targetDate,
+                              isSplit: dropEndMinutes <= MORNING_BOUNDARY,
+                          }
                         : s
                 )
             );
         }
     };
-    
 
     return (
         <div css={S.SWrapper}>
             <div css={S.SLayout}>
                 <div css={S.SContainer}>
-                    {/* 시간 라벨 컬럼 */}
+                    {/* 시간 라벨 */}
                     <div css={S.STimeColumn}>
                         <div css={S.SStickyHeaderSpacer} />
                         {hours.map((h) => (
@@ -105,26 +150,50 @@ function PlanTable() {
                         ))}
                     </div>
 
-                    {/* 날짜별 일정 렌더링 */}
-                    {dates.map((date, index) => {
-                        const daySchedules = schedules.flatMap(splitSchedule).filter((s) => s.date === date);
+                    {/* 날짜별 일정 */}
+                    {tripDates.map((date, index) => {
+                        const daySchedules = schedules
+                            .flatMap(splitSchedule)
+                            .filter(
+                                (s) =>
+                                    format(new Date(s.date), "yyyy.MM.dd") ===
+                                    date
+                            );
                         return (
-                            <DropZone key={date} date={date} index={index} onDrop={handleDrop}>
+                            <DropZone
+                                key={date}
+                                date={date}
+                                index={index}
+                                onDrop={handleDrop}
+                            >
                                 {daySchedules.map((s, i) => (
                                     <ScheduleCard
-                                        key={`${s.trip_schedule_id}_${s.start_time}_${i}`}
+                                        key={`${s.tripScheduleId}_${s.startTime}_${i}`}
                                         schedule={s}
                                         onToggleLock={(id) => {
                                             setSchedules((prev) =>
                                                 prev.map((sch) =>
-                                                    sch.trip_schedule_id === id ? { ...sch, is_locked: sch.is_locked ? 0 : 1 } : sch
+                                                    sch.tripScheduleId === id
+                                                        ? {
+                                                              ...sch,
+                                                              isLocked:
+                                                                  sch.isLocked
+                                                                      ? 0
+                                                                      : 1,
+                                                          }
+                                                        : sch
                                                 )
                                             );
                                         }}
                                         onUpdate={(id, updates) => {
                                             setSchedules((prev) =>
                                                 prev.map((item) =>
-                                                    item.trip_schedule_id === id ? { ...item, ...updates } : item
+                                                    item.tripScheduleId === id
+                                                        ? {
+                                                              ...item,
+                                                              ...updates,
+                                                          }
+                                                        : item
                                                 )
                                             );
                                         }}

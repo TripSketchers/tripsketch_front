@@ -14,6 +14,7 @@ function PlaceSelectPanel({ text, categories }) {
     const [selectedPlace, setSelectedPlace] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState("");
+
     const categoryTypeMap = {
         명소: "tourist_attraction",
         맛집: "restaurant",
@@ -22,7 +23,7 @@ function PlaceSelectPanel({ text, categories }) {
     };
 
     const {
-        dateRange,
+        tripInfo,
         storedPlaces,
         setStoredPlaces,
         setStoredAccommodations,
@@ -43,7 +44,7 @@ function PlaceSelectPanel({ text, categories }) {
                 params: {
                     type: categoryTypeMap[selectedCategory] || "",
                     keyword: searchKeyword || categoryTypeMap[selectedCategory],
-                    pagetoken: pageParam, // ✅ pagetoken 보내기
+                    pagetoken: pageParam,
                 },
                 headers: {
                     Authorization: localStorage.getItem("accessToken"),
@@ -51,9 +52,7 @@ function PlaceSelectPanel({ text, categories }) {
             });
             return res.data;
         },
-        getNextPageParam: (lastPage) => {
-            return lastPage?.nextPageToken || undefined; // ✅ nextPageToken으로 다음 요청
-        },
+        getNextPageParam: (lastPage) => lastPage?.nextPageToken || undefined,
         staleTime: 1000 * 60 * 5,
     });
 
@@ -71,17 +70,7 @@ function PlaceSelectPanel({ text, categories }) {
         } else {
             setStoredPlaces((prev) => {
                 const exists = prev.some((p) => p.id === place.id);
-                if (exists) {
-                    return prev.filter((p) => p.id !== place.id);
-                } else {
-                    return [
-                        ...prev,
-                        {
-                            ...place,
-                            stayTime: 120, // 기본 2시간
-                        },
-                    ];
-                }
+                return exists ? prev.filter((p) => p.id !== place.id) : [...prev, place];
             });
         }
     };
@@ -98,9 +87,7 @@ function PlaceSelectPanel({ text, categories }) {
                     placeholder={`${text}명을 입력하세요`}
                     onSearch={(value) => {
                         setSearchKeyword(value);
-                        value
-                            ? setSelectedCategory(null)
-                            : setSelectedCategory(categories[0]);
+                        setSelectedCategory(value ? null : categories[0]);
                     }}
                 />
             </div>
@@ -123,12 +110,7 @@ function PlaceSelectPanel({ text, categories }) {
 
                 {data?.pages.map((page, pageIndex) =>
                     page.places
-                        .filter((place) => {
-                            return (
-                                !selectedCategory || // ✅ 카테고리 선택 안 됐으면 무조건 통과
-                                selectedCategory === place.category
-                            );
-                        })
+                        .filter((place) => !selectedCategory || selectedCategory === place.category)
                         .map((place, i) => (
                             <PlaceBox
                                 key={place.id ?? `${pageIndex}-${i}`}
@@ -149,13 +131,7 @@ function PlaceSelectPanel({ text, categories }) {
                             onClick={fetchNextPage}
                             disabled={isFetchingNextPage}
                         >
-                            {isFetchingNextPage ? (
-                                "불러오는 중..."
-                            ) : (
-                                <>
-                                    <FaPlus /> 더보기
-                                </>
-                            )}
+                            {isFetchingNextPage ? "불러오는 중..." : (<><FaPlus /> 더보기</>)}
                         </button>
                     </div>
                 )}
@@ -169,7 +145,6 @@ function PlaceSelectPanel({ text, categories }) {
                 <AccommodationModal
                     onClose={() => setShowModal(false)}
                     onConfirm={handleAccommodationConfirm}
-                    dateRange={dateRange}
                     selectedPlace={selectedPlace}
                 />
             )}
