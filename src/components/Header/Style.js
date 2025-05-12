@@ -4,6 +4,7 @@ export const SLayout = css`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 30px;
     width: 100%;
     height: 100px;
     & img {
@@ -12,7 +13,7 @@ export const SLayout = css`
 `;
 
 export const SContainer = css`
-    margin-right: 30px;
+    /* margin-right: 30px; */
 `;
 
 export const SLoginBox = css`

@@ -39,7 +39,7 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
     // 🐭 DnD 드래그 설정
     const [{ isDragging }, dragRef] = useDrag({
         type: "SCHEDULE",
-        item: { schedule },
+        item: { schedule, topPx },
         canDrag: !isLocked && !showEditor,
         collect: (monitor) => ({ isDragging: monitor.isDragging() }),
     });
