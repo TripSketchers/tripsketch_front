@@ -70,6 +70,22 @@ export const SImgBox = css`
     }
 `;
 
+export const SPhotoDelete = css`
+    position: absolute;
+    z-index: 2;
+    top: 7px;
+    right: 7px;
+    background-color: transparent;
+
+    path {
+        color: #da2a2a;
+
+        :hover {
+            color:rgb(255, 56, 56);
+        }
+    }
+`;
+
 export const SAddImg = css`
     display: flex;
     justify-content: center;

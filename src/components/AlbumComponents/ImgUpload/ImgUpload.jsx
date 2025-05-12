@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import { LuImagePlus } from "react-icons/lu";
+import { FaTrash } from "react-icons/fa6";
 import {
     addPhoto,
     getAllPhotos,
@@ -77,6 +78,11 @@ function ImgUpload({ memos, setMemos }) {
         setMemos((prev) => ({ ...prev, [currentId]: newMemo }));
     };
 
+    const handleDeleteBtn = async () => {
+        deletePhoto(photos[currentPage].id);
+        fetchPhotos();
+    }
+
     return (
         <div css={S.SLayout}>
             <div css={S.STitleContainer}>
@@ -96,7 +102,10 @@ function ImgUpload({ memos, setMemos }) {
                     )}
                     <div css={S.SImgBox}>
                         {photos.length > 0 && currentPhoto ? (
-                            <img src={currentPhoto.previewUrl} alt="preview" />
+                            <>
+                                <img src={currentPhoto.previewUrl} alt="preview" />
+                                <button css={S.SPhotoDelete} onClick={handleDeleteBtn}><FaTrash /></button>
+                            </>
                         ) : (
                             <label htmlFor="fileInput" css={S.SAddImg}>
                                 <LuImagePlus />
