@@ -6,7 +6,6 @@ import { FaStar } from "react-icons/fa";
 import { FaPlus, FaCheck } from "react-icons/fa6";
 import { instance } from "../../../api/config/instance";
 import { useTrip } from "../../TripCreate/TripContext";
-import { getCategoryFromTypes } from "../../../utils/CategoryUtils";
 
 function PlaceBox({ place, onToggle, isAdded }) {
 	const imgRef = useRef();
@@ -60,8 +59,6 @@ function PlaceBox({ place, onToggle, isAdded }) {
 		return () => observer.disconnect();
 	}, [place, imgSrc]);
 
-	const category = getCategoryFromTypes(place.types);
-
 	return (
 		<div css={S.SLayout} onClick={() => setPlaceModalInfo(place)}>
 			<img
@@ -74,7 +71,7 @@ function PlaceBox({ place, onToggle, isAdded }) {
 			<div css={S.SContainer}>
 				<h2 css={S.STitle}>{place.displayName?.text || "이름 없음"}</h2>
 				<div>
-					<span css={S.SCategory(category)}>{category}</span>
+					<span css={S.SCategory(place.category)}>{place.category}</span>
 					<span css={S.SAddress}>
 						{place.formattedAddress || "주소 정보 없음"}
 					</span>

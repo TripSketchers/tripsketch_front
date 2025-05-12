@@ -161,8 +161,7 @@ function AlbumPhotos({ albums }) {
                     ))}
             </div>
             {albums.map((album, index) => {
-                const photoData = albumPhotoQueries[index]?.data;
-                const photos = photoData?.photos || [];
+                const photos = albumPhotoQueries[index]?.data || [];
 
                 return (
                     <div

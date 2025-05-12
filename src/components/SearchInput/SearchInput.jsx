@@ -41,7 +41,7 @@ function SearchInput({ placeholder, onSearch, setIsShow }) {
                 onKeyDown={handleKeyDown}
                 onChange={handleChange}
                 onFocus={handleFocus}
-				onBlur={handleBlur}
+				        onBlur={handleBlur}
             />
             <button css={S.SButton} onClick={handleSearchBtn}>
                 <IoSearch />
