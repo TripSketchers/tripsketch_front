@@ -72,7 +72,7 @@ function TripPlan() {
                         </div>
                     </div>
                     <div css={S.SMapContainer}>
-                        <Map />
+                        <Map selectedStep={2}/>
                     </div>
                 </Split>
             </div>

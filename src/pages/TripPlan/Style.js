@@ -63,7 +63,7 @@ export const SToggleButton = (isOpen) => css`
 	transform: translateY(-50%);
 	z-index: 100;
 	background: #fff;
-	border: 1px solid #ccc;
+	border: 1px solid #dbdbdb;
 	width: 30px;
 	height: 50px;
 	display: flex;

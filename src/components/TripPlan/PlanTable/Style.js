@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 
 export const SWrapper = css`
     flex: 1;
+    border-left: 1px solid #dbdbdb;
     width: 100%;
     height: 100%;
     overflow: auto;

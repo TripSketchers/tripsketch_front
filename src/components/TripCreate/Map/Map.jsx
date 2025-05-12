@@ -78,9 +78,8 @@ function Map({ selectedStep }) {
 		if (!mapRef.current) return;
 
 		const targetPlace = focusedPlace ?? places.at(-1);
-		if (!targetPlace?.location) return;
 
-		const { latitude, longitude } = targetPlace.location;
+		const { latitude, longitude } = targetPlace?.location || targetPlace;
 		mapRef.current.panTo({ lat: latitude, lng: longitude });
 	}, [
 		isLoaded,
@@ -106,45 +105,41 @@ function Map({ selectedStep }) {
 			}}
 		>
 			{selectedStep === 2 &&
-				storedPlaces.map((place, idx) =>
-					place.location ? (
-						<Marker
-							key={place.id}
-							position={{
-								lat: place.location.latitude,
-								lng: place.location.longitude,
-							}}
-							icon={createPinMarkerIcon(
-								idx + 1,
-								getColorByCategory(place.category)
-							)}
-							onClick={() => {
-								setPlaceModalInfo(place);
-								setFocusedPlace(place);
-							}}
-						/>
-					) : null
-				)}
+				storedPlaces.map((place, idx) => (
+					<Marker
+						key={place.id}
+						position={{
+							lat: place?.location?.latitude || place?.latitude,
+							lng: place?.location?.longitude || place?.longitude,
+						}}
+						icon={createPinMarkerIcon(
+							idx + 1,
+							getColorByCategory(place.category)
+						)}
+						onClick={() => {
+							setPlaceModalInfo(place);
+							setFocusedPlace(place);
+						}}
+					/>
+				))}
 
 			{selectedStep === 3 &&
-				Object.values(storedAccommodations).map((place) =>
-					place.location ? (
-						<Marker
-							key={place.id}
-							position={{
-								lat: place.location.latitude,
-								lng: place.location.longitude,
-							}}
-							icon={createBedMarkerIcon(
-								getColorByCategory(place.category)
-							)}
-							onClick={() => {
-								setPlaceModalInfo(place);
-								setFocusedPlace(place);
-							}}
-						/>
-					) : null
-				)}
+				Object.values(storedAccommodations).map((place) => (
+					<Marker
+						key={place.id}
+						position={{
+							lat: place?.location?.latitude || place?.latitude,
+							lng: place?.location?.longitude || place?.longitude,
+						}}
+						icon={createBedMarkerIcon(
+							getColorByCategory(place.category)
+						)}
+						onClick={() => {
+							setPlaceModalInfo(place);
+							setFocusedPlace(place);
+						}}
+					/>
+				))}
 		</GoogleMap>
 	);
 }
