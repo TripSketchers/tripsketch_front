@@ -63,7 +63,6 @@ function DropZone({ date, index, onDrop, children }) {
 		},
 		drop: (item, monitor) => {
 			const clientOffset = monitor.getClientOffset();
-			const clientY = clientOffset?.y; // ✅ 마우스 Y 좌표 추출
 
 			if (!dropBodyRef?.current) return;
 
@@ -78,7 +77,7 @@ function DropZone({ date, index, onDrop, children }) {
 			setPreviewHeight(null);
 
 			if (item.schedule) {
-				onDrop(item.schedule, date, startTime, clientY, dropBodyRef); // ✅ clientY 전달
+				onDrop(item.schedule, date, startTime, dropBodyRef); // ✅ clientY 전달
 			} else if (item.place) {
 				const stayTime = item.place.stayTime || 120;
 				const newSchedule = {
@@ -99,7 +98,7 @@ function DropZone({ date, index, onDrop, children }) {
 						longitude: item.place.longitude,
 					},
 				};
-				onDrop(newSchedule, date, startTime, clientY, dropBodyRef); // ✅ clientY 전달
+				onDrop(newSchedule, date, startTime, dropBodyRef); // ✅ clientY 전달
 			}
 		},
 		collect: (monitor) => ({ isOver: monitor.isOver() }), // 현재 드롭 영역에 마우스가 있는지 여부

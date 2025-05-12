@@ -76,73 +76,94 @@ function PlanTable() {
 		}
 	};
 
-	const handleDrop = (droppedItem, dropDate, dropStartTime) => {
+	const handleDrop = (droppedItem, dropDate) => {
+		console.log("🚀 [Drop Start] ------------------------------");
+		console.log("📅 Drop Date:", dropDate);
+		console.log("📦 Dropped Item:", droppedItem);
+
 		const daySchedules = schedules.filter(
 			(s) => format(new Date(s.date), "yyyy.MM.dd") === dropDate
 		);
+		console.log("📅 Schedules on Drop Date:", daySchedules);
 
-		const dropStartMinutes = parseTime(dropStartTime);
-		const dropEndMinutes = dropStartMinutes + (droppedItem.stayTime || 120);
+		const dropStartMinutes = parseTime(droppedItem.startTime); // 📌 드래그한 카드의 startTime 기준
+		const dropDuration = droppedItem.stayTime || 120;
+		const dropEndMinutes = dropStartMinutes + dropDuration;
 
-		const overlappingSchedule = daySchedules.find((s) => {
+		console.log("🕒 Drop Start Minutes (From Card):", dropStartMinutes);
+
+		// 🔍 빈 시간 확인 (자기 자신 제외)
+		const hasOverlap = daySchedules.some((s) => {
 			if (s.tripScheduleId === droppedItem.tripScheduleId) return false;
 			const sStart = parseTime(s.startTime);
 			const sEnd = parseTime(s.endTime);
 			return dropStartMinutes < sEnd && dropEndMinutes > sStart;
 		});
 
-		let adjustedStartTime = dropStartTime;
+		let adjustedStartTime = droppedItem.startTime;
 
-		if (overlappingSchedule) {
-			const sStart = parseTime(overlappingSchedule.startTime);
-			const sEnd = parseTime(overlappingSchedule.endTime);
-			const overlapMid = (sStart + sEnd) / 2;
-			const dropDuration = droppedItem.stayTime || 120;
+		if (hasOverlap) {
+			// ❌ 겹침 → 가능한 아래로 밀어 빈 시간 찾기
+			console.log(
+				"🔍 Overlap detected. Searching for available time slot..."
+			);
 
-			if (dropStartMinutes < overlapMid) {
-				// 🎯 드롭한 스케줄을 위에 배치
-				adjustedStartTime = minutesToTime(sStart - dropDuration);
-
-				// ✅ PlanTable에서 직접 상태 업데이트로 겹치는 스케줄 조정
-				setSchedules((prev) =>
-					prev.map((item) =>
-						item.tripScheduleId ===
-						overlappingSchedule.tripScheduleId
-							? {
-									...item,
-									startTime: minutesToTime(sStart),
-									endTime: minutesToTime(sEnd),
-							  }
-							: item
-					)
+			const sortedSchedules = daySchedules
+				.filter((s) => s.tripScheduleId !== droppedItem.tripScheduleId)
+				.sort(
+					(a, b) => parseTime(a.startTime) - parseTime(b.startTime)
 				);
-			} else {
-				// 🎯 드롭한 스케줄을 아래에 배치 (기존 로직 유지)
-				adjustedStartTime = overlappingSchedule.endTime;
-			}
 
-			console.log("🔀 Adjusted Start Time:", adjustedStartTime);
+			for (let i = 0; i <= sortedSchedules.length; i++) {
+				const prevEnd =
+					i === 0 ? 360 : parseTime(sortedSchedules[i - 1].endTime);
+				const nextStart =
+					i === sortedSchedules.length
+						? 1440
+						: parseTime(sortedSchedules[i].startTime);
+
+				if (
+					nextStart - prevEnd >= dropDuration &&
+					prevEnd >= dropStartMinutes
+				) {
+					adjustedStartTime = minutesToTime(prevEnd);
+					console.log(
+						"📌 Found available slot at:",
+						adjustedStartTime
+					);
+					break;
+				}
+			}
+		} else {
+			console.log(
+				"📌 No Overlap. Using original startTime:",
+				adjustedStartTime
+			);
 		}
 
-		// 🆕 새로운 일정 추가
+		// 🆕 새 일정 추가 (Place에서 드래그한 경우)
 		if (!droppedItem.tripScheduleId) {
-			const stayTime = droppedItem.stayTime || 120;
 			createAndAddSchedule(
 				droppedItem,
 				dropDate,
 				adjustedStartTime,
-				stayTime
+				dropDuration
 			);
+			console.log("✅ [Drop End] New Schedule Added");
+			console.log("--------------------------------------------------");
 			return;
 		}
 
 		// ✂️ 기존 일정 이동
+		console.log("✂️ Moving Existing Schedule to:", adjustedStartTime);
 		splitAndSetSchedule(
 			droppedItem,
 			dropDate,
 			adjustedStartTime,
-			droppedItem.stayTime
+			dropDuration
 		);
+		console.log("✅ [Drop End] Existing Schedule Moved");
+		console.log("--------------------------------------------------");
 	};
 
 	// 📅 새 일정 생성 후 추가
