@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import image from "../../../assets/w1.jpg";
 
-export const SLayout = css`
+export const SLayout = (image) => css`
     display: flex;
     justify-content: space-between;
     flex-direction: column;
