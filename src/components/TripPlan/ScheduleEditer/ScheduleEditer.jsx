@@ -1,95 +1,130 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
+import { minutesToTime, timeToMinutes } from "../../../utils/scheduleUtils";
+import { useTrip } from "../../Routes/TripContext";
+import useScheduleDropHandler from "../../../hooks/useScheduleDropHandler";
 
 function ScheduleEditor({ schedule, onSave, onClose }) {
-    // ✅ Context에서 초기값 설정
-    const { tripScheduleId, startTime, endTime, stayTime } = schedule || {};
+    const { schedules, setSchedules } = useTrip();
+    const { handleDrop } = useScheduleDropHandler(schedules, setSchedules);
 
-    const [start, setStart] = useState(startTime?.slice(0, 5) || "00:00");
-    const [end, setEnd] = useState(endTime?.slice(0, 5) || "00:00");
-    const [stayHour, setStayHour] = useState(Math.floor(stayTime / 60));
-    const [stayMinute, setStayMinute] = useState(stayTime % 60);
+	const { tripScheduleId, startTime, endTime, stayTime } = schedule || {};
 
-    const editorRef = useRef(null);
+	const [start, setStart] = useState(startTime?.slice(0, 5) || "00:00");
+	const [end, setEnd] = useState(endTime?.slice(0, 5) || "00:00");
+	const [stayHour, setStayHour] = useState(Math.floor(stayTime / 60));
+	const [stayMinute, setStayMinute] = useState(stayTime % 60);
 
-    // ✅ 클릭 시 외부 클릭 감지로 닫기
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (editorRef.current && !editorRef.current.contains(e.target)) {
-                onClose?.();
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [onClose]);
+	const editorRef = useRef(null);
 
-    // ✅ 종료 시간 변경 시 머무는 시간 자동 계산
-    const handleEndTimeChange = (value) => {
-        setEnd(value);
-        const [sh, sm] = start.split(":").map(Number);
-        const [eh, em] = value.split(":").map(Number);
-        let diff = eh * 60 + em - (sh * 60 + sm);
+	useEffect(() => {
+		const handleClickOutside = (e) => {
+			if (editorRef.current && !editorRef.current.contains(e.target)) {
+				onClose?.();
+			}
+		};
+		document.addEventListener("mousedown", handleClickOutside);
+		return () =>
+			document.removeEventListener("mousedown", handleClickOutside);
+	}, [onClose]);
 
-        // 다음 날로 넘어가는 경우 (예: 23:00 ~ 01:00)
-        if (diff < 0) diff += 1440;
+	// 🟢 시작 시간 변경 → 종료 시간 자동 변경
+	const handleStartChange = (newStart) => {
+		setStart(newStart);
+		const startMins = timeToMinutes(newStart);
+		const totalStay = stayHour * 60 + stayMinute;
+		const newEnd = minutesToTime((startMins + totalStay) % 1440);
+		setEnd(newEnd);
+	};
 
-        setStayHour(Math.floor(diff / 60));
-        setStayMinute(diff % 60);
-    };
+	// 🟢 종료 시간 변경 → 머무는 시간 자동 변경
+	const handleEndChange = (newEnd) => {
+		setEnd(newEnd);
+		const startMins = timeToMinutes(start);
+		const endMins = timeToMinutes(newEnd);
+		let diff = endMins - startMins;
+		if (diff < 0) diff += 1440;
+		setStayHour(Math.floor(diff / 60));
+		setStayMinute(diff % 60);
+	};
 
-    // ✅ 저장 버튼 클릭
-    const handleSave = () => {
-        const total = stayHour * 60 + stayMinute;
-        onSave?.(tripScheduleId, {
-            startTime: `${start}:00`,
-            endTime: `${end}:00`,
-            stayTime: total,
-        });
-        onClose?.();
-    };
+	// 🟢 머무는 시간 변경 → 종료 시간 자동 변경
+	const handleStayChange = (hour, minute) => {
+		setStayHour(hour);
+		setStayMinute(minute);
+		const startMins = timeToMinutes(start);
+		const newEnd = minutesToTime((startMins + hour * 60 + minute) % 1440);
+		setEnd(newEnd);
+	};
 
-    return (
-        <div css={S.SBubbleEditor} ref={editorRef}>
-            <label>시작 시간</label>
-            <input
-                type="time"
-                value={start}
-                onChange={(e) => setStart(e.target.value)}
-            />
-            <label>종료 시간</label>
-            <input
-                type="time"
-                value={end}
-                onChange={(e) => handleEndTimeChange(e.target.value)}
-            />
-            <label>머무는 시간</label>
-            <div css={S.SEditorRow}>
-                <input
-                    type="number"
-                    min={0}
-                    value={stayHour}
-                    onChange={(e) =>
-                        setStayHour(Math.max(0, parseInt(e.target.value, 10) || 0))
-                    }
-                    css={S.STimeInput}
-                />
-                <span>시간</span>
-                <input
-                    type="number"
-                    min={0}
-                    max={59}
-                    value={stayMinute}
-                    onChange={(e) =>
-                        setStayMinute(Math.max(0, parseInt(e.target.value, 10) || 0))
-                    }
-                    css={S.STimeInput}
-                />
-                <span>분</span>
-            </div>
-            <button onClick={handleSave}>저장</button>
-        </div>
-    );
+	const handleSave = () => {
+		const total = stayHour * 60 + stayMinute;
+		onSave?.(tripScheduleId, {
+			startTime: `${start}:00`,
+			endTime: `${end}:00`,
+			stayTime: total,
+		});
+		handleDrop(
+			{
+				...schedule,
+				stayTime: total,
+				startTime: `${start}:00`,
+				endTime: `${end}:00`,
+			},
+			schedule.date,
+			start
+		);
+		onClose?.();
+	};
+
+	return (
+		<div css={S.SBubbleEditor} ref={editorRef}>
+			<label>시작 시간</label>
+			<input
+				type="time"
+				value={start}
+				onChange={(e) => handleStartChange(e.target.value)}
+			/>
+			<label>종료 시간</label>
+			<input
+				type="time"
+				value={end}
+				onChange={(e) => handleEndChange(e.target.value)}
+			/>
+			<label>머무는 시간</label>
+			<div css={S.SEditorRow}>
+				<input
+					type="number"
+					min={0}
+					value={stayHour}
+					onChange={(e) =>
+						handleStayChange(
+							Math.max(0, parseInt(e.target.value, 10) || 0),
+							stayMinute
+						)
+					}
+					css={S.STimeInput}
+				/>
+				<span>시간</span>
+				<input
+					type="number"
+					min={0}
+					max={59}
+					value={stayMinute}
+					onChange={(e) =>
+						handleStayChange(
+							stayHour,
+							Math.max(0, parseInt(e.target.value, 10) || 0)
+						)
+					}
+					css={S.STimeInput}
+				/>
+				<span>분</span>
+			</div>
+			<button onClick={handleSave}>저장</button>
+		</div>
+	);
 }
 
 export default ScheduleEditor;

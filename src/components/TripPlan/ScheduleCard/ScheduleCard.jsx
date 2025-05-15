@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDrag } from "react-dnd";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import { FaLock, FaLockOpen } from "react-icons/fa6";
 import ScheduleEditor from "../ScheduleEditer/ScheduleEditer";
+import { getCardPositionAndHeight } from "../../../utils/scheduleUtils";
 
 function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
     const {
@@ -16,24 +17,11 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
         viewEndTime,
         place,
     } = schedule;
-
     const [showEditor, setShowEditor] = useState(false);
     const [selectedSchedule, setSelectedSchedule] = useState(null);
 
-    // 🧮 카드 위치 계산
-    const [sh, sm] = startTime?.split(":").map(Number) || [0, 0];
-    let totalMinutes = sh * 60 + sm;
-    if (sh < 6) totalMinutes += 1440;
-
     const PIXELS_PER_MINUTE = 1;
-    const topPx = (totalMinutes - 360) * PIXELS_PER_MINUTE;
-
-    // 🧮 카드 높이 계산
-    const [eh, em] = endTime?.split(":").map(Number) || [0, 0];
-    let endTotalMinutes = eh * 60 + em;
-    if (eh < 6) endTotalMinutes += 1440;
-
-    const heightPx = (endTotalMinutes - totalMinutes) * PIXELS_PER_MINUTE;
+    const { top: topPx, height: heightPx } = getCardPositionAndHeight(startTime, endTime, PIXELS_PER_MINUTE);
     const compactView = heightPx < 45;
 
     // 🐭 DnD 드래그 설정

@@ -1,24 +1,35 @@
 import {
-    findPrevEndTime,
     getAbsoluteMinutes,
     minutesToTime,
-    parseTime,
+    timeToMinutes,
 } from "../utils/scheduleUtils";
 
 export default function useScheduleDropHandler(schedules, setSchedules) {
     const handleDrop = (droppedItem, dropDate, startTime) => {
+        const timelineStartAbs = getAbsoluteMinutes(dropDate, "06:00:00");
+        const timelineEndAbs = timelineStartAbs + 1440; // 다음날 06:00까지
+
+        // 드롭된 날짜의 6:00~다음날 6:00 사이의 일정만 필터링
         const daySchedules = schedules.filter((s) => {
             const scheduleStartAbs = getAbsoluteMinutes(s.date, s.startTime);
-            const timelineStartAbs = getAbsoluteMinutes(dropDate, "06:00:00");
-            const timelineEndAbs = timelineStartAbs + 1440; // 다음날 06:00까지
+            const scheduleDate = new Date(s.date);
+            const dropDateObj = new Date(dropDate);
+            const diffDays =
+                (scheduleDate - dropDateObj) / (1000 * 60 * 60 * 24);
 
-            return (
-                scheduleStartAbs >= timelineStartAbs &&
-                scheduleStartAbs < timelineEndAbs
-            );
+            if (diffDays === 0) {
+                // dropDate 당일 6:00~24:00
+                return (
+                    scheduleStartAbs >= timelineStartAbs &&
+                    scheduleStartAbs < timelineEndAbs
+                );
+            } else if (diffDays === 1) {
+                // dropDate 다음날 0:00~6:00
+                const startHour = parseInt(s.startTime.split(":")[0], 10);
+                return startHour < 6;
+            }
+            return false;
         });
-
-        console.log(daySchedules);
 
         const dropStartAbs = getAbsoluteMinutes(dropDate, startTime);
         const dropDuration = droppedItem.stayTime || 120;
@@ -26,19 +37,16 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 
         let adjustedStartAbs = dropStartAbs;
 
-        // ✅ 겹치는 일정 검사
+        // 겹치는 일정이 있는지 검사
         const overlappingSchedule = daySchedules.find((s) => {
             if (s.tripScheduleId === droppedItem.tripScheduleId) return false;
-
             const sStartAbs = getAbsoluteMinutes(s.date, s.startTime);
             const sEndAbs = sStartAbs + s.stayTime;
-
             return dropStartAbs < sEndAbs && dropEndAbs > sStartAbs;
         });
 
         if (overlappingSchedule) {
-            console.log("⚠️ 겹치는 일정 존재:", overlappingSchedule);
-
+            // 겹치는 일정의 시작/끝/중간 계산
             const sStartAbs = getAbsoluteMinutes(
                 overlappingSchedule.date,
                 overlappingSchedule.startTime
@@ -46,6 +54,7 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
             const sEndAbs = sStartAbs + overlappingSchedule.stayTime;
             const overlapMidAbs = (sStartAbs + sEndAbs) / 2;
 
+            // 현재 드롭 위치 기준으로 위/아래 빈 공간 탐색
             const sorted = [...daySchedules]
                 .filter((s) => s.tripScheduleId !== droppedItem.tripScheduleId)
                 .sort(
@@ -55,25 +64,20 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
                 );
 
             if (dropStartAbs < overlapMidAbs) {
+                // 위쪽 빈 공간 탐색
                 const found = findEmptySlot(
                     sorted,
                     dropDuration,
                     "up",
                     sStartAbs
                 );
-
                 if (found !== null) {
                     adjustedStartAbs = found;
-                    console.log(
-                        "📌 위쪽 빈 공간 발견:",
-                        minutesToTime(adjustedStartAbs)
-                    );
                 } else {
-                    console.log("❌ 위쪽 빈 공간 없음, 이동 취소");
-                    return; // 💥 이동 취소
+                    return; // 빈 공간 없으면 이동 취소
                 }
             } else {
-                console.log("🔽 아래쪽 빈 시간 탐색 시도");
+                // 아래쪽 빈 공간 탐색
                 const found = findEmptySlot(
                     sorted,
                     dropDuration,
@@ -82,24 +86,15 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
                 );
                 if (found !== null) {
                     adjustedStartAbs = found;
-                    console.log(
-                        "📌 아래쪽 빈 공간 발견:",
-                        minutesToTime(adjustedStartAbs)
-                    );
                 } else {
-                    console.log("❌ 아래쪽 빈 공간 없음, 이동 취소");
                     return;
                 }
             }
-        } else {
-            console.log(
-                "✅ 겹치는 일정 없음 → 그대로 배치:",
-                minutesToTime(adjustedStartAbs)
-            );
         }
 
         const adjustedStartTime = minutesToTime(adjustedStartAbs);
 
+        // 새 일정 추가 또는 기존 일정 분할
         if (!droppedItem.tripScheduleId) {
             createAndAddSchedule(
                 droppedItem,
@@ -107,7 +102,6 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
                 adjustedStartTime,
                 dropDuration
             );
-            console.log("🆕 새 일정 추가 완료:", adjustedStartTime);
         } else {
             splitAndSetSchedule(
                 droppedItem,
@@ -115,59 +109,51 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
                 adjustedStartTime,
                 dropDuration
             );
-            console.log("✂️ 기존 일정 이동 완료:", adjustedStartTime);
         }
-
-        console.log("🏁 [드롭 종료]");
     };
 
+    // 빈 슬롯(공간) 탐색 함수
     const findEmptySlot = (
         sorted,
         dropDuration,
         direction,
         overlapBoundaryAbs
     ) => {
-        // ✅ 탐색 방향에 따라 배열을 뒤집음 (up: 위쪽 탐색 → 거꾸로, down: 아래쪽 탐색 → 그대로)
-        const loop = direction === "up" ? [...sorted].reverse() : sorted;
-
-        for (let i = 0; i <= loop.length; i++) {
-            // 📌 이전 일정의 끝나는 절대 시간 (없으면 06:00 → 360분)
+        for (let i = 0; i <= sorted.length; i++) {
             const prevEndAbs =
                 i === 0
-                    ? 360
-                    : getAbsoluteMinutes(loop[i - 1].date, loop[i - 1].endTime);
+                    ? 360 // 06:00 (타임라인 시작)
+                    : getAbsoluteMinutes(sorted[i - 1].date, sorted[i - 1].endTime);
 
-            // 📌 다음 일정의 시작 절대 시간 (없으면 타임라인 끝인 30시간 → 1800분)
             const nextStartAbs =
-                i === loop.length
-                    ? 1800
-                    : getAbsoluteMinutes(loop[i]?.date, loop[i]?.startTime);
+                i === sorted.length
+                    ? 1800 // 30:00 (타임라인 끝)
+                    : getAbsoluteMinutes(sorted[i]?.date, sorted[i]?.startTime);
 
             if (direction === "up") {
-                // ⬆️ "위쪽" 탐색 (현재 겹치는 일정보다 위쪽에 배치 가능한 공간 찾기)
+                // 위쪽(겹치는 일정의 시작 전까지)에서 충분한 공간이 있는지
                 if (
-                    nextStartAbs <= overlapBoundaryAbs && // 겹치는 일정의 시작 전까지만 탐색
-                    nextStartAbs - prevEndAbs >= dropDuration && // 이전 일정 끝과 다음 일정 시작 사이에 충분한 공간이 있는지
-                    nextStartAbs - dropDuration >= 360 // 06:00 이전에는 배치하지 않기 (일정 시작은 06:00부터)
+                    nextStartAbs <= overlapBoundaryAbs &&
+                    nextStartAbs - prevEndAbs >= dropDuration &&
+                    nextStartAbs - dropDuration >= 360
                 ) {
-                    return nextStartAbs - dropDuration; // ✔️ 가능한 슬롯 발견 → 그 위치에 배치
+                    return nextStartAbs - dropDuration;
                 }
             } else {
-                // ⬇️ "아래쪽" 탐색 (현재 겹치는 일정보다 아래쪽에 배치 가능한 공간 찾기)
+                // 아래쪽(겹치는 일정의 끝 이후)에서 충분한 공간이 있는지
                 if (
-                    prevEndAbs >= overlapBoundaryAbs && // 겹치는 일정의 끝 이후부터 탐색
-                    prevEndAbs >= 360 && // 06:00 이후에만 배치 가능
-                    nextStartAbs - prevEndAbs >= dropDuration // 이전 일정 끝과 다음 일정 시작 사이에 충분한 공간이 있는지
+                    prevEndAbs >= overlapBoundaryAbs &&
+                    prevEndAbs >= 360 &&
+                    nextStartAbs - prevEndAbs >= dropDuration
                 ) {
-                    return prevEndAbs; // ✔️ 가능한 슬롯 발견 → 바로 이전 일정 끝나는 시점에 배치
+                    return prevEndAbs;
                 }
             }
         }
-
-        // ❌ 빈 슬롯을 찾지 못함
-        return null;
+        return null; // 빈 슬롯 없음
     };
 
+    // 새 일정 생성 및 추가
     const createAndAddSchedule = (place, dropDate, dropStartTime, stayTime) => {
         const generateSchedule = (date, startTime, endTime) => ({
             tripScheduleId: place.tripScheduleId || Date.now() + Math.random(),
@@ -187,13 +173,14 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
             generateSchedule(
                 dropDate,
                 dropStartTime,
-                minutesToTime(parseTime(dropStartTime) + stayTime)
+                minutesToTime(timeToMinutes(dropStartTime) + stayTime)
             ),
         ];
 
         setSchedules((prev) => [...prev, ...splitSchedules]);
     };
 
+    // 기존 일정 분할 및 반영
     const splitAndSetSchedule = (
         schedule,
         dropDate,
@@ -214,7 +201,7 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
             generateSchedule(
                 dropDate,
                 dropStartTime,
-                minutesToTime(parseTime(dropStartTime) + duration)
+                minutesToTime(timeToMinutes(dropStartTime) + duration)
             ),
         ];
 
