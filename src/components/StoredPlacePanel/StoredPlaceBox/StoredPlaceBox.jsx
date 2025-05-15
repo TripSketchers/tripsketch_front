@@ -65,7 +65,7 @@ function StoredPlaceBox({ index, type, place, onRemove }) {
 				css={S.SDeleteBtn}
 				onClick={(e) => {
 					e.stopPropagation();
-					onRemove(place.id || place.placeId);
+					onRemove(place.googlePlaceId);
 				}}
 			>
 				<FaTrash />

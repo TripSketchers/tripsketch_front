@@ -67,24 +67,32 @@ function PlaceSelectPanel({ text, categories }) {
         if (text === "숙소") {
             setSelectedPlace(place);
             setShowModal(true);
-        } else {
+        } else if (text === "계획") {
             setStoredPlaces((prev) => {
-                const exists = prev.some((p) => p.id === place.id);
-                return exists ? prev.filter((p) => p.id !== place.id) : [...prev, place];
+                const exists = prev.some((p) => p.googlePlaceId === place.id);
+                if (exists) {
+                    return prev.filter((p) => p.googlePlaceId !== place.id);
+                } else {
+                    const normalizedPlace = {
+                        ...place,
+                        googlePlaceId: place.id, // ✅ ID 통일
+                    };
+                    return [...prev, normalizedPlace];
+                }
             });
         }
     };
 
     const isPlaceAdded = (place) => {
         if (text === "숙소") return false;
-        return storedPlaces.some((p) => p.id === place.id);
+        return storedPlaces.some((p) => p.googlePlaceId === place.id);
     };
 
     return (
         <div css={S.SLayout}>
             <div css={S.SSearchBox}>
                 <SearchInput
-                    placeholder={`${text}명을 입력하세요`}
+                    placeholder={`${text === "숙소" ? "숙소" : "장소"}명을 입력하세요`}
                     onSearch={(value) => {
                         setSearchKeyword(value);
                         setSelectedCategory(value ? null : categories[0]);
@@ -110,10 +118,16 @@ function PlaceSelectPanel({ text, categories }) {
 
                 {data?.pages.map((page, pageIndex) =>
                     page.places
-                        .filter((place) => !selectedCategory || selectedCategory === place.category)
+                        .filter(
+                            (place) =>
+                                !selectedCategory ||
+                                selectedCategory === place.category
+                        )
                         .map((place, i) => (
                             <PlaceBox
-                                key={place.id ?? `${pageIndex}-${i}`}
+                                key={
+                                    place.googlePlaceId || place.id
+                                }
                                 place={place}
                                 onToggle={(e) => {
                                     e.stopPropagation();
@@ -131,7 +145,13 @@ function PlaceSelectPanel({ text, categories }) {
                             onClick={fetchNextPage}
                             disabled={isFetchingNextPage}
                         >
-                            {isFetchingNextPage ? "불러오는 중..." : (<><FaPlus /> 더보기</>)}
+                            {isFetchingNextPage ? (
+                                "불러오는 중..."
+                            ) : (
+                                <>
+                                    <FaPlus /> 더보기
+                                </>
+                            )}
                         </button>
                     </div>
                 )}

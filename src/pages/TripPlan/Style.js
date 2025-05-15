@@ -46,14 +46,13 @@ export const SBox = css`
 	overflow: hidden;
 `;
 
-export const SStoredPanel = (isOpen) => css`
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	background-color: #f7f7f7;
-	transition: width 0.3s ease;
-	width: ${isOpen ? "300px" : "0"};
-	height: 100%;
+export const SStoredPanel = (isOpen, isShow) => css`
+    position: relative;
+    display: flex;
+    background-color: #f7f7f7;
+    transition: width 0.3s ease;
+    width: ${isOpen ? (isShow ? "600px" : "300px") : "0"};
+    height: 100%;
 `;
 
 export const SToggleButton = (isOpen) => css`
