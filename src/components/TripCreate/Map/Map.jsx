@@ -6,50 +6,50 @@ import { getColorByCategory } from "../../../utils/CategoryUtils";
 const GOOGLE_MAP_LIBRARIES = ["places"];
 
 function Map({ selectedStep }) {
-	const { isLoaded } = useJsApiLoader({
-		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
-		libraries: GOOGLE_MAP_LIBRARIES,
-		language: "ko",
-	});
+    const { isLoaded } = useJsApiLoader({
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
+        libraries: GOOGLE_MAP_LIBRARIES,
+        language: "ko",
+    });
 
-	const mapRef = useRef(null);
-	const {
-		storedPlaces,
-		storedAccommodations,
-		setPlaceModalInfo,
-		focusedPlace,
-		setFocusedPlace,
-	} = useTrip();
+    const mapRef = useRef(null);
+    const {
+        storedPlaces,
+        storedAccommodations,
+        setPlaceModalInfo,
+        focusedPlace,
+        setFocusedPlace,
+    } = useTrip();
 
-	const containerStyle = {
-		width: "100%",
-		height: "100%",
-	};
+    const containerStyle = {
+        width: "100%",
+        height: "100%",
+    };
 
-	const defaultCenter = {
-		lat: 35.1796,
-		lng: 129.0756,
-	};
+    const defaultCenter = {
+        lat: 35.1796,
+        lng: 129.0756,
+    };
 
-	// 📍 핀 마커
-	const createPinMarkerIcon = (number, color = "#1976d2") => {
-		return {
-			url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+    // 📍 핀 마커
+    const createPinMarkerIcon = (number, color = "#1976d2") => {
+        return {
+            url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
 		  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="70" viewBox="0 0 40 60">
 			<path d="M20 0C9 0 0 9 0 20c0 11.6 18 38.5 19.1 40.2a1.2 1.2 0 002 0C22 58.5 40 31.6 40 20c0-11-9-20-20-20z" fill="${color}"/>
 			<circle cx="20" cy="20" r="15" fill="white"/>
 			<text x="20" y="25" text-anchor="middle" font-size="16" fill="${color}" font-weight="bold" font-family="Arial">${number}</text>
 		  </svg>
 		`)}`,
-			scaledSize: new window.google.maps.Size(30, 70),
-			anchor: new window.google.maps.Point(15, 70),
-		};
-	};
+            scaledSize: new window.google.maps.Size(30, 70),
+            anchor: new window.google.maps.Point(15, 70),
+        };
+    };
 
-	// 🛏 침대 마커
-	const createBedMarkerIcon = (color = "#1976d2") => {
-		return {
-			url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+    // 🛏 침대 마커
+    const createBedMarkerIcon = (color = "#1976d2") => {
+        return {
+            url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
 		  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="70" viewBox="0 0 40 60">
 			<path d="M20 0C9 0 0 9 0 20c0 11.6 18 38.5 19.1 40.2a1.2 1.2 0 002 0C22 58.5 40 31.6 40 20c0-11-9-20-20-20z" fill="${color}" />
 			<circle cx="20" cy="20" r="15" fill="white" />
@@ -61,87 +61,90 @@ function Map({ selectedStep }) {
 			</g>
 		  </svg>
 		`)}`,
-			scaledSize: new window.google.maps.Size(30, 70),
-			anchor: new window.google.maps.Point(15, 70),
-		};
-	};
+            scaledSize: new window.google.maps.Size(30, 70),
+            anchor: new window.google.maps.Point(15, 70),
+        };
+    };
 
-	// 지도 중심 이동
-	useEffect(() => {
-		if (!isLoaded) return;
+    // 📌 지도 중심 이동
+    useEffect(() => {
+        if (!isLoaded || !mapRef.current) return;
 
-		const places =
-			selectedStep === 2
-				? storedPlaces
-				: Object.values(storedAccommodations);
+        const places =
+            selectedStep === 2
+                ? storedPlaces
+                : Object.values(storedAccommodations);
+        const targetPlace = focusedPlace ?? places.at(-1);
 
-		if (!mapRef.current) return;
+        if (!targetPlace) return; // ✅ targetPlace가 undefined면 종료
 
-		const targetPlace = focusedPlace ?? places.at(-1);
+        const { latitude, longitude } = targetPlace.location || targetPlace;
 
-		const { latitude, longitude } = targetPlace?.location || targetPlace;
-		mapRef.current.panTo({ lat: latitude, lng: longitude });
-	}, [
-		isLoaded,
-		selectedStep,
-		storedPlaces,
-		storedAccommodations,
-		focusedPlace,
-	]);
+        // ✅ latitude, longitude가 유효한지 확인
+        if (latitude === undefined || longitude === undefined) return;
 
-	// ✅ 아직 로딩 중이면 표시
-	if (!isLoaded || !window.google?.maps) {
-		return <div>지도 불러오는 중...</div>;
-	}
+        mapRef.current.panTo({ lat: latitude, lng: longitude });
+    }, [
+        isLoaded,
+        selectedStep,
+        storedPlaces,
+        storedAccommodations,
+        focusedPlace,
+    ]);
 
-	return (
-		<GoogleMap
-			mapContainerStyle={containerStyle}
-			defaultCenter={defaultCenter}
-			zoom={13}
-			onLoad={(map) => {
-				mapRef.current = map;
-				map.panTo(defaultCenter);
-			}}
-		>
-			{selectedStep === 2 &&
-				storedPlaces.map((place, idx) => (
-					<Marker
-						key={place.id}
-						position={{
-							lat: place?.location?.latitude || place?.latitude,
-							lng: place?.location?.longitude || place?.longitude,
-						}}
-						icon={createPinMarkerIcon(
-							idx + 1,
-							getColorByCategory(place.category)
-						)}
-						onClick={() => {
-							setPlaceModalInfo(place);
-							setFocusedPlace(place);
-						}}
-					/>
-				))}
+    // ✅ 아직 로딩 중이면 표시
+    if (!isLoaded || !window.google?.maps) {
+        return <div>지도 불러오는 중...</div>;
+    }
 
-			{selectedStep === 3 &&
-				Object.values(storedAccommodations).map((place) => (
-					<Marker
-						key={place.id}
-						position={{
-							lat: place?.location?.latitude || place?.latitude,
-							lng: place?.location?.longitude || place?.longitude,
-						}}
-						icon={createBedMarkerIcon(
-							getColorByCategory(place.category)
-						)}
-						onClick={() => {
-							setPlaceModalInfo(place);
-							setFocusedPlace(place);
-						}}
-					/>
-				))}
-		</GoogleMap>
-	);
+    return (
+        <GoogleMap
+            mapContainerStyle={containerStyle}
+            defaultCenter={defaultCenter}
+            zoom={13}
+            onLoad={(map) => {
+                mapRef.current = map;
+                map.panTo(defaultCenter);
+            }}
+        >
+            {selectedStep === 2 &&
+                storedPlaces.map((place, idx) => (
+                    <Marker
+                        key={place.id}
+                        position={{
+                            lat: place?.location?.latitude || place?.latitude,
+                            lng: place?.location?.longitude || place?.longitude,
+                        }}
+                        icon={createPinMarkerIcon(
+                            idx + 1,
+                            getColorByCategory(place.category)
+                        )}
+                        onClick={() => {
+                            setPlaceModalInfo(place);
+                            setFocusedPlace(place);
+                        }}
+                    />
+                ))}
+
+            {selectedStep === 3 &&
+                Object.values(storedAccommodations).map((place) => (
+                    <Marker
+                        key={place.id}
+                        position={{
+                            lat: place?.location?.latitude || place?.latitude,
+                            lng: place?.location?.longitude || place?.longitude,
+                        }}
+                        icon={createBedMarkerIcon(
+                            getColorByCategory(place.category)
+                        )}
+                        onClick={() => {
+                            setPlaceModalInfo(place);
+                            setFocusedPlace(place);
+                        }}
+                    />
+                ))}
+        </GoogleMap>
+    );
 }
 
 export default Map;
