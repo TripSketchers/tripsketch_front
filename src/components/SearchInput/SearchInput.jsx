@@ -12,8 +12,8 @@ function SearchInput({ placeholder, onSearch, setIsShow }) {
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            handleSearchBtn(); // Enter 키 누르면 검색 실행
-			setIsShow(true);
+            handleSearchBtn();
+            setIsShow?.(true); // setIsShow가 있을 때만 실행
         }
     };
 
@@ -22,12 +22,12 @@ function SearchInput({ placeholder, onSearch, setIsShow }) {
     };
 
     const handleFocus = () => {
-        setIsShow(true);
+        setIsShow?.(true);
     };
 
     const handleBlur = () => {
         setTimeout(() => {
-            setIsShow(false);
+            setIsShow?.(false);
         }, 100);
     };
 

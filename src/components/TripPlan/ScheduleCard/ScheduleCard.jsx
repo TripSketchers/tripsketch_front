@@ -59,7 +59,7 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
                             {viewStartTime?.slice(0, 5) || startTime?.slice(0, 5)} -{" "}
                             {viewEndTime?.slice(0, 5) || endTime?.slice(0, 5)}
                         </span>
-                        {place.name}
+                        {place.name || place.displayName?.text}
                     </div>
                 ) : (
                     <>
@@ -68,7 +68,7 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
                             {viewEndTime?.slice(0, 5) || endTime?.slice(0, 5)}
                             <span> ({Math.floor(stayTime / 60)}시간 {stayTime % 60}분)</span>
                         </div>
-                        <div css={S.SCardLabel}>{place.name}</div>
+                        <div css={S.SCardLabel}>{place.name || place.displayName?.text}</div>
                     </>
                 )}
             </div>
