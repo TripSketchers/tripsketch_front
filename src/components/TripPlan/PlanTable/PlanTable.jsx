@@ -9,7 +9,7 @@ import useScheduleDropHandler from "../../../hooks/useScheduleDropHandler";
 import { formatHour } from "../../../utils/scheduleUtils";
 
 function PlanTable() {
-    const { tripInfo, schedules, setSchedules } = useTrip();
+    const { tripInfo, schedules, setSchedules, storedAccommodations } = useTrip();
     const { handleDrop } = useScheduleDropHandler(schedules, setSchedules);
 
     const startDate = tripInfo?.startDate || tripInfo?.trip?.startDate;
@@ -17,7 +17,7 @@ function PlanTable() {
 
     const tripDates = startDate && endDate
         ? eachDayOfInterval({ start: new Date(startDate), end: new Date(endDate) })
-              .map((d) => format(d, "yyyy.MM.dd"))
+              .map((d) => format(d, "yyyy-MM-dd")) // ← 하이픈(-)으로!
         : [];
 
     const hours = [...Array.from({ length: 19 }, (_, i) => i + 6), ...Array.from({ length: 5 }, (_, i) => i + 1)];
@@ -56,6 +56,29 @@ function PlanTable() {
                         const daySchedules = schedules.filter(
                             (s) => format(new Date(s.date), "yyyy.MM.dd") === date
                         );
+
+                        // 날짜별 숙소 정보 가져오기
+                        const place = storedAccommodations?.[date];
+
+                        // 숙소를 Schedule 형식으로 변환
+                        let accommodationSchedule = null;
+                        if (place) {
+                            accommodationSchedule = {
+                                tripScheduleId: null,
+                                tripId: tripInfo?.tripId ?? null,
+                                placeStoreId: place.placeId ?? null,
+                                date: date,
+                                startTime: "23:00:00", // 숙소 입실 시간
+                                endTime: "30:00:00",   // 숙소 퇴실 시간(다음날)
+                                stayTime: 420,
+                                travelTime: null,
+                                position: null,
+                                isLocked: 0,
+                                place: place,
+                                isAccommodation: true,
+                            };
+                        }              
+
                         return (
                             <DropZone key={date} date={date} index={index} onDrop={handleDrop}>
                                 {daySchedules.map((s, i) => (
@@ -66,6 +89,14 @@ function PlanTable() {
                                         onUpdate={onUpdate}
                                     />
                                 ))}
+                                {/* 숙소가 있으면 마지막에 추가 */}
+                                {accommodationSchedule && (
+                                    <ScheduleCard
+                                        key={`accommodation_${place.googlePlaceId || place.placeId}_${date}`}
+                                        schedule={accommodationSchedule}
+                                        isAccommodation
+                                    />
+                                )}
                             </DropZone>
                         );
                     })}

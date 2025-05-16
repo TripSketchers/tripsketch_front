@@ -42,3 +42,16 @@ export const getCardPositionAndHeight = (startTime, endTime, pixelsPerMinute = 1
 
 // 📌 시간 값(Hour) → "HH:00" 포맷 (타임라인 라벨용)  
 export const formatHour = (h) => `${(h % 24).toString().padStart(2, "0")}:00`;
+
+// ✅ 시간 문자열을 익일 처리해서 표시용으로 변환
+export function formatDisplayTime(timeStr) {
+    if (!timeStr) return "";
+
+    const [hourStr, minute] = timeStr.split(":");
+    let hour = parseInt(hourStr, 10);
+
+    if (hour >= 24) hour -= 24;
+
+    const formattedHour = hour.toString().padStart(2, "0");
+    return `${formattedHour}:${minute}`;
+}

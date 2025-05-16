@@ -26,7 +26,6 @@ function Sidebar({ selectedStep, setSelectedStep }) {
     const handleTransportSelect = async (selectedTransport) => {
         try {
             const mergedAccommodations = convertStoredAccommodationMapToArray(storedAccommodations);
-            console.log(location.state.tripId);
             
             const reqData = {
                 trip: {
