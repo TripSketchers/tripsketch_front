@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDrag } from "react-dnd";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import { FaLock, FaLockOpen } from "react-icons/fa6";
 import ScheduleEditor from "../ScheduleEditer/ScheduleEditer";
-import { getCardPositionAndHeight } from "../../../utils/scheduleUtils";
-import { formatDisplayTime } from "../../../utils/scheduleUtils";
+import { formatDisplayTime, getCardPositionAndHeight } from "../../../utils/scheduleUtils";
 
 function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
     const {
@@ -18,7 +17,6 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
         viewEndTime,
         place,
     } = schedule;
-
     const [showEditor, setShowEditor] = useState(false);
     const [selectedSchedule, setSelectedSchedule] = useState(null);
 
@@ -26,6 +24,10 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
     const { top: topPx, height: heightPx } = getCardPositionAndHeight(startTime, endTime, PIXELS_PER_MINUTE);
     const compactView = heightPx < 45;
 
+    const [popupPosition, setPopupPosition] = useState("below");
+    const cardRef = useRef(null);
+
+    // 🐭 DnD 드래그 설정
     const [{ isDragging }, dragRef] = useDrag({
         type: "SCHEDULE",
         item: { schedule, topPx },
@@ -37,13 +39,30 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
         e.stopPropagation();
         if (!isLocked) {
             setSelectedSchedule(schedule);
+            if (cardRef.current) {
+                const position = getPopupPosition(cardRef.current);
+                setPopupPosition(position);
+            }
             setShowEditor(true);
         }
     };
 
+    const getPopupPosition = (triggerElement, popupHeight = 200) => {
+        const rect = triggerElement.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        const spaceBelow = viewportHeight - rect.bottom;
+        const shouldShowAbove = spaceBelow < popupHeight;
+
+        return shouldShowAbove ? "above" : "below";
+    }
+
     return (
         <div
-            ref={dragRef}
+            ref={(el) => {
+                dragRef(el);
+                cardRef.current = el;
+            }}
             css={S.SCard}
             style={{
                 top: `${topPx}px`,
@@ -69,13 +88,12 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
                             {formatDisplayTime(viewEndTime || endTime)}
                             <span> ({Math.floor(stayTime / 60)}시간 {stayTime % 60}분)</span>
                         </div>
-                        <div css={S.SCardLabel}>
-                            {place?.name || place?.displayName?.text}
-                        </div>
+                        <div css={S.SCardLabel}>{place?.name || place?.displayName?.text}</div>
                     </>
                 )}
             </div>
 
+            {/* 🔒 잠금 버튼 */}
             <div
                 css={S.SLocked}
                 onClick={(e) => {
@@ -86,9 +104,11 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
                 {isLocked === 1 ? <FaLock /> : <FaLockOpen />}
             </div>
 
+            {/* ✏️ 편집기 팝업 */}
             {showEditor && (
                 <ScheduleEditor
                     schedule={selectedSchedule}
+                    popupPosition={popupPosition}
                     onSave={(id, updates) => {
                         onUpdate?.(id, updates);
                         setShowEditor(false);

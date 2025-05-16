@@ -1,10 +1,8 @@
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 
 export const SBubbleEditor = css`
 	position: absolute;
-	top: calc(100% + 5px);
 	left: 0;
-	margin-top: 8px;
 	padding: 12px;
 	background-color: #fff;
 	border: 1px solid #ddd;
@@ -14,24 +12,11 @@ export const SBubbleEditor = css`
 	display: flex;
 	flex-direction: column;
 
-    /* ✅ 말풍선 꼬리 추가 */
-	&::before {
-		content: "";
-		position: absolute;
-		top: -8px;
-		left: calc(50% - 8px);
-		width: 0;
-		height: 0;
-		border-left: 8px solid transparent;
-		border-right: 8px solid transparent;
-		border-bottom: 8px solid #fff; /* 말풍선 배경색과 동일 */
+	label {
+		font-weight: bold;
+		font-size: 14px;
+		margin: 8px 0 4px 0;
 	}
-
-    label {
-        font-weight: bold;
-        font-size: 14px;
-        margin: 8px 0 4px 0;
-    }
 
 	input[type="time"],
 	input[type="number"] {
@@ -43,7 +28,7 @@ export const SBubbleEditor = css`
 
 	button {
 		align-self: center;
-        margin-top: 8px;
+		margin-top: 8px;
 		padding: 5px 20px;
 		background-color: #1890ff;
 		color: #fff;
@@ -54,6 +39,40 @@ export const SBubbleEditor = css`
 		&:hover {
 			background-color: #1476cc;
 		}
+	}
+`;
+
+/** 🟢 아래쪽 (기본) 말풍선 */
+export const SPopupBelow = css`
+	top: calc(100% + 5px);
+
+	&::before {
+		content: "";
+		position: absolute;
+		top: -8px;
+		left: calc(50% - 8px);
+		width: 0;
+		height: 0;
+		border-left: 8px solid transparent;
+		border-right: 8px solid transparent;
+		border-bottom: 8px solid #fff;
+	}
+`;
+
+/** 🔵 위쪽 말풍선 */
+export const SPopupAbove = css`
+	bottom: calc(100% + 5px);
+
+	&::before {
+		content: "";
+		position: absolute;
+		bottom: -8px;
+		left: calc(50% - 8px);
+		width: 0;
+		height: 0;
+		border-left: 8px solid transparent;
+		border-right: 8px solid transparent;
+		border-top: 8px solid #fff;
 	}
 `;
 
