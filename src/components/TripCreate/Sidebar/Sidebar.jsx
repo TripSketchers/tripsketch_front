@@ -11,10 +11,11 @@ import TransportModal from "../TransportModal/TransportModal";
 import { instance } from "../../../api/config/instance";
 import { useTrip } from "../../Routes/TripContext";
 import { convertStoredAccommodationMapToArray } from "../../../utils/StoredAccommdationsUtils";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Sidebar({ selectedStep, setSelectedStep }) {
     const navigate = useNavigate();
+    const location = useLocation();
     const [showModal, setShowModal] = useState(false);
     const { tripInfo, storedPlaces, storedAccommodations } = useTrip();
 
@@ -25,51 +26,65 @@ function Sidebar({ selectedStep, setSelectedStep }) {
     const handleTransportSelect = async (selectedTransport) => {
         try {
             const mergedAccommodations = convertStoredAccommodationMapToArray(storedAccommodations);
-
+            console.log(location.state.tripId);
+            
             const reqData = {
                 trip: {
+                    tripId: location.state.tripId ?? null,
                     title: tripInfo?.title || "여행 이름을 입력하세요",
                     startDate: tripInfo?.startDate,
                     endDate: tripInfo?.endDate,
-                    tripDestinationId: tripInfo?.tripDestinationId || 5, // 필요에 따라 tripInfo에서 가져오거나 기본값 사용
+                    tripDestinationId: tripInfo?.tripDestinationId || 5,
                     transportType: selectedTransport,
+                    tripDestinationKoName: tripInfo?.tripDestinationKoName || "여행지",
                 },
                 storedPlaces: storedPlaces.map((place) => ({
                     place: {
-                        googlePlaceId: place.id,
-                        name: place.displayName?.text,
-                        address: place.formattedAddress,
-                        latitude: place.location.latitude,
-                        longitude: place.location.longitude,
+                        googlePlaceId: place.googlePlaceId || place.id,
+                        name: place.name || place.displayName?.text,
+                        address: place.address || place.formattedAddress,
+                        latitude: place.latitude || place.location?.latitude,
+                        longitude: place.longitude || place.location?.longitude,
                         category: place.category,
                         rating: place.rating,
-                        photoReference: place.photos?.[0]?.name || "",
+                        photoReference: place.photoReference || place.photos?.[0]?.name || "",
                     },
                 })),
                 storedAccommodations: mergedAccommodations.map((item) => ({
                     place: {
-                        googlePlaceId: item.place.id,
-                        name: item.place.displayName?.text,
-                        address: item.place.formattedAddress,
-                        latitude: item.place.location.latitude,
-                        longitude: item.place.location.longitude,
+                        googlePlaceId: item.place.googlePlaceId || item.place.id,
+                        name: item.place.name || item.place.displayName?.text,
+                        address: item.place.address || item.place.formattedAddress,
+                        latitude: item.place.latitude || item.place.location?.latitude,
+                        longitude: item.place.longitude || item.place.location?.longitude,
                         category: item.place.category,
                         rating: item.place.rating,
-                        photoReference: item.place.photos?.[0]?.name || "",
+                        photoReference: item.place.photoReference || item.place.photos?.[0]?.name || "",
                     },
                     checkInDate: item.checkInDate,
                     checkOutDate: item.checkOutDate,
                 })),
             };
 
-            await instance.post("/trip", reqData, {
-                headers: {
-                    Authorization: localStorage.getItem("accessToken"),
-                },
-            });
-
-            alert("여행이 생성되었습니다!");
-            navigate("/account/mypage");
+            if (tripInfo?.tripId) {
+                // 수정(업데이트)일 때: PUT /trip/{tripId}
+                await instance.put(`/trip/${tripInfo.tripId}`, reqData, {
+                    headers: {
+                        Authorization: localStorage.getItem("accessToken"),
+                    },
+                });
+                alert("여행이 수정되었습니다!");
+                navigate(`/trip/plan/${tripInfo.tripId}`);
+            } else {
+                // 생성(신규)일 때: POST /trip
+                await instance.post("/trip", reqData, {
+                    headers: {
+                        Authorization: localStorage.getItem("accessToken"),
+                    },
+                });
+                alert("여행이 생성되었습니다!");
+                navigate("/account/mypage");
+            }
         } catch (err) {
             console.error(err);
             alert("여행 생성에 실패했습니다.");

@@ -91,6 +91,8 @@ function StoredPlacePanel({ text, onAddPlaceClick, isAddingPlace, onSave }) {
 												index={i + 1}
 												type="accommodation"
 												place={place}
+												// key에 날짜와 googlePlaceId를 조합
+												key={`${place.googlePlaceId || place.id}-${dateStr}`}
 												onRemove={() => {
 													const copy = {
 														...storedAccommodations,

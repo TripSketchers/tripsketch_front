@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import { instance } from "../../api/config/instance";
 import { useTrip } from "../../components/Routes/TripContext";
 import PlaceDetailModal from "../../components/PlaceDetailModal/PlaceDetailModal";
+import { convertArrayToAccommodationMap } from "../../utils/StoredAccommdationsUtils";
 
 function TripPlan() {
 	const [isStoredPanelOpen, setIsStoredPanelOpen] = useState(true);
@@ -41,7 +42,7 @@ function TripPlan() {
 
 				setTripInfo(data.trip);
 				setStoredPlaces(data.storedPlaces);
-				setStoredAccommodations(data.storedAccommodations);
+				setStoredAccommodations(convertArrayToAccommodationMap(data.storedAccommodations));
 				setSchedules(data.tripSchedules);
 			} catch (err) {
 				console.error("여행 정보를 불러오는 데 실패했습니다.", err);

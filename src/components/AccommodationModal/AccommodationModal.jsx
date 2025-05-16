@@ -60,7 +60,7 @@ function AccommodationModal({ onClose, onConfirm, selectedPlace }) {
                     const dateStr = format(day, "yyyy-MM-dd");
                     const isSelected = !!selectedDateMap[dateStr];
                     const targetPlace = selectedDateMap[dateStr];
-                    const placeName = targetPlace?.displayName?.text || "";
+                    const placeName = targetPlace?.displayName?.text || targetPlace?.name || "";
                     const photoUrl = selectedDateMap[dateStr]?.imageUrl || fallbackImg;
 
                     return (

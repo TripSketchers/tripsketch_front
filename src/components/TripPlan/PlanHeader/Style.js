@@ -19,8 +19,8 @@ export const SContainer = css`
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
-    min-width: 250px;
-    gap: 10px;
+	min-width: 250px;
+	gap: 10px;
 	* {
 		display: block;
 		text-overflow: ellipsis;
@@ -37,4 +37,26 @@ export const STitle = css`
 	overflow: hidden;
 	font-size: 28px;
 	font-weight: 600;
+`;
+
+export const SButton = css`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 10px;
+	background-color: #fff;
+	color: #000; /* 버튼 텍스트 및 아이콘 색상 */
+	font-size: 14px;
+	font-weight: 500;
+	min-width: 65px;
+    height: 100%;
+	cursor: pointer;
+
+	* {
+		color: #000;
+	}
+	svg {
+		font-size: 18px;
+        margin-right: 5px;
+	}
 `;

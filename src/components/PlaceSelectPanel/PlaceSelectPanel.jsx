@@ -67,7 +67,7 @@ function PlaceSelectPanel({ text, categories }) {
         if (text === "숙소") {
             setSelectedPlace(place);
             setShowModal(true);
-        } else if (text === "계획") {
+        } else {
             setStoredPlaces((prev) => {
                 const exists = prev.some((p) => p.googlePlaceId === place.id);
                 if (exists) {
@@ -77,6 +77,7 @@ function PlaceSelectPanel({ text, categories }) {
                         ...place,
                         googlePlaceId: place.id, // ✅ ID 통일
                     };
+                    console.log("place.id:", place.id, "place.googlePlaceId:", place.googlePlaceId);
                     return [...prev, normalizedPlace];
                 }
             });
