@@ -6,8 +6,8 @@ import AlbumFolderItem from "./AlbumFolderItem/AlbumFolderItem";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { groupBy } from "lodash";
 
-function AlbumFolder({ albums, setShowSorting }) {
-    const [selectedAlbumId, setSelectedAlbumId] = useState(null); //폴더(앨범) 클릭시 albumId 저장
+function AlbumFolder({ albums, setShowSorting, stateAlbumId }) {
+    const [selectedAlbumId, setSelectedAlbumId] = useState(stateAlbumId ?? null); //폴더(앨범) 클릭시 albumId 저장
 
     // 선택한 albumId에 맞는 앨범 하나 찾기
     const selectedAlbum = albums.find(

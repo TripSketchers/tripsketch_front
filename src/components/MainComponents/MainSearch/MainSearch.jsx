@@ -32,8 +32,7 @@ function MainSearch(props) {
                         searchKeyword: searchKeyword || ""
                     }
                 };
-                const response = await instance.get(`/trip-destinations`, options );
-                console.log(searchKeyword);
+                const response = await instance.get(`/main/trip-destinations`, options );
                 return response.data;
             } catch (error) {
                 console.error(error);

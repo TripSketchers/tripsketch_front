@@ -33,7 +33,7 @@ function MyPage() {
 	const calculateDDay = (startDate) => {
 		const today = new Date();
 		const start = new Date(startDate);
-		const diff = differenceInDays(start, today);
+		const diff = differenceInDays(start, today) + 1;
 		if (diff === 0) return "D - Day";
 		if (diff > 0) return `D - ${diff}`;
 		return `D + ${Math.abs(diff)}`;
