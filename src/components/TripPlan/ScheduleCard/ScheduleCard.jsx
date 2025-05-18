@@ -4,7 +4,7 @@ import { useDrag } from "react-dnd";
 import * as S from "./Style";
 import { FaLock, FaLockOpen } from "react-icons/fa6";
 import ScheduleEditor from "../ScheduleEditer/ScheduleEditer";
-import { formatDisplayTime, getCardPositionAndHeight } from "../../../utils/scheduleUtils";
+import { formatDisplayTime, getCardPositionAndHeight, timeToMinutes } from "../../../utils/scheduleUtils";
 
 function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
     const {
@@ -36,6 +36,8 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
     });
 
     const handleEditClick = (e) => {
+        console.log(schedule);
+        
         e.stopPropagation();
         if (!isLocked) {
             setSelectedSchedule(schedule);
@@ -57,13 +59,19 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
         return shouldShowAbove ? "above" : "below";
     }
 
+    // 원래 전체 일정 기준 머무는 시간(분) 계산
+    const displayStayTime =
+        viewStartTime && viewEndTime
+            ? timeToMinutes(viewEndTime) - timeToMinutes(viewStartTime)
+            : stayTime ?? 0; // stayTime도 undefined일 수 있으니 기본값 0
+
     return (
         <div
             ref={(el) => {
                 dragRef(el);
                 cardRef.current = el;
             }}
-            css={S.SCard}
+            css={S.SCard(schedule?.place?.category)}
             style={{
                 top: `${topPx}px`,
                 height: `${heightPx}px`,
@@ -86,7 +94,10 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
                         <div css={S.SCardTime}>
                             {formatDisplayTime(viewStartTime || startTime)} -{" "}
                             {formatDisplayTime(viewEndTime || endTime)}
-                            <span> ({Math.floor(stayTime / 60)}시간 {stayTime % 60}분)</span>
+                            <span>
+                                {" "}
+                                ({Math.floor(displayStayTime / 60)}시간 {displayStayTime % 60}분)
+                            </span>
                         </div>
                         <div css={S.SCardLabel}>{place?.name || place?.displayName?.text}</div>
                     </>

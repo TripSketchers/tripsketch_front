@@ -55,3 +55,13 @@ export function formatDisplayTime(timeStr) {
     const formattedHour = hour.toString().padStart(2, "0");
     return `${formattedHour}:${minute}`;
 }
+
+// ⏰ 종료 시간 계산 함수 (startTime + stayTime)
+export function calculateEndTime(startTime, stayTime) {
+    const [h, m] = startTime.split(":").map(Number);
+    const startDate = new Date(2025, 0, 1, h, m);
+    const endDate = new Date(startDate.getTime() + stayTime * 60000);
+    const endH = String(endDate.getHours()).padStart(2, "0");
+    const endM = String(endDate.getMinutes()).padStart(2, "0");
+    return `${endH}:${endM}:00`;
+}

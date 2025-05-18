@@ -1,13 +1,14 @@
 import { css } from "@emotion/react";
+import { getColorByCategory } from "../../../utils/CategoryUtils";
 
-export const SCard = css`
+export const SCard = (category) => css`
 	position: absolute;
 	left: 0;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	border: 1px solid #dbdbdb;
-	border-left: 4px solid #1890ff;
+	border-left: 4px solid ${getColorByCategory(category)};
 	padding: 0 8px;
 	background-color: white;
 	width: 100%;
