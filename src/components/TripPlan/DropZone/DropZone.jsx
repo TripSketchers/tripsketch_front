@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { useDrop } from "react-dnd";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import { calculateEndTime } from "../../../utils/scheduleUtils";
+import { calculateEndTime } from "../../../utils/ScheduleTimeUtils";
 
 // 📌 상수 정의
 const PIXELS_PER_MINUTE = 1; // 1분 = 1px

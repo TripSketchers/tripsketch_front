@@ -6,12 +6,13 @@ import ScheduleCard from "../ScheduleCard/ScheduleCard";
 import DropZone from "../DropZone/DropZone";
 import { useTrip } from "../../Routes/TripContext";
 import useScheduleDropHandler from "../../../hooks/useScheduleDropHandler";
-import { formatHour } from "../../../utils/scheduleUtils";
+import { formatHour } from "../../../utils/ScheduleTimeUtils";
+import { initScheduleHandler, splitAndSetSchedule } from "../../../utils/ScheduleCreateUtils";
 
 function PlanTable() {
 	const { tripInfo, schedules, setSchedules, storedAccommodations } =
 		useTrip();
-	const { handleDrop, splitAndSetSchedule } = useScheduleDropHandler(schedules, setSchedules);
+	const { handleDrop } = useScheduleDropHandler(schedules, setSchedules);
 
 	const startDate = tripInfo?.startDate || tripInfo?.trip?.startDate;
 	const endDate = tripInfo?.endDate || tripInfo?.trip?.endDate;
@@ -63,6 +64,7 @@ function PlanTable() {
 			);
 
 			if (accommodation && !hasAccommodationSchedule) {
+                initScheduleHandler(setSchedules);
 				// splitAndSetSchedule을 사용하여 분할 추가
 				splitAndSetSchedule(
 					{

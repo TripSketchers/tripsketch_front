@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import { formatDisplayTime, minutesToTime, timeToMinutes } from "../../../utils/scheduleUtils";
+import { formatDisplayTime, minutesToTime, timeToMinutes } from "../../../utils/ScheduleTimeUtils";
 import { useTrip } from "../../Routes/TripContext";
 import useScheduleDropHandler from "../../../hooks/useScheduleDropHandler";
 

@@ -4,7 +4,7 @@ import { useDrag } from "react-dnd";
 import * as S from "./Style";
 import { FaLock, FaLockOpen } from "react-icons/fa6";
 import ScheduleEditor from "../ScheduleEditer/ScheduleEditer";
-import { formatDisplayTime, getCardPositionAndHeight, timeToMinutes } from "../../../utils/scheduleUtils";
+import { formatDisplayTime, getCardPositionAndHeight, getDisplayStayTime } from "../../../utils/ScheduleTimeUtils";
 
 function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
     const {
@@ -62,7 +62,7 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
     // 원래 전체 일정 기준 머무는 시간(분) 계산
     const displayStayTime =
         viewStartTime && viewEndTime
-            ? timeToMinutes(viewEndTime) - timeToMinutes(viewStartTime)
+            ? getDisplayStayTime(viewStartTime, viewEndTime)
             : stayTime ?? 0; // stayTime도 undefined일 수 있으니 기본값 0
 
     return (
