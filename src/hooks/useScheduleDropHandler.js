@@ -3,6 +3,7 @@ import { findOverlappingSlot } from "../utils/ScheduleOverlapUtils";
 import {
     calculateTotalStayTime,
 	getAbsoluteMinutes,
+	minutesToAbsTime,
 	minutesToTime,
 	timeToMinutes,
 } from "../utils/ScheduleTimeUtils";
@@ -12,10 +13,8 @@ const TIMELINE_END = 1800;    // 30:00 (익일 06:00)
 
 export default function useScheduleDropHandler(schedules, setSchedules) {
 	const handleDrop = (droppedItem, dropDate, startTime, endTime) => {
-        console.log("✔️[handleDrop] ▶ 드래그된 일정 Drop 시작");
-        console.log("드롭 대상:", droppedItem);
-        console.log("드롭 날짜:", dropDate);
-        console.log("드롭 시작 시간:", startTime, "드롭 종료 시간:", endTime);
+        console.log("[handleDrop]", startTime, endTime);
+        
 		// ✅ 머무는 시간 계산 (분할 일정이면 viewStart~end, 아니면 stayTime 또는 시간차)
 		const isSplit = droppedItem.isSplit === true; // isSplit으로 분할 일정 여부 판단
         let totalStayTime = calculateTotalStayTime(droppedItem, startTime, endTime);
@@ -40,11 +39,11 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
         const dropStartAbs = getAbsoluteMinutes(startTime);
         const dropEndAbs = getAbsoluteMinutes(endTime);
 
-		// 🚧 겹치는 일정 확인 및 빈 슬롯 탐색
+        // 🚧 겹치는 일정 확인 및 빈 슬롯 탐색
 		let adjustedStartAbs = findOverlappingSlot(daySchedules, droppedItem, dropStartAbs, dropEndAbs);
         if (adjustedStartAbs === null) return;   // 🚫 이동할 공간 없으면 Drop 취소
 
-		const adjustedStartTime = minutesToTime(adjustedStartAbs);
+		const adjustedStartTime = minutesToAbsTime(adjustedStartAbs);
 
 		// 📝 viewStartTime, viewEndTime 계산
 		let viewStartTime, viewEndTime;
@@ -87,9 +86,8 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 			droppedItem,
 			dropDate,
 			adjustedStartTime,
-			minutesToTime(timeToMinutes(adjustedStartTime) + totalStayTime)
+			minutesToAbsTime(timeToMinutes(adjustedStartTime) + totalStayTime)
 		);
-        console.log("➖[handleDrop] ▶ 드래그된 일정 Drop 종료");
 	};
 
 	return { handleDrop };

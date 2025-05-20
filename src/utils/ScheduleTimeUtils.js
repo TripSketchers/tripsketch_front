@@ -23,10 +23,10 @@ export const minutesToAbsTime = (totalMinutes) => {
 };
 
 // 📌 타임라인 좌표/절대 분(minute) 계산 (06:00 기준, 0시~5시 → 다음날 처리)  
-export const getAbsoluteMinutes = (timeStr, timelineStart = TIMELINE_START) => {
+export const getAbsoluteMinutes = (timeStr) => {
     if (!timeStr) return 0;
     const total = timeToMinutes(timeStr);
-    return total < timelineStart ? total + TIME_END : total;
+    return total < TIMELINE_START ? total + TIME_END : total;
 };
 
 // 📌 카드 위치와 높이 계산 (타임라인에서 사용)  
@@ -34,7 +34,8 @@ export const getCardPositionAndHeight = (startTime, endTime, pixelsPerMinute = 1
     const start = getAbsoluteMinutes(startTime);
     const end = getAbsoluteMinutes(endTime);
     const top = (start - TIMELINE_START) * pixelsPerMinute;
-    const height = (end - start) * pixelsPerMinute;
+    let height = (end - start) * pixelsPerMinute;
+    if(height < 0) height += 1440;
     return { top, height };
 };
 
@@ -57,8 +58,8 @@ export const calculateTotalStayTime = (droppedItem, startTime, endTime) => {
 };
 
 // 🟢 익일 처리 함수
-export const adjustMinutes = (start, end) => {
-    if (end <= start || (end > TIMELINE_START && start < TIMELINE_START)) {
+export const adjustMinutes = (start, end) => {  //02:00 10:00
+    if (end <= start || end > TIMELINE_START && start < TIMELINE_START) {
         end += TIME_END; // 다음날로 간주
     }
     if (start < TIMELINE_START && start >= 0) {
