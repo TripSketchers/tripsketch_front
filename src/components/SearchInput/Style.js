@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 
 export const SSearchBox = css`
+	position: relative;
 	display: flex;
 	align-items: center;
 	border: 1px solid #dbdbdb;
@@ -10,6 +11,7 @@ export const SSearchBox = css`
 	height: 2.5rem;
 	box-shadow: 2px 2px 5px #a7b5b9;
 	background-color: white;
+	z-index: 1;
 `;
 
 export const SInput = css`

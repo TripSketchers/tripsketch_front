@@ -1,7 +1,6 @@
 import React from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import MainImg from "../../../assets/MainImg.jpg";
 import { FaLocationDot } from "react-icons/fa6";
 import { BiSolidCalendarCheck } from "react-icons/bi";
 import { AiFillCar } from "react-icons/ai";
@@ -10,6 +9,7 @@ import { differenceInDays } from "date-fns";
 import { instance } from "../../../api/config/instance";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { IoIosImages } from "react-icons/io";
 
 // startDate, endDate로 D-Day와 n박 n일을 반환하는 함수
 function getTripInfo(startDate, endDate) {
@@ -110,7 +110,9 @@ function RecentTrips({ getUpcomingTrip }) {
                         getRecentAlbums.data.length > 0 ? (
                             getRecentAlbums?.data?.map((album, idx) => (
                                 <div
-                                    className={`albumBox albumBox-count-${getRecentAlbums.data.length} albumBox-idx-${idx + 1}`}
+                                    className={`albumBox albumBox-count-${
+                                        getRecentAlbums.data.length
+                                    } albumBox-idx-${idx + 1}`}
                                     key={album.tripId}
                                     onClick={() =>
                                         navigate(
@@ -128,16 +130,27 @@ function RecentTrips({ getUpcomingTrip }) {
                                 </div>
                             ))
                         ) : (
-                            <button
-                                css={S.SNoAlbum}
-                                onClick={() =>
-                                    navigate(
-                                        `/trip/album/${getUpcomingTrip?.tripId}`
-                                    )
-                                }
-                            >
-                                + 새 앨범 만들기
-                            </button>
+                            <div css={S.SNoAlbum}>
+                                <div>
+                                    <span>
+                                        <IoIosImages /> 최근 앨범이 없습니다
+                                        <br />
+                                    </span>
+                                    <p>
+                                        여행을 다녀오고 앨범을 만들어보세요!
+                                    </p>
+                                </div>
+                                <button
+                                    data-text="새 앨범 만들기"
+                                    onClick={() =>
+                                        navigate(
+                                            `/trip/album/${getUpcomingTrip?.tripId}`
+                                        )
+                                    }
+                                >
+                                    + 새 앨범 만들기
+                                </button>
+                            </div>
                         )}
                     </div>
                 </div>

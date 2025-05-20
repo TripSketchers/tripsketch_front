@@ -37,7 +37,8 @@ export const SLeftContainer = css`
 export const STripBox = css`
     position: relative;
     width: 100%;
-    height: 100%;
+    max-height: 320px;
+    min-height: 160px;
     border-radius: 20px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -108,6 +109,7 @@ export const STripBox = css`
         position: relative;
         width: 100%;
         height: 100%;
+        max-height: 100%;
         object-fit: cover;
     }
 `;
@@ -119,22 +121,11 @@ export const SRightContainer = css`
     & > div {
         position: relative;
         width: 100%;
-        height: 85%;
+        min-height: 160px;
 
         @media (max-width: 1000px) {
             // SRightContainer 위치 조정
-            height: clamp(160px, 30vw, 300px);
-        }
-    }
-
-    & > div {
-        position: relative;
-        width: 100%;
-        height: calc(100% - 44px);
-
-        @media (max-width: 1000px) {
-            // SRightContainer 위치 조정
-            height: clamp(160px, 30vw, 300px);
+            max-height: 364px;
         }
     }
 
@@ -235,13 +226,93 @@ export const SRightContainer = css`
 `;
 
 export const SNoAlbum = css`
-    position: rez;
+    position: relative;
     width: 100%;
-    height: 100%;
+    height: 320px;
     min-height: 160px;
-    border: 1px dashed #aaa;
-    border-radius: 20px;
-    color: #888;
     font-size: 1.1rem;
-    cursor: pointer;
+    border-radius: 20px;
+    border: 3px dashed lightgray;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* 앨범 없음 안내 텍스트 영역 */
+    > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        
+        * {
+            color: gray;
+        }
+
+        span {
+            display: flex;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        svg {
+            font-size: 24px;
+            margin-right: 5px;
+        }
+    }
+
+    button {
+        position: relative;
+        left: 0;
+        bottom: 0;
+        transform: none;
+        width: 160px;
+        height: 50px;
+        line-height: 50px;
+        font-size: 20px;
+        text-align: center;
+        font-family: sans-serif;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: #ccc;
+    }
+    button:before {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background: #81e7f9;
+        color: #fff;
+        transition: 0.5s;
+        transform-origin: bottom;
+        transform: translatey(-100%) rotatex(90deg);
+    }
+    button:hover:before {
+        transform: translatey(0) rotatex(0deg);
+    }
+
+    button:after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background: #6ec4d3;
+        color: #fff;
+        transition: 0.5s;
+        transform-origin: top;
+        transform: translatey(0) rotatex(0deg);
+    }
+    button:hover:after {
+        transform: translatey(100%) rotatex(90deg);
+    }
 `;

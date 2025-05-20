@@ -1,6 +1,8 @@
 import { css } from '@emotion/react';
 
 export const SLayout = css`
+    position: relative;
+    bottom: 0;
     padding: 10px 0;
     height: 120px;
     background-color: #f6f6f6;

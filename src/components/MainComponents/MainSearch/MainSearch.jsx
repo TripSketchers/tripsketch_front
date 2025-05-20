@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import MainImg from "../../../assets/MainImg.jpg";
+import MainImg1 from "../../../assets/MainImg1.jpg";
+import MainImg2 from "../../../assets/MainImg2.jpg";
+import MainImg3 from "../../../assets/MainImg3.jpg";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import SearchInput from "../../SearchInput/SearchInput";
@@ -16,6 +18,17 @@ function MainSearch(props) {
     const [isShow, setIsShow] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState("");
 
+    // 이미지 슬라이드 관련 상태
+    const images = [MainImg1, MainImg2, MainImg3];
+    const [currentImg, setCurrentImg] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentImg((prev) => (prev + 1) % images.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [images.length]);
+
     const handleStartBtn = () => {
         navigate("/auth/signin");
     };
@@ -29,10 +42,13 @@ function MainSearch(props) {
                         Authorization: localStorage.getItem("accessToken"),
                     },
                     params: {
-                        searchKeyword: searchKeyword || ""
-                    }
+                        searchKeyword: searchKeyword || "",
+                    },
                 };
-                const response = await instance.get(`/main/trip-destinations`, options );
+                const response = await instance.get(
+                    `/main/trip-destinations`,
+                    options
+                );
                 return response.data;
             } catch (error) {
                 console.error(error);
@@ -43,22 +59,35 @@ function MainSearch(props) {
     });
 
     const handleDestinationClick = (item) => {
-        navigate(`/trip/create`, { state: item })
-    }
+        navigate(`/trip/create`, { state: item });
+    };
 
     return (
         <div css={S.SLayout}>
-            <div css={S.SLeftContainer}>
-                <img src={MainImg} />
+            <img
+                src={images[currentImg]}
+                css={S.SImg}
+                alt="메인 배경"
+                draggable={false}
+            />
+            <div css={S.SIndicator}>
+                {images.map((_, idx) => (
+                    <span
+                        key={idx}
+                        className={`dot${idx === currentImg ? " active" : ""}`}
+                    >
+                        *
+                    </span>
+                ))}
             </div>
-            <div css={S.SRightContainer}>
+            <div css={S.SSearchContainer}>
                 <div>
                     <h1>
                         나만의 여행을
                         <br />
                         스케치 해보세요
                     </h1>
-                    <div css={S.SRightBottomBox}>
+                    <div css={S.SSearchBox}>
                         {principalState?.data?.data ? (
                             <SearchInput
                                 placeholder={"여행지 검색"}
@@ -77,12 +106,19 @@ function MainSearch(props) {
                                         <div
                                             key={item.tripDestinationId}
                                             css={S.STripDestinationBox}
-                                            onClick={()=>handleDestinationClick(item)}
+                                            onClick={() =>
+                                                handleDestinationClick(item)
+                                            }
+                                            onMouseDown={(e) => {
+                                                e.preventDefault();
+                                            }}
                                         >
                                             <FaLocationDot />
                                             <div css={S.STripDestinationName}>
                                                 <span>
-                                                    {item.koName.split(" ").pop()}
+                                                    {item.koName
+                                                        .split(" ")
+                                                        .pop()}
                                                 </span>
                                                 {item.koName.split(" ")[0]}
                                             </div>
