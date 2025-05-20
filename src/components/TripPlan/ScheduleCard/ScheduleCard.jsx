@@ -4,7 +4,7 @@ import { useDrag } from "react-dnd";
 import * as S from "./Style";
 import { FaLock, FaLockOpen } from "react-icons/fa6";
 import ScheduleEditor from "../ScheduleEditer/ScheduleEditer";
-import { formatDisplayTime, getCardPositionAndHeight, getDisplayStayTime } from "../../../utils/ScheduleTimeUtils";
+import { getCardPositionAndHeight, getDisplayStayTime, normalizeTime } from "../../../utils/ScheduleTimeUtils";
 
 function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
     const {
@@ -65,6 +65,9 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
             ? getDisplayStayTime(viewStartTime, viewEndTime)
             : stayTime ?? 0; // stayTime도 undefined일 수 있으니 기본값 0
 
+    const displayStart = normalizeTime(viewStartTime || startTime || "00:00");
+    const displayEnd = normalizeTime(viewEndTime || endTime || "00:00");
+
     return (
         <div
             ref={(el) => {
@@ -84,16 +87,14 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate }) {
                 {compactView ? (
                     <div css={S.SCompactText}>
                         <span>
-                            {formatDisplayTime(viewStartTime || startTime)} -{" "}
-                            {formatDisplayTime(viewEndTime || endTime)}
+                            {displayStart} - {displayEnd}
                         </span>
                         {place?.name || place?.displayName?.text}
                     </div>
                 ) : (
                     <>
                         <div css={S.SCardTime}>
-                            {formatDisplayTime(viewStartTime || startTime)} -{" "}
-                            {formatDisplayTime(viewEndTime || endTime)}
+                            {displayStart} - {displayEnd}
                             <span>
                                 {" "}
                                 ({Math.floor(displayStayTime / 60)}시간 {displayStayTime % 60}분)

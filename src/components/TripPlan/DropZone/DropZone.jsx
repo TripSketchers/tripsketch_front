@@ -2,7 +2,8 @@ import React, { useRef, useState, useEffect } from "react";
 import { useDrop } from "react-dnd";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import { calculateEndTime } from "../../../utils/ScheduleTimeUtils";
+// ✅ calculateEndTime 삭제, minutesToTime/timeToMinutes 조합으로 대체
+import { minutesToTime, timeToMinutes } from "../../../utils/ScheduleTimeUtils";
 
 // 📌 상수 정의
 const PIXELS_PER_MINUTE = 1; // 1분 = 1px
@@ -16,17 +17,17 @@ function DropZone({ date, index, onDrop, children }) {
 
 	// 🕒 마우스 위치를 시간으로 변환
 	const calculateTimeFromPosition = (clientY, sourceY, containerTop) => {
-		const offsetY = clientY - (clientY - sourceY) - containerTop;
-		const rawMinutes = offsetY / PIXELS_PER_MINUTE;
+		const offsetY = clientY - (clientY - sourceY) - containerTop;   // 드롭 영역의 상단 위치
+		const rawMinutes = offsetY / PIXELS_PER_MINUTE; // 드롭 위치의 분 단위
 		const clampedMinutes = Math.round(rawMinutes / 5) * 5;
 		const totalMinutes =
-			Math.max(-OFFSET_MINUTES, clampedMinutes) + OFFSET_MINUTES;
+			Math.max(-OFFSET_MINUTES, clampedMinutes) + OFFSET_MINUTES; // 최소 6시부터 시작
 
 		const hour = Math.floor(totalMinutes / 60) % 24;
 		const minute = totalMinutes % 60;
 		const startTime = `${hour.toString().padStart(2, "0")}:${minute
 			.toString()
-			.padStart(2, "0")}:00`;
+			.padStart(2, "0")}`;
 		const previewY = (totalMinutes - OFFSET_MINUTES) * PIXELS_PER_MINUTE;
 		return { startTime, previewY };
 	};
@@ -39,7 +40,7 @@ function DropZone({ date, index, onDrop, children }) {
 
 			const clientOffset = monitor.getClientOffset(); // 마우스 현재 위치
 			const sourceOffset = monitor.getSourceClientOffset(); // 드래그 시작 위치
-			const bounding = dropBodyRef.current.getBoundingClientRect();
+			const bounding = dropBodyRef.current.getBoundingClientRect();   // 드롭 영역의 바운딩 박스
 
 			const { previewY } = calculateTimeFromPosition(
 				clientOffset.y,
@@ -47,21 +48,16 @@ function DropZone({ date, index, onDrop, children }) {
 				bounding.top
 			);
 
-			// 분할 일정이면 전체 구간(viewStartTime~viewEndTime) 머무는 시간으로 프리뷰 높이 계산
-			let previewStayTime;
-			if (item.schedule?.viewStartTime && item.schedule?.viewEndTime) {
-				// 전체 구간의 분(min)
-				const [vh, vm] = item.schedule.viewStartTime
-					.split(":")
-					.map(Number);
-				const [eh, em] = item.schedule.viewEndTime
-					.split(":")
-					.map(Number);
-				previewStayTime = eh * 60 + em - (vh * 60 + vm);
-			} else {
-				previewStayTime =
-					item.schedule?.stayTime || item.place?.stayTime || 120;
-			}
+            // 분할 일정이면 전체 구간(viewStartTime~viewEndTime) 머무는 시간으로 프리뷰 높이 계산
+            let previewStayTime;
+            if (item.schedule?.viewStartTime && item.schedule?.viewEndTime) {
+                const s = timeToMinutes(item.schedule.viewStartTime);
+                const e = timeToMinutes(item.schedule.viewEndTime);
+                previewStayTime = e >= s ? e - s : e + 1440 - s;
+            } else {
+                previewStayTime =
+                    item.schedule?.stayTime || item.place?.stayTime || 120;
+            }
 
 			setPreviewTop(previewY);
 			setPreviewHeight(previewStayTime * PIXELS_PER_MINUTE);
@@ -79,9 +75,9 @@ function DropZone({ date, index, onDrop, children }) {
 				bounding.top
 			);
 
-			const stayTime =
-				item.schedule?.stayTime || item.place?.stayTime || 120;
-			const endTime = calculateEndTime(startTime, stayTime);
+            const stayTime =
+                item.schedule?.stayTime || item.place?.stayTime || 120;
+            const endTime = minutesToTime(timeToMinutes(startTime) + stayTime);
 
 			setPreviewTop(null);
 			setPreviewHeight(null);

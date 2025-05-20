@@ -57,34 +57,32 @@ function PlanTable() {
 
 		tripDates.forEach((date) => {
 			const accommodation = storedAccommodations[date];
+			// tripScheduleId가 accommodation_${date}인 일정이 이미 있으면 추가하지 않음
 			const hasAccommodationSchedule = schedules.some(
-				(s) =>
-					s.isAccommodation &&
-					format(new Date(s.date), "yyyy-MM-dd") === date
+				(s) => s.tripScheduleId === `accommodation_${date}`
 			);
 
 			if (accommodation && !hasAccommodationSchedule) {
-                initScheduleHandler(setSchedules);
-				// splitAndSetSchedule을 사용하여 분할 추가
+				initScheduleHandler(setSchedules);
 				splitAndSetSchedule(
 					{
 						tripScheduleId: `accommodation_${date}`,
 						tripId: tripInfo?.tripId ?? null,
 						date: date,
-						startTime: "23:00:00",
-						endTime: "32:00:00",
+						startTime: "23:00",
+						endTime: "32:00",
 						stayTime: 540,
 						travelTime: null,
 						position: null,
 						isLocked: 0,
 						place: accommodation,
 						isAccommodation: true,
-						viewStartTime: "23:00:00",
-						viewEndTime: "32:00:00",
+						viewStartTime: "23:00",
+						viewEndTime: "32:00",
 					},
 					date,
-					"23:00:00",
-					"32:00:00",
+					"23:00",
+					"32:00",
 				);
 			}
 		});

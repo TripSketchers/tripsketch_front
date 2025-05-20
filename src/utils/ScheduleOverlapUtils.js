@@ -1,43 +1,38 @@
-import { getAbsoluteMinutes, timeToMinutes } from "./ScheduleTimeUtils"; 
+import { getAbsoluteMinutes } from "./ScheduleTimeUtils"; 
 
 const TIMELINE_START = 360;    // 06:00
 const TIMELINE_END = 1800;     // 30:00 (다음날 06:00)
 const TIME_END = 1440;    // 24:00
 
 // 📌 겹치는 일정 처리 및 빈 슬롯 찾기
-export const findOverlappingSlot = (daySchedules, droppedItem, dropStartAbs, dropEndAbs) => {
+export const findOverlappingSlot = (daySchedules, droppedItem, dropStartAbs, dropEndAbs) => {    
     const overlappingSchedule = daySchedules.find((s) => {
         if (s.tripScheduleId === droppedItem.tripScheduleId) return false;
-        const sStartAbs = getAbsoluteMinutes(s.date, s.startTime);
-        let sEndAbs = getAbsoluteMinutes(s.date, s.endTime);
-
-        // 익일로 넘어가는 일정 처리
-        if (timeToMinutes(s.endTime) <= timeToMinutes(s.startTime)) {
-            sEndAbs += TIME_END;
-        }
+        const sStartAbs = getAbsoluteMinutes(s.startTime);
+        let sEndAbs = getAbsoluteMinutes(s.endTime);
 
         return dropStartAbs < sEndAbs && dropEndAbs > sStartAbs;
     });
 
-    if (!overlappingSchedule) return dropStartAbs; // 겹치는 일정 없음
+    if (!overlappingSchedule) {
+        return dropStartAbs; // 겹치는 일정 없음
+    }
 
-    const sStartAbs = getAbsoluteMinutes(overlappingSchedule.date, overlappingSchedule.startTime);
+    const sStartAbs = getAbsoluteMinutes(overlappingSchedule.startTime);
     const sEndAbs = sStartAbs + overlappingSchedule.stayTime;
-    const overlapMidAbs = (sStartAbs + sEndAbs) / 2;
+    const overlapMidAbs = (sStartAbs + sEndAbs) / 2;    // 겹치는 일정의 중간 시간
 
     const sorted = [...daySchedules]
         .filter((s) => s.tripScheduleId !== droppedItem.tripScheduleId)
         .sort(
             (a, b) => 
-                getAbsoluteMinutes(a.date, a.startTime) - getAbsoluteMinutes(b.date, b.startTime)
+                getAbsoluteMinutes(a.startTime) - getAbsoluteMinutes(b.startTime)   // 일정 시작 시간 기준 정렬
         );
 
-    if (dropStartAbs < overlapMidAbs) {
-        const found = findEmptySlot(sorted, droppedItem.stayTime, "up", sStartAbs);
-        return found !== null ? found : dropStartAbs;
-    } 
-    const found = findEmptySlot(sorted, droppedItem.stayTime, "down", sEndAbs);
-    return found !== null ? found : dropStartAbs;
+    if (dropStartAbs < overlapMidAbs) { // 중간 시간보다 위쪽에 드롭: 위쪽의 빈 슬롯 탐색
+        return findEmptySlot(sorted, droppedItem.stayTime, "up", sStartAbs);
+    }
+    return findEmptySlot(sorted, droppedItem.stayTime, "down", sEndAbs);
 };
 
 // 🟢 빈 슬롯(공간) 탐색 함수
@@ -47,31 +42,32 @@ export const findEmptySlot = (
     direction,
     overlapBoundaryAbs
 ) => {
+    let candidate = null;
+
     for (let i = 0; i <= sorted.length; i++) {
         const prevEndAbs =
             i === 0
-                ? TIMELINE_START // 06:00 (타임라인 시작)
-                : getAbsoluteMinutes(
-                        sorted[i - 1].date,
-                        sorted[i - 1].endTime
-                    );
+                ? TIMELINE_START
+                : getAbsoluteMinutes(sorted[i - 1]?.endTime);
 
         const nextStartAbs =
             i === sorted.length
-                ? TIMELINE_END // 30:00 (타임라인 끝)
-                : getAbsoluteMinutes(sorted[i]?.date, sorted[i]?.startTime);
+                ? TIMELINE_END
+                : getAbsoluteMinutes(sorted[i]?.startTime);
 
         if (direction === "up") {
-            // 위쪽(겹치는 일정의 시작 전까지)에서 충분한 공간이 있는지
+            // 위쪽 슬롯 탐색
             if (
                 nextStartAbs <= overlapBoundaryAbs &&
                 nextStartAbs - prevEndAbs >= dropDuration &&
                 nextStartAbs - dropDuration >= TIMELINE_START
             ) {
-                return nextStartAbs - dropDuration;
+                if (!candidate || prevEndAbs > candidate) {
+                    candidate = nextStartAbs - dropDuration;
+                }
             }
         } else {
-            // 아래쪽(겹치는 일정의 끝 이후)에서 충분한 공간이 있는지
+            // 아래쪽 슬롯 탐색
             if (
                 prevEndAbs >= overlapBoundaryAbs &&
                 prevEndAbs >= TIMELINE_START &&
@@ -81,5 +77,10 @@ export const findEmptySlot = (
             }
         }
     }
-    return null; // 빈 슬롯 없음
+
+    if (direction === "up" && candidate !== null) {
+        return candidate;    // 조건이 맞는 모든 슬롯 중 가장 늦은 slot 반환
+    }
+
+    return null;
 };
