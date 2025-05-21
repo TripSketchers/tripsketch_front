@@ -1,9 +1,9 @@
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 
 export const SLayout = css`
     margin: 5% 0;
     width: 100%;
-    padding: 0 20%; 
+    padding: 0 20%;
 `;
 
 export const STitle = css`
@@ -20,42 +20,92 @@ export const STitle = css`
 export const SContainer = css`
     position: relative;
     display: grid;
-    grid-template-columns: repeat(3, minmax(100px, 1fr)); /* 최소 150px, 최대 비율 분배 */
+    grid-template-columns: repeat(
+        3,
+        minmax(200px, 1fr)
+    ); /* 최소 150px, 최대 비율 분배 */
     gap: 25px;
+    height: clamp(120px, 30vw, 200px);
     padding: 0 27px;
     margin: 10px 0 30px 0;
 
-    @media (max-width: 900px) { // SRightContainer 위치 조정
-        grid-template-columns: repeat(1, minmax(100px, 1fr)); /* 최소 150px, 최대 비율 분배 */
+    @media (max-width: 900px) {
+        // SRightContainer 위치 조정
+        grid-template-columns: repeat(1, 1fr); /* 최소 150px, 최대 비율 분배 */
+        height: 600px;
     }
+`;
 
-    div {
-        position: relative;
-        border-radius: 2rem;
-        overflow: hidden;
-    }
-    
-    & > div:hover {
+export const SPopularTripBox = (img) => css`
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background-image: url(${img});
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+
+    :hover {
         transform: scale(1.03);
         box-shadow: 2px 4px 16px #00000029;
     }
-    
-    img {
+
+    span {
+        position: absolute;
+        left: 5%;
+        bottom: 5%;
+        color: white;
+        font-weight: 600;
+        font-size: 22px;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .banner_bg {
+        display: block;
+        position: relative;
         width: 100%;
         height: 100%;
     }
 
-    div > div {
+    .banner_bg::after {
+        content: "";
         position: absolute;
-        bottom: 10%;
-        left: 5%;
-        color: white;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 4;
+        pointer-events: none;
+    }
+
+    .banner_bg:hover::after {
+        opacity: 1;
+    }
+
+    .hover_text {
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -10%);
+        color: #fff;
+        text-align: center;
+        line-height: 26px;
+        z-index: 5;
         font-weight: 600;
-        width: 90%;
-        font-size: clamp(1rem, 5vw, 1.5rem);
-        
-        @media (max-width: 900px) {
-            font-size: clamp(1rem, 5vw, 1.5rem); /* 작은 화면에서는 고정 크기 적용 */
-        }
+        font-size: clamp(16px, 2vw, 20px);;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s, transform 0.7s;
+    }
+
+    .banner_bg:hover > .hover_text {
+        opacity: 1;
+        transform: translate(-50%, -10%);
     }
 `;

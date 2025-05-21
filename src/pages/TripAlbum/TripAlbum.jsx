@@ -4,7 +4,7 @@ import * as S from './Style';
 import NavLayout from '../../components/NavComponents/NavLayout/NavLayout';
 import AlbumFolder from '../../components/AlbumComponents/AlbumFolder/AlbumFolder';
 import NavContainer from '../../components/NavComponents/NavContainer/NavContainer';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import AlbumWhole from '../../components/AlbumComponents/AlbumWhole/AlbumWhole';
 import { useQuery } from '@tanstack/react-query';
 import { instance } from '../../api/config/instance';
@@ -13,7 +13,11 @@ import { differenceInDays } from 'date-fns';
 
 function TripAlbum( props ) {
     const { tripId } = useParams();
-    const [ viewType, setViewType ] = useState(0);
+    const location = useLocation();
+    // 상태로 전달된 값 읽기
+    const stateViewType = location.state?.viewType;
+    const stateAlbumId = location.state?.albumId;
+    const [ viewType, setViewType ] = useState(stateViewType ?? 0);
     const [ sorting, setSorting ] = useState(0); //최신순 : 0, 과거순: 1
     const [showSorting, setShowSorting] = useState(true);
 
@@ -104,7 +108,7 @@ function TripAlbum( props ) {
                 </div>
                 <div style={{minHeight: "400px"}}>
                     {viewType === 0 ? <AlbumWhole albums={sortedAlbums} /> 
-                    : <AlbumFolder albums={sortedAlbums} setShowSorting={setShowSorting}/>}
+                    : <AlbumFolder albums={sortedAlbums} setShowSorting={setShowSorting} stateAlbumId={stateAlbumId ?? null}/>}
                 </div>
                 <Link to={`/trip/album/${tripId}/upload`} css={S.SUploadBtn}><HiPlus /> 사진 업로드</Link>
             </NavContainer>

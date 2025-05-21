@@ -13,7 +13,7 @@ function SearchInput({ placeholder, onSearch, setIsShow }) {
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
             handleSearchBtn(); // Enter 키 누르면 검색 실행
-			setIsShow(true);
+            setIsShow?.(true);
         }
     };
 
@@ -22,12 +22,12 @@ function SearchInput({ placeholder, onSearch, setIsShow }) {
     };
 
     const handleFocus = () => {
-        setIsShow(true);
+        setIsShow?.(true);
     };
 
     const handleBlur = () => {
         setTimeout(() => {
-            setIsShow(false);
+            setIsShow?.(false);
         }, 100);
     };
 
@@ -41,7 +41,7 @@ function SearchInput({ placeholder, onSearch, setIsShow }) {
                 onKeyDown={handleKeyDown}
                 onChange={handleChange}
                 onFocus={handleFocus}
-				        onBlur={handleBlur}
+                onBlur={handleBlur}
             />
             <button css={S.SButton} onClick={handleSearchBtn}>
                 <IoSearch />

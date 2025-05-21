@@ -15,7 +15,9 @@ const wrapper = css`
   min-height: 100vh;
 `
 const content = css`
-  min-height: calc(100vh - 220px);
+  position: relative;
+  margin-top: 100px;
+  min-height: calc(100vh - 120px);
 `;
 
 function App() {

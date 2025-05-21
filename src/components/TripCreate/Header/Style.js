@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import image from "../../../assets/w1.jpg";
 
-export const SLayout = css`
+export const SLayout = (image) => css`
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -13,6 +13,8 @@ export const SLayout = css`
     height: 135px;
     * {
         color: white;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 1.0);
+        font-weight: 600;
     }
 `;
 
@@ -22,13 +24,11 @@ export const STitle = (isEditing) => css`
 	white-space: nowrap;
 	overflow: hidden;
     font-size: 28px;
-    font-weight: 600;
     padding-top: ${isEditing ? "0" : "6px"};
 `;
 
 export const SInput = css`
     font-size: 28px;
-    font-weight: 600;
     margin: 0;
     border: none;
     border-bottom: 2px solid #ccc;

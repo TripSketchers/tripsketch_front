@@ -30,7 +30,6 @@ function PhotoBox({
             } else {
                 newSet.add(photoKey);
             }
-            console.log(newSet);
             return newSet;
         });
     };

@@ -16,5 +16,5 @@ export default NavLayout;
 
 const SLayout = css`
     position: relative;
-    top: 0px;
+    top: 20px;
 `;

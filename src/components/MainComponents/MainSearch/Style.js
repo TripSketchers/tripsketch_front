@@ -1,38 +1,52 @@
 import { css } from "@emotion/react";
 
 export const SLayout = css`
+    position: relative;
+    width: 100%;
+    height: 900px;
+    z-index: 0;
+    margin-top: -100px; //헤더 높이만큼 위로 올리기
+`;
+
+export const SImg = css`
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+`;
+
+export const SIndicator = css`
+    position: absolute;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
     display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    margin: 5% 0;
-    width: 100%;
-    padding: 0 20%;
+    gap: 8px;
+    z-index: 10;
 
-    @media (max-width: 1000px) {
-        // SRightContainer 위치 조정
-        flex-direction: column;
+    .dot {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #bbb;
+        opacity: 0.5;
+        transition: color 0.2s, opacity 0.2s;
+        user-select: none;
+    }
+    .dot.active {
+        color: #222;
+        opacity: 1;
     }
 `;
 
-export const SLeftContainer = css`
-    flex: 1;
-    width: 100%;
-
-    img {
-        width: 100%;
-        border-radius: 2rem;
-    }
-`;
-
-export const SRightContainer = css`
+export const SSearchContainer = css`
     flex: 1;
     display: flex;
     align-items: center;
-
-    @media (max-width: 1100px) {
-        // SRightContainer 위치 조정
-        margin: 20px 0;
-    }
+    justify-content: center;
+    position: absolute;
+    width: 700px;
+    top: 35%;
+    left: calc(50% - 350px);
 
     & > div {
         display: flex;
@@ -43,20 +57,25 @@ export const SRightContainer = css`
         width: 100%;
     }
 
-    h1 {    //문구
-        margin-bottom: 20px;
+    h1 {
+        //문구
+        margin-bottom: 50px;
         font-size: 34px;
-        line-height: 38px;
+        line-height: 50px;
         font-weight: 700;
     }
 `;
 
-export const SRightBottomBox = css`
+export const SSearchBox = css`
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
+
+    & > div:first-of-type { // SearchInput 컴포넌트 height 조정
+        height: 50px;
+    }
 `;
 
 export const SStartBtn = css`
@@ -77,12 +96,15 @@ export const SStartBtn = css`
 
 export const STripDestinations = css`
     position: absolute;
-    top: 45px;
+    top: 40px;
     left: 0;
-    z-index: 4;
+    z-index: 0;
     width: 100%;
-    height: 250px;
+    height: 260px;
     background-color: white;
+    border-end-end-radius: 10px;
+    border-end-start-radius: 10px;
+    padding-top: 10px; /* 스크롤 영역과 스크롤바 모두 10px 아래에서 시작 */
     overflow: auto;
 
     ::-webkit-scrollbar {
@@ -92,9 +114,10 @@ export const STripDestinations = css`
     ::-webkit-scrollbar-track {
         background-color: rgb(240, 240, 240);
         border-radius: 1rem;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 
-    /* 스크롤바 thumb */
     ::-webkit-scrollbar-thumb {
         background-color: black;
         border-radius: 1rem;
