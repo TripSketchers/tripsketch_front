@@ -12,7 +12,8 @@ import Pagination from "../../components/Pagination/Pagination";
 function MyPage() {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 20;	// 한 페이지에 보여줄 여행 카드 개수
+    const itemsPerPage = 20; // 한 페이지에 보여줄 여행 카드 개수
+    const [filterType, setFilterType] = useState("all"); // all | upcoming | past
 
     const getTripsQuery = useQuery({
         queryKey: ["getTripsByUserId"],
@@ -33,15 +34,20 @@ function MyPage() {
 
     const tripList = getTripsQuery.data.data.tripList;
 
-    // 페이징 계산
+	// 필터링된 여행
+    const today = new Date();
+    const filteredTrips = tripList.filter((trip) => {
+        const endDate = new Date(trip.endDate);
+
+        if (filterType === "upcoming") return endDate >= today;
+        if (filterType === "past") return endDate < today;
+        return true; // all
+    });
+
+    // 페이징 계산 (filteredTrips 기준으로!)
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentTrips = tripList.slice(indexOfFirstItem, indexOfLastItem);
-
-    const handlePageChange = (pageNumber) => {
-        setCurrentPage(pageNumber);
-        window.scrollTo(0, 0); // 페이지 이동 시 스크롤 맨 위로
-    };
+    const currentTrips = filteredTrips.slice(indexOfFirstItem, indexOfLastItem);
 
     // D-Day 계산
     const calculateDDay = (startDate) => {
@@ -65,7 +71,28 @@ function MyPage() {
                         <div css={S.STitleBox}>
                             <h1>나의 여행</h1>
                         </div>
-                        <Link to={"/trip/create"}>여행 생성</Link>
+						<nav css={S.SFilterBox}>
+							<ul>
+								<li
+									className={filterType === "all" ? "active" : ""}
+									onClick={() => setFilterType("all")}
+								>
+									전체
+								</li>
+								<li
+									className={filterType === "upcoming" ? "active" : ""}
+									onClick={() => setFilterType("upcoming")}
+								>
+									예정된 여행
+								</li>
+								<li
+									className={filterType === "past" ? "active" : ""}
+									onClick={() => setFilterType("past")}
+								>
+									지난 여행
+								</li>
+							</ul>
+						</nav>
                     </div>
                     <div css={S.STripBox}>
                         {currentTrips.map((trip) => (
@@ -86,13 +113,15 @@ function MyPage() {
                         ))}
                     </div>
                     {/* 페이지네이션 */}
-                    {tripList.length > itemsPerPage && (
+                    {filteredTrips.length > itemsPerPage && (
                         <div style={{ marginTop: "30px", textAlign: "center" }}>
                             <Pagination
                                 currentPage={currentPage}
-                                totalItems={tripList.length}
+                                totalItems={filteredTrips.length}
                                 itemsPerPage={itemsPerPage}
-                                onPageChange={(newPage) => setCurrentPage(newPage)}
+                                onPageChange={(newPage) =>
+                                    setCurrentPage(newPage)
+                                }
                             />
                         </div>
                     )}

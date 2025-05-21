@@ -12,7 +12,7 @@ function Pagination({ currentPage, totalItems, itemsPerPage, onPageChange }) {
         onPageChange(pageNumber);
     };
 
-    const renderPageNumbers = () => {
+    const renderPageNumbers = () => {	// 현재 페이지를 기준 앞뒤 최대 2개까지 버튼을 보여줌
 		const pages = [];
 		const start = Math.max(1, currentPage - 2);
 		const end = Math.min(totalPages, currentPage + 2);

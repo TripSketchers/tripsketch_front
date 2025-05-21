@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 
 export const SLayout = css`
     display: flex;
@@ -33,12 +33,37 @@ export const SHeader = css`
 `;
 
 export const STitleBox = css`
-    border-bottom: 4px solid #5C86B3;
+    border-bottom: 4px solid #5c86b3;
     padding: 10px 0;
     width: max-content;
     h1 {
         font-size: 22px;
         font-weight: 600;
+    }
+`;
+
+export const SFilterBox = css`
+    padding: 10px 0;
+
+    ul {
+        display: flex;
+        gap: 20px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    li {
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        padding: 10px 0;
+        transition: color 0.3s;
+
+        &:hover, &.active {
+            color: #5c86b3;
+            font-weight: 600;
+        }
     }
 `;
 
