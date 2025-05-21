@@ -7,15 +7,16 @@ export const SLayout = css`
     height: 100%;
     background-color: #e6e6e6;
     padding: 20px 20%;
-    `;
+`;
 
 export const SContainer = css`
     position: relative;
     display: flex;
     width: 100%;
     height: 100%;
-    max-height: 460px;
-    min-height: 300px;
+    min-height: 340px;
+    max-height: 440px;
+    overflow: hidden;
 `;
 
 export const SBannerBox = css`
@@ -27,11 +28,19 @@ export const SBannerBox = css`
     pointer-events: none;
 
     img {
-        width: 100%;
-        max-height: 340px;
-        min-height: 200px;
+        width: 500px;
+        height: 240px;
         object-fit: cover;
         border-radius: 40px;
+
+        @media (max-width: 900px) {
+            width: 400px;
+            height: 200px;
+        }
+        @media (max-width: 700px) {
+            width: 300px;
+            height: 160px;
+        }
     }
 
     &.center {
@@ -90,7 +99,7 @@ export const SBannerBox = css`
 
 export const SSlideBtn = css`
     position: absolute;
-    top: 45%;
+    bottom: 0%;
     transform: translateY(-50%);
     background: #432d13;
     color: #fff;
@@ -103,16 +112,17 @@ export const SSlideBtn = css`
     cursor: pointer;
     opacity: 0.8;
     transition: background 0.2s;
+    
     &:hover {
         background: #6e4b1b;
     }
 
     &.rightBtn {
-        right: 22%;
+        right: clamp(0px, 20%, 180px);
     }
 
     &.leftBtn {
-        left: 22%;
+        left: clamp(0px, 20%, 180px);
     }
 `;
 
