@@ -15,7 +15,7 @@ export const SContainer = css`
 `;
 
 export const STripContainer = css`
-    padding: 10px 20px;
+    padding: 10px 20px 30px 20px;
 `;
 
 export const SHeader = css`
