@@ -5,36 +5,15 @@ import { FaLocationDot } from "react-icons/fa6";
 import { BiSolidCalendarCheck } from "react-icons/bi";
 import { AiFillCar } from "react-icons/ai";
 import { FaBus } from "react-icons/fa";
-import { differenceInDays } from "date-fns";
 import { instance } from "../../../api/config/instance";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { IoIosImages } from "react-icons/io";
-
-// startDate, endDate로 D-Day와 n박 n일을 반환하는 함수
-function getTripInfo(startDate, endDate) {
-    if (!startDate || !endDate) return { dDay: "-", period: "-" };
-    const today = new Date();
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-
-    // D-Day 계산
-    const diff = differenceInDays(start, today) + 1;
-    let dDay;
-    if (diff === 0) dDay = "D - Day";
-    if (diff > 0) dDay = `D - ${diff}`;
-
-    // n박 n일 계산
-    const nights = Math.round((end - start) / (1000 * 60 * 60 * 24));
-    const days = nights + 1;
-    const period = `${nights}박 ${days}일`;
-
-    return { dDay, period };
-}
+import { getNightandDays } from "../../../utils/DateUtils";
 
 function RecentTrips({ getUpcomingTrip }) {
     const navigate = useNavigate();
-    const { dDay, period } = getTripInfo(
+    const { dDay, period } = getNightandDays(
         getUpcomingTrip?.startDate,
         getUpcomingTrip?.endDate
     );
@@ -114,7 +93,7 @@ function RecentTrips({ getUpcomingTrip }) {
                                         getRecentAlbums.data.length
                                     } albumBox-idx-${idx + 1}`}
                                     key={album.tripId}
-                                    onClick={() =>
+                                    onClick={() => {
                                         navigate(
                                             `/trip/album/${album.tripId}`,
                                             {
@@ -123,8 +102,8 @@ function RecentTrips({ getUpcomingTrip }) {
                                                     albumId: album.albumId,
                                                 },
                                             }
-                                        )
-                                    }
+                                        );
+                                    }}
                                 >
                                     <img src={album.photoUrl} alt="" />
                                 </div>
@@ -136,9 +115,7 @@ function RecentTrips({ getUpcomingTrip }) {
                                         <IoIosImages /> 최근 앨범이 없습니다
                                         <br />
                                     </span>
-                                    <p>
-                                        여행을 다녀오고 앨범을 만들어보세요!
-                                    </p>
+                                    <p>여행을 다녀오고 앨범을 만들어보세요!</p>
                                 </div>
                                 <button
                                     data-text="새 앨범 만들기"

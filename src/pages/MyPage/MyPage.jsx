@@ -5,9 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import TripCard from "../../components/TripCard/TripCard";
 import ProfileContainer from "../../components/ProfileContainer/ProfileContainer";
 import { instance } from "../../api/config/instance";
-import { format, differenceInDays } from "date-fns";
-import { Link, useNavigate } from "react-router-dom";
+import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 import Pagination from "../../components/Pagination/Pagination";
+import { getDday, formatDate } from "../../utils/DateUtils";
 
 function MyPage() {
     const navigate = useNavigate();
@@ -49,19 +50,6 @@ function MyPage() {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentTrips = filteredTrips.slice(indexOfFirstItem, indexOfLastItem);
 
-    // D-Day 계산
-    const calculateDDay = (startDate) => {
-        const today = new Date();
-        const start = new Date(startDate);
-        const diff = differenceInDays(start, today) + 1;
-        if (diff === 0) return "D - Day";
-        if (diff > 0) return `D - ${diff}`;
-        return `D + ${Math.abs(diff)}`;
-    };
-
-    // 날짜 포맷
-    const formatDate = (date) => format(new Date(date), "yyyy/MM/dd");
-
     return (
         <div css={S.SLayout}>
             <div css={S.SContainer}>
@@ -102,7 +90,7 @@ function MyPage() {
                                 }}
                                 key={trip.tripId}
                                 tripId={trip.tripId}
-                                dDay={calculateDDay(trip.startDate)}
+                                dDay={getDday(trip.startDate)}
                                 title={trip.title}
                                 location={trip.tripDestinationKoName}
                                 dateRange={`${formatDate(

@@ -9,7 +9,7 @@ import AlbumWhole from '../../components/AlbumComponents/AlbumWhole/AlbumWhole';
 import { useQuery } from '@tanstack/react-query';
 import { instance } from '../../api/config/instance';
 import { HiPlus } from "react-icons/hi";
-import { differenceInDays } from 'date-fns';
+import { getNday } from '../../utils/DateUtils';
 
 function TripAlbum( props ) {
     const { tripId } = useParams();
@@ -57,13 +57,9 @@ function TripAlbum( props ) {
     // 여기서 n일차 가공
     const sortedAlbums = Array.isArray(getAlbum?.data?.albums)
         ? [...getAlbum?.data?.albums].map((item) => {
-        const daysDiff = differenceInDays(
-            new Date(item.date),
-            new Date(getAlbum?.data?.startDate)
-        );
         return {
             ...item,
-            dayDiff: `${daysDiff + 1}일차`,
+            dayDiff: getNday(getAlbum?.data?.startDate, item.date),
         };
     }).sort((a, b) => {
         if (sorting === 0) {
@@ -76,7 +72,6 @@ function TripAlbum( props ) {
     if (getAlbum.isLoading) return <div>로딩 중...</div>;
     if (getAlbum.isError) return <div>데이터를 불러오지 못했습니다.</div>;
 
-    
     return (
         <NavLayout>
             <NavContainer>
