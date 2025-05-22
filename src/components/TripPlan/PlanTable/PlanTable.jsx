@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { format, eachDayOfInterval } from "date-fns";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
@@ -7,12 +7,17 @@ import DropZone from "../DropZone/DropZone";
 import { useTrip } from "../../Routes/TripContext";
 import useScheduleDropHandler from "../../../hooks/useScheduleDropHandler";
 import { formatHour } from "../../../utils/ScheduleTimeUtils";
-import { initScheduleHandler, splitAndSetSchedule } from "../../../utils/ScheduleCreateUtils";
+import {
+	initScheduleHandler,
+	splitAndSetSchedule,
+} from "../../../utils/ScheduleCreateUtils";
+import TrashDropZone from "../TrashDropZone/TrashDropZone";
 
 function PlanTable() {
 	const { tripInfo, schedules, setSchedules, storedAccommodations } =
 		useTrip();
 	const { handleDrop } = useScheduleDropHandler(schedules, setSchedules);
+	const [isDragging, setIsDragging] = useState(false);
 
 	const startDate = tripInfo?.startDate || tripInfo?.trip?.startDate;
 	const endDate = tripInfo?.endDate || tripInfo?.trip?.endDate;
@@ -82,7 +87,7 @@ function PlanTable() {
 					},
 					date,
 					"23:00",
-					"32:00",
+					"32:00"
 				);
 			}
 		});
@@ -119,6 +124,7 @@ function PlanTable() {
 										schedule={s}
 										onToggleLock={onToggleLock}
 										onUpdate={onUpdate}
+										setIsDragging={setIsDragging}
 									/>
 								))}
 							</DropZone>
@@ -126,6 +132,17 @@ function PlanTable() {
 					})}
 				</div>
 			</div>
+            <div css={S.STrashDropZone}>
+                {isDragging && (
+                    <TrashDropZone
+                        onDrop={(id) => {
+                            setSchedules((prev) =>
+                                prev.filter((s) => s.tripScheduleId !== id)
+                            );
+                        }}
+                    />
+                )}
+            </div>
 		</div>
 	);
 }

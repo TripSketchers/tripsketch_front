@@ -70,8 +70,8 @@ function DropZone({ date, index, onDrop, children }) {
 			const bounding = dropBodyRef.current.getBoundingClientRect();
 
 			const { startTime } = calculateTimeFromPosition(
-				clientOffset.y,
-				sourceOffset.y,
+				clientOffset?.y,
+				sourceOffset?.y,
 				bounding.top
 			);
 

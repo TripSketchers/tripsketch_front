@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 
 export const SWrapper = css`
+    position: relative;
     flex: 1;
     border-left: 1px solid #dbdbdb;
     width: 100%;
@@ -50,4 +51,14 @@ export const STimeRow = css`
     border-top: 1px solid #ccc;
     font-size: 12px;
     color: #555;
+`;
+
+export const STrashDropZone = css`
+    position: sticky;
+    bottom: 0;
+    height: 0; // 공간 확보
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 10;
 `;
