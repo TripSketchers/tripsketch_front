@@ -22,8 +22,8 @@ export function getNightandDays(startDate, endDate) {
     const diff = differenceInDays(start, today);
     let dDay;
     if (diff === 0) dDay = "D - Day";
-    if (diff > 0) dDay = `D - ${diff}`;
-    dDay = `D + ${Math.abs(diff)}`;
+    else if (diff > 0) dDay = `D - ${diff}`;
+    else dDay = `D + ${Math.abs(diff)}`;
 
     // n박 n일 계산
     const nights = Math.round((end - start) / (1000 * 60 * 60 * 24));
