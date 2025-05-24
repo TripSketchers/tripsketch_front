@@ -12,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import ScheduleTable from "../../components/AlbumComponents/ScheduleTable/ScheduleTable";
 import Loading from "../../components/Loading/Loading";
 import usePrompt from "../../hooks/usePrompt";
+import { getAuth } from "firebase/auth";
 
 function TripAlbumUpload() {
     const { tripId } = useParams();
@@ -30,6 +31,8 @@ function TripAlbumUpload() {
     );
 
     const handleUploadBtn = async () => {
+        const auth = getAuth();
+        console.log(auth.currentUser); // null이면 로그인 안 된 상태
         setIsLoading(true); // 로딩 시작
         const photos = await getAllPhotos(); //IndexedDB에서 사진 가져오기
 
@@ -85,7 +88,13 @@ function TripAlbumUpload() {
                 ) : (
                     <div css={S.SLayout}>
                         <div css={S.SLeftContainer}>
-                            <ImgUpload memos={memos} setMemos={setMemos} onPhotosChange={(hasPhotos) => setHasUnsavedPhotos(hasPhotos)}/>
+                            <ImgUpload
+                                memos={memos}
+                                setMemos={setMemos}
+                                onPhotosChange={(hasPhotos) =>
+                                    setHasUnsavedPhotos(hasPhotos)
+                                }
+                            />
                         </div>
                         <div css={S.SRightContainer}>
                             <div className="titleBox">

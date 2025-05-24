@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import AlbumDetailModal from "../AlbumDetailModal/AlbumDetailModal";
-import { differenceInDays } from "date-fns";
 import { instance } from "../../../api/config/instance";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { FaTrash } from "react-icons/fa6";
