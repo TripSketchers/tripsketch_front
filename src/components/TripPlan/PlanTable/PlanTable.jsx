@@ -12,6 +12,7 @@ import {
 	splitAndSetSchedule,
 } from "../../../utils/ScheduleCreateUtils";
 import TrashDropZone from "../TrashDropZone/TrashDropZone";
+import { instance } from "../../../api/config/instance";
 
 function PlanTable() {
 	const { tripInfo, schedules, setSchedules, storedAccommodations } =
@@ -93,6 +94,53 @@ function PlanTable() {
 		});
 	}, [storedAccommodations]);
 
+	useEffect(() => {
+		if (!schedules || schedules.length === 0) return;
+
+		const computeTravelTimes = async () => {
+			// 1. 날짜 + 시간 기준 전체 정렬
+			const sorted = [...schedules].sort((a, b) => {
+				const aTime = `${a.date} ${a.startTime}`;
+				const bTime = `${b.date} ${b.startTime}`;
+				return aTime.localeCompare(bTime);
+			});
+
+			// 2. 인접한 쌍마다 travelTime 계산
+			for (let i = 0; i < sorted.length - 1; i++) {
+				const origin = sorted[i];
+				const dest = sorted[i + 1];
+
+				if (origin.place && dest.place) {
+					let travelTime;
+					try {
+						const res = await instance.get("/trips/traveltime", {
+							params: {
+								originLat: origin.place.latitude || origin.place.location.latitude,
+								originLng: origin.place.longitude || origin.place.location.longitude,
+								destLat: dest.place.latitude || dest.place.location.latitude,
+								destLng: dest.place.longitude || dest.place.location.longitude,
+								mode: "driving",
+							},
+							headers: {
+								Authorization:
+									localStorage.getItem("accessToken"),
+							},
+						});
+						travelTime = res.data;
+					} catch (e) {
+						console.error("🛑 이동 시간 계산 실패:", e);
+						travelTime = 0;
+					}
+					origin.travelTime = travelTime;
+				}
+			}
+
+			setSchedules(sorted); // travelTime 적용된 정렬된 리스트로 반영
+		};
+
+		computeTravelTimes();
+	}, [schedules.length]);
+
 	return (
 		<div css={S.SWrapper}>
 			<div css={S.SLayout}>
@@ -132,17 +180,17 @@ function PlanTable() {
 					})}
 				</div>
 			</div>
-            <div css={S.STrashDropZone}>
-                {isDragging && (
-                    <TrashDropZone
-                        onDrop={(id) => {
-                            setSchedules((prev) =>
-                                prev.filter((s) => s.tripScheduleId !== id)
-                            );
-                        }}
-                    />
-                )}
-            </div>
+			<div css={S.STrashDropZone}>
+				{isDragging && (
+					<TrashDropZone
+						onDrop={(id) => {
+							setSchedules((prev) =>
+								prev.filter((s) => s.tripScheduleId !== id)
+							);
+						}}
+					/>
+				)}
+			</div>
 		</div>
 	);
 }
