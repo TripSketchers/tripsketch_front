@@ -95,51 +95,61 @@ function PlanTable() {
 	}, [storedAccommodations]);
 
 	useEffect(() => {
-		if (!schedules || schedules.length === 0) return;
+        if (!schedules || schedules.length === 0) return;
 
-		const computeTravelTimes = async () => {
-			// 1. 날짜 + 시간 기준 전체 정렬
-			const sorted = [...schedules].sort((a, b) => {
-				const aTime = `${a.date} ${a.startTime}`;
-				const bTime = `${b.date} ${b.startTime}`;
-				return aTime.localeCompare(bTime);
-			});
+        const computeTravelTimes = async () => {
+            const sorted = [...schedules].sort((a, b) => {
+                const aTime = `${a.date} ${a.startTime}`;
+                const bTime = `${b.date} ${b.startTime}`;
+                return aTime.localeCompare(bTime);
+            });
 
-			// 2. 인접한 쌍마다 travelTime 계산
-			for (let i = 0; i < sorted.length - 1; i++) {
-				const origin = sorted[i];
-				const dest = sorted[i + 1];
+            for (let i = 0; i < sorted.length - 1; i++) {
+                const origin = sorted[i];
+                const dest = sorted[i + 1];
 
-				if (origin.place && dest.place) {
-					let travelTime;
-					try {
-						const res = await instance.get("/trips/traveltime", {
-							params: {
-								originLat: origin.place.latitude || origin.place.location.latitude,
-								originLng: origin.place.longitude || origin.place.location.longitude,
-								destLat: dest.place.latitude || dest.place.location.latitude,
-								destLng: dest.place.longitude || dest.place.location.longitude,
-								mode: "driving",
-							},
-							headers: {
-								Authorization:
-									localStorage.getItem("accessToken"),
-							},
-						});
-						travelTime = res.data;
-					} catch (e) {
-						console.error("🛑 이동 시간 계산 실패:", e);
-						travelTime = 0;
-					}
-					origin.travelTime = travelTime;
-				}
-			}
+                if (origin.place && dest.place) {
+                    const originLat = origin.place.latitude || origin.place.location?.latitude;
+                    const originLng = origin.place.longitude || origin.place.location?.longitude;
+                    const destLat = dest.place.latitude || dest.place.location?.latitude;
+                    const destLng = dest.place.longitude || dest.place.location?.longitude;
 
-			setSchedules(sorted); // travelTime 적용된 정렬된 리스트로 반영
-		};
+                    if (!originLat || !originLng || !destLat || !destLng)
+                        continue;
 
-		computeTravelTimes();
-	}, [schedules.length]);
+                    try {
+                        const res = await instance.get(
+                            "/trips/traveltime",
+                            {
+                                params: {
+                                    originLat,
+                                    originLng,
+                                    destLat,
+                                    destLng,
+                                    mode: "DRIVE", // 또는 "TRANSIT"
+                                },
+                                headers: {
+                                    Authorization:
+                                        localStorage.getItem("accessToken"),
+                                },
+                            }
+                        );
+
+                        const seconds = res.data ?? 0;
+                        origin.travelTime = seconds;
+                    } catch (err) {
+                        console.error("🚨 백엔드 경로 계산 실패", err);
+                        origin.travelTime = 0;
+                    }
+                }
+            }
+
+            setSchedules(sorted);
+        };
+
+        computeTravelTimes();
+    }, [schedules.length]);
+	
 
 	return (
 		<div css={S.SWrapper}>
