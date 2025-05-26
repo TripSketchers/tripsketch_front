@@ -28,6 +28,7 @@ function TripPlan() {
 		setStoredPlaces,
 		setStoredAccommodations,
 		setSchedules,
+        setTripDestination,
 	} = useTrip();
 
 	useEffect(() => {
@@ -41,6 +42,7 @@ function TripPlan() {
 				const data = res.data;
 
 				setTripInfo(data.trip);
+                setTripDestination(data.tripDestination);
 				setStoredPlaces(data.storedPlaces);
 				setStoredAccommodations(convertArrayToAccommodationMap(data.storedAccommodations));
 				setSchedules(data.tripSchedules);
@@ -50,13 +52,7 @@ function TripPlan() {
 		};
 
 		fetchTripInfo();
-	}, [
-		tripId,
-		setTripInfo,
-		setStoredPlaces,
-		setStoredAccommodations,
-		setSchedules,
-	]);
+	}, []);
 
 	const handleSaveStoredPlaces = async () => {
 		const formattedPlaces = storedPlaces.map((place) => ({

@@ -1,17 +1,17 @@
 import { css } from "@emotion/react";
-import image from "../../../assets/w1.jpg";
 
-export const SLayout = css`
+export const SLayout = (img) => css`
 	display: flex;
 	justify-content: space-between;
 	padding: 20px;
-	background-image: url(${image});
+	background-image: url(${img});
 	background-size: cover; /* 이미지가 꽉 차도록 */
 	background-position: center; /* 가운데 정렬 */
 	background-repeat: no-repeat; /* 반복 안 되게 */
 	width: 100%;
 	* {
 		color: white;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 1.0);
 	}
 `;
 
@@ -44,16 +44,15 @@ export const SButton = css`
 	justify-content: center;
 	align-items: center;
 	border-radius: 10px;
-	background-color: #fff;
-	color: #000; /* 버튼 텍스트 및 아이콘 색상 */
+	background-color:rgb(58, 98, 111);
 	font-size: 14px;
 	font-weight: 500;
 	min-width: 65px;
     height: 100%;
 	cursor: pointer;
 
-	* {
-		color: #000;
+	& * {
+        text-shadow: none;
 	}
 	svg {
 		font-size: 18px;

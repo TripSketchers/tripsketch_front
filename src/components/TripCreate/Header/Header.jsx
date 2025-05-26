@@ -7,14 +7,12 @@ import { formatDateRange } from "../../../utils/DateUtils";
 import { useTrip } from "../../Routes/TripContext";
 
 function Header({ selectedStep, onOpenModal }) {
-    const { dateRange, tripName, setTripName } = useTrip();
+    const { tripDestination, tripInfo, setTripInfo } = useTrip();
     const [isEditing, setIsEditing] = useState(false);
+	const [tempTripName, setTempTripName] = useState(tripInfo?.title || "");
 
     const location = useLocation();
-    const item = location.state;
-
-	const { tripInfo, setTripInfo } = useTrip();
-	const [tempTripName, setTempTripName] = useState(tripInfo?.title || "");
+    const { img, koName } = tripDestination || location?.state || {};
 
 	// tripInfo.title이 바뀌면 tempTripName도 동기화
 	useEffect(() => {
@@ -40,8 +38,12 @@ function Header({ selectedStep, onOpenModal }) {
 		}
 	};
 
+    if (!img || !koName) {
+        return <div>로딩 중...</div>;
+    }
+
     return (
-        <div css={S.SLayout(item.img)}>
+        <div css={S.SLayout(img || "")}>
             <div css={S.STitle(isEditing)} onClick={() => setIsEditing(true)}>
                 {isEditing ? (
                     <input
@@ -58,7 +60,7 @@ function Header({ selectedStep, onOpenModal }) {
                 )}
             </div>
             <div>
-                <div css={S.STripDes}>{item.koName}</div>
+                <div css={S.STripDes}>{koName}</div>
                 <div css={S.SDateBox}>
                     <div>
                         {formatDateRange(

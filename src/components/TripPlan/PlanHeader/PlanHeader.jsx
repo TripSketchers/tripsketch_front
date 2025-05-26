@@ -5,13 +5,18 @@ import { formatDateRange } from "../../../utils/DateUtils";
 import { useTrip } from "../../Routes/TripContext";
 import { MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import defaultImage from "../../../assets/w1.jpg"; // 기본 이미지 경로
 
 function PlanHeader() {
-    const { tripInfo } = useTrip();
+    const { tripInfo, tripDestination } = useTrip();
     const navigate = useNavigate();
 
+    if (!tripDestination?.img) {
+        return <div>로딩 중...</div>;
+    }
+
     return (
-        <div css={S.SLayout}>
+        <div css={S.SLayout(tripDestination?.img || defaultImage)}>
             <div css={S.STitle}>
                 {tripInfo?.title || "여행 이름을 입력하세요"}
             </div>

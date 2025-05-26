@@ -12,10 +12,6 @@ import qs from "qs";
 import { useTrip } from "../Routes/TripContext";
 
 function PlaceSelectPanel({ text, categories }) {
-    const location = useLocation();
-    // 구조분해 할당으로 변수에 담기
-    const { lowLat, lowLng, highLat, highLng } = location.state;
-
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
     const [selectedPlace, setSelectedPlace] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -29,12 +25,16 @@ function PlaceSelectPanel({ text, categories }) {
     };
 
     const {
-        tripInfo,
+        tripDestination,
         storedPlaces,
         setStoredPlaces,
         setStoredAccommodations,
         setFocusedPlace,
     } = useTrip();
+
+    const location = useLocation();
+    // 구조분해 할당으로 변수에 담기
+    const { lowLat, lowLng, highLat, highLng } = tripDestination || location?.state || {};
 
     const {
         data,
@@ -62,7 +62,13 @@ function PlaceSelectPanel({ text, categories }) {
         },
         getNextPageParam: (lastPage) => lastPage?.nextPageToken || undefined,
         staleTime: 1000 * 60 * 5,
+        enabled: !!lowLat && !!lowLng && !!highLat && !!highLng,
     });
+
+            
+    if (!lowLat || !lowLng || !highLat || !highLng) {
+        return <div>위치 정보 로딩 중...</div>;
+    }
 
     const handleAccommodationConfirm = (selectedMap) => {
         setStoredAccommodations((prev) => ({ ...prev, ...selectedMap }));

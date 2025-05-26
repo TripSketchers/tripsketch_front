@@ -7,8 +7,17 @@ import { useLocation } from "react-router-dom";
 const GOOGLE_MAP_LIBRARIES = ["places"];
 
 function Map({ selectedStep }) {
+    const {
+        tripDestination,
+        storedPlaces,
+        storedAccommodations,
+        setPlaceModalInfo,
+        focusedPlace,
+        setFocusedPlace,
+    } = useTrip();
+
     const location = useLocation();
-    const item = location.state;
+    const { lowLat, lowLng, highLat, highLng } = tripDestination || location?.state || {};
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
@@ -17,13 +26,6 @@ function Map({ selectedStep }) {
     });
 
     const mapRef = useRef(null);
-    const {
-        storedPlaces,
-        storedAccommodations,
-        setPlaceModalInfo,
-        focusedPlace,
-        setFocusedPlace,
-    } = useTrip();
 
     const containerStyle = {
         width: "100%",
@@ -31,8 +33,8 @@ function Map({ selectedStep }) {
     };
 
     const defaultCenter = {
-        lat: (item.lowLat + item.highLat) / 2,
-        lng: (item.lowLng + item.highLng) / 2,
+        lat: (lowLat + highLat) / 2,
+        lng: (lowLng + highLng) / 2,
     };
 
     // 📍 핀 마커
@@ -89,13 +91,14 @@ function Map({ selectedStep }) {
     }, [
         isLoaded,
         selectedStep,
+        tripDestination,
         storedPlaces,
         storedAccommodations,
         focusedPlace,
     ]);
 
     // ✅ 아직 로딩 중이면 표시
-    if (!isLoaded || !window.google?.maps) {
+    if (!isLoaded || !window.google?.maps || !lowLat || !lowLng || !highLat || !highLng) {
         return <div>지도 불러오는 중...</div>;
     }
 
