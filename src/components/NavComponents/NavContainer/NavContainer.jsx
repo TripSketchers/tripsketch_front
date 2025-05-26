@@ -23,6 +23,7 @@ const SLayout = css`
     margin-bottom: 50px;
     
     & > div {
+        position: relative;
         margin: 0 20%;
         border-radius: 10px;
         padding: 30px 40px;
@@ -31,6 +32,7 @@ const SLayout = css`
         
         width: 100%;
         min-width: 430px;
+        min-height: 600px;
     }
     
     h1 {

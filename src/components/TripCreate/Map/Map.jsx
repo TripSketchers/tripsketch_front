@@ -2,10 +2,14 @@ import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import React, { useEffect, useRef } from "react";
 import { useTrip } from "../../Routes/TripContext";
 import { getColorByCategory } from "../../../utils/CategoryUtils";
+import { useLocation } from "react-router-dom";
 
 const GOOGLE_MAP_LIBRARIES = ["places"];
 
 function Map({ selectedStep }) {
+    const location = useLocation();
+    const item = location.state;
+
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
         libraries: GOOGLE_MAP_LIBRARIES,
@@ -27,8 +31,8 @@ function Map({ selectedStep }) {
     };
 
     const defaultCenter = {
-        lat: 35.1796,
-        lng: 129.0756,
+        lat: (item.lowLat + item.highLat) / 2,
+        lng: (item.lowLng + item.highLng) / 2,
     };
 
     // 📍 핀 마커
@@ -74,15 +78,13 @@ function Map({ selectedStep }) {
             selectedStep === 2
                 ? storedPlaces
                 : Object.values(storedAccommodations);
+
+        if (!mapRef.current) return;
+
         const targetPlace = focusedPlace ?? places.at(-1);
+        if (!targetPlace?.location) return;
 
-        if (!targetPlace) return; // ✅ targetPlace가 undefined면 종료
-
-        const { latitude, longitude } = targetPlace.location || targetPlace;
-
-        // ✅ latitude, longitude가 유효한지 확인
-        if (latitude === undefined || longitude === undefined) return;
-
+        const { latitude, longitude } = targetPlace.location;
         mapRef.current.panTo({ lat: latitude, lng: longitude });
     }, [
         isLoaded,

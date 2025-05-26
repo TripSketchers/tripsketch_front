@@ -2,17 +2,27 @@ import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import { LuImagePlus } from "react-icons/lu";
+import { FaTrash } from "react-icons/fa6";
+
 import {
     addPhoto,
     getAllPhotos,
     deletePhoto,
-    clearPhotos
+    clearPhotos,
 } from "../../../api/DB/AlbumDB";
 
-function ImgUpload({ memos, setMemos }) {
+function ImgUpload({ memos, setMemos, onPhotosChange }) {
     const [photos, setPhotos] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const currentPhoto = photos[currentPage];
+
+    useEffect(() => {
+        const checkPhotos = async () => {
+            const photos = await getAllPhotos();
+            onPhotosChange?.(photos.length > 0); // ✅ 마운트 시에도 알려줌
+        };
+        checkPhotos();
+    }, []);
 
     // 사진 업로드 (IndexedDB에 저장)
     const handleImgChangeBtn = async (e) => {
@@ -35,14 +45,16 @@ function ImgUpload({ memos, setMemos }) {
         const allPhotos = await getAllPhotos();
 
         // 미리보기용 URL을 만들어서 상태에 넣어줌
-        const photoWithPreview  = allPhotos.map(photo => ({
+        const photoWithPreview = allPhotos.map((photo) => ({
             ...photo,
-            previewUrl: URL.createObjectURL(photo.file)// Blob → URL
+            previewUrl: URL.createObjectURL(photo.file), // Blob → URL
         }));
         setPhotos(photoWithPreview);
+        onPhotosChange?.(allPhotos.length > 0); // ✅ 사진 변경 시마다 상위에 알려줌
     };
 
-    useEffect(() => {   //임시
+    useEffect(() => {
+        //임시
         fetchPhotos();
     }, []);
 
@@ -77,6 +89,11 @@ function ImgUpload({ memos, setMemos }) {
         setMemos((prev) => ({ ...prev, [currentId]: newMemo }));
     };
 
+    const handleDeleteBtn = async () => {
+        deletePhoto(photos[currentPage].id);
+        fetchPhotos();
+    };
+
     return (
         <div css={S.SLayout}>
             <div css={S.STitleContainer}>
@@ -96,7 +113,18 @@ function ImgUpload({ memos, setMemos }) {
                     )}
                     <div css={S.SImgBox}>
                         {photos.length > 0 && currentPhoto ? (
-                            <img src={currentPhoto.previewUrl} alt="preview" />
+                            <>
+                                <img
+                                    src={currentPhoto.previewUrl}
+                                    alt="preview"
+                                />
+                                <button
+                                    css={S.SPhotoDelete}
+                                    onClick={handleDeleteBtn}
+                                >
+                                    <FaTrash />
+                                </button>
+                            </>
                         ) : (
                             <label htmlFor="fileInput" css={S.SAddImg}>
                                 <LuImagePlus />
@@ -128,7 +156,6 @@ function ImgUpload({ memos, setMemos }) {
                     ></textarea>
                 </div>
             </div>
-            {/* <button onClick={handleUploadBtn}>임시 업로드 버튼</button> */}
         </div>
     );
 }

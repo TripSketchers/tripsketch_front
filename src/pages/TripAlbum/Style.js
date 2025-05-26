@@ -26,18 +26,11 @@ export const SLayout = css`
 
 
 export const SViewTypeBox = css`
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 10px 0;
-
-    a { // 사진 업로드 버튼
-        border: 0;
-        border-radius: 3rem;
-        padding: 10px;
-        background-color: #51748b;
-        color: white;
-    } 
 
     .switches-container {
         width: 12rem;
@@ -105,18 +98,79 @@ export const SViewTypeBox = css`
         transform: translateX(100%);
     }
 
-    // 전체보기 선택 시 텍스트 보여주기 
-    .switches-container input:nth-of-type(1):checked ~ .switch-wrapper .switch div:nth-of-type(1) {
+    // 전체보기 선택 시 텍스트 보여주기
+    .switches-container
+        input:nth-of-type(1):checked
+        ~ .switch-wrapper
+        .switch
+        div:nth-of-type(1) {
         opacity: 1;
     }
 
     // 폴더별 보기 선택 시 텍스트 보여주기
-    .switches-container input:nth-of-type(2):checked ~ .switch-wrapper .switch div:nth-of-type(2) {
+    .switches-container
+        input:nth-of-type(2):checked
+        ~ .switch-wrapper
+        .switch
+        div:nth-of-type(2) {
         opacity: 1;
     }
-
 `;
 export const ViewType = (viewType) =>  css`
     cursor: pointer;
-    border-bottom: ${viewType === 1 ? "3px solid #51748b" : "" };
+    border-bottom: ${viewType === 1 ? "3px solid #51748b" : ""};
+`;
+
+export const SSortingBox = css`
+    float: right;
+    position: relative;
+    top: 0px;
+
+    span {
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
+
+        &.selected {
+            font-weight: 500;
+            text-decoration: underline;
+        }
+    }
+`;
+
+export const SUploadBtn = css`
+    position: sticky;
+    bottom: 20px;
+    left: calc(50% - 70px);
+    width: 140px;
+    height: 45px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 0;
+    border-radius: 2rem;
+    padding: 10px;
+
+    background-color: #51748b;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    svg {
+        margin-right: 5px;
+        transition: transform 0.3s ease;
+        * {
+            color: white;
+        }
+    }
+
+    &:hover {
+        background-color: rgb(47, 102, 136);
+        svg {
+            transform: rotate(180deg); /* hover 시 회전 */
+        }
+    }
 `;

@@ -1,10 +1,10 @@
-import { css, keyframes } from '@emotion/react';
+import { css } from '@emotion/react';
 
 export const SLayout = css`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 240px);
+    height: calc(100vh - 240px); 
 
     h1 {
         font-size: 24px;

@@ -12,8 +12,8 @@ function SearchInput({ placeholder, onSearch, setIsShow }) {
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            handleSearchBtn();
-            setIsShow?.(true); // setIsShow가 있을 때만 실행
+            handleSearchBtn(); // Enter 키 누르면 검색 실행
+            setIsShow?.(true);
         }
     };
 
@@ -41,7 +41,7 @@ function SearchInput({ placeholder, onSearch, setIsShow }) {
                 onKeyDown={handleKeyDown}
                 onChange={handleChange}
                 onFocus={handleFocus}
-				        onBlur={handleBlur}
+                onBlur={handleBlur}
             />
             <button css={S.SButton} onClick={handleSearchBtn}>
                 <IoSearch />

@@ -7,9 +7,15 @@ import { instance } from "../../api/config/instance";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { FaPlus } from "react-icons/fa";
 import AccommodationModal from "../AccommodationModal/AccommodationModal";
+import { useLocation } from "react-router-dom";
+import qs from "qs";
 import { useTrip } from "../Routes/TripContext";
 
 function PlaceSelectPanel({ text, categories }) {
+    const location = useLocation();
+    // 구조분해 할당으로 변수에 담기
+    const { lowLat, lowLng, highLat, highLng } = location.state;
+
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
     const [selectedPlace, setSelectedPlace] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -44,8 +50,10 @@ function PlaceSelectPanel({ text, categories }) {
                 params: {
                     type: categoryTypeMap[selectedCategory] || "",
                     keyword: searchKeyword || categoryTypeMap[selectedCategory],
-                    pagetoken: pageParam,
+                    pagetoken: pageParam, // ✅ pagetoken 보내기
+                    location: [lowLat, lowLng, highLat, highLng],
                 },
+                paramsSerializer: params => qs.stringify(params, { arrayFormat: "repeat" }),
                 headers: {
                     Authorization: localStorage.getItem("accessToken"),
                 },

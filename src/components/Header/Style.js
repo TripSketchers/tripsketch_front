@@ -1,14 +1,29 @@
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 
-export const SLayout = css`
+export const SLayout = (isScrolled, isMain) => css`
+    position: fixed;
+    top: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 30px;
     width: 100%;
     height: 100px;
-    & img {
+    background-color: transparent;
+    z-index: 10;
+    ${(isMain && !!isScrolled) || !isMain
+        ? "background-color: white;"
+        : "background-color: transparent;"};
+    transition: background-color 0.3s, color 0.3s;
+
+    img {
         height: 100px;
+    }
+
+    .loginName, path {
+        ${(isMain && !!isScrolled) || !isMain
+            ? "color: black;"
+            : "color: white;"}
     }
 `;
 
@@ -37,6 +52,7 @@ export const SDropLayout = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 18px;
     cursor: pointer;
 
     & svg {
@@ -53,37 +69,41 @@ export const SDropLayout = css`
         visibility: visible;
         transition: opacity 0.3s;
     }
-
 `;
 
 export const SDropDown = css`
     position: absolute;
     top: 70px;
-    right: 0px;
+    right: 10px;
     transform: translateX(-10%); /* 한 번에 처리 */
     border: 1px solid #dbdbdb;
     border-radius: 1rem;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     background-color: #fff;
-    width: 12rem;
+    width: 200px;
     font-size: 16px;
     z-index: 3;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s, transform 0.3s ease-out, visibility 0s linear 0.3s;
+    *{color: black;}
 
-    & > li {
+    a,
+    div {
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 10px;
         cursor: pointer;
+        width: 100%;
+    }
+
+    & > li {
         transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     & > li:hover {
         background-color: #dff2f6;
-        color: white;
     }
 
     & li:first-of-type {
@@ -92,7 +112,7 @@ export const SDropDown = css`
     }
 
     & li:last-of-type {
-        border-radius: 0 0 1rem 1rem ;
+        border-radius: 0 0 1rem 1rem;
     }
 
     /* 미디어 쿼리로 작은 화면에서 크기 조정 */

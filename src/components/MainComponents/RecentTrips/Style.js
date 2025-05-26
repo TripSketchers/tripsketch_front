@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 
 export const SLayout = css`
     position: relative;
@@ -6,9 +6,9 @@ export const SLayout = css`
     width: 100%;
     height: 100%;
     padding: 0 20%;
-    
-    h1 {
-        font-size: 2rem;
+
+    h2 {
+        font-size: 24px;
         font-weight: 600;
         margin-bottom: 20px;
     }
@@ -20,8 +20,10 @@ export const SContainer = css`
     justify-content: space-between;
     gap: 2rem;
     width: 100%;
+    height: 100%;
 
-    @media (max-width: 1000px) { // SRightContainer 위치 조정
+    @media (max-width: 1000px) {
+        // SRightContainer 위치 조정
         flex-direction: column;
     }
 `;
@@ -30,26 +32,32 @@ export const SLeftContainer = css`
     display: flex;
     flex-direction: column;
     flex: 1;
-    height: 100%;
 `;
 
 export const STripBox = css`
     position: relative;
     width: 100%;
-    height: 100%;
-    border-radius: 2rem;
+    max-height: 320px;
+    min-height: 160px;
+    border-radius: 20px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
 
     &:hover {
         transform: scale(1.03);
         box-shadow: 2px 4px 16px #00000029;
     }
-    
-    * { 
-        color: white; 
+
+    * {
+        color: white;
         font-weight: 600;
         transition: transform 0.3s ease;
+    }
+
+    span,
+    h3 {
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
     }
 
     .info {
@@ -61,7 +69,7 @@ export const STripBox = css`
         padding: 5%;
         z-index: 1;
     }
-    
+
     .dDay {
         margin-right: 5px;
         border-radius: 1rem;
@@ -80,14 +88,13 @@ export const STripBox = css`
         left: 0;
         padding: 5%;
         z-index: 1;
-        line-height: 1.3rem;
+        line-height: 1.5rem;
     }
 
     h3 {
         font-size: 1.3rem;
-        line-height: 2rem;
     }
-    
+
     .containIcon {
         display: flex;
         align-items: center;
@@ -97,81 +104,215 @@ export const STripBox = css`
         width: 1rem;
         margin-right: 5px;
     }
-    
+
     img {
         position: relative;
         width: 100%;
         height: 100%;
-        
+        max-height: 100%;
+        object-fit: cover;
     }
 `;
 
 export const SRightContainer = css`
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     flex: 1;
 
     & > div {
         position: relative;
         width: 100%;
-        padding-bottom: clamp(60%, 65%, 80%); // 브라우저에 맞춰 비율 조정
+        min-height: 160px;
+
+        @media (max-width: 1000px) {
+            // SRightContainer 위치 조정
+            max-height: 364px;
+        }
     }
 
+    /* 기본 albumBox 스타일 */
     .albumBox {
+        box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    /* albumBox가 1개일 때 */
+    .albumBox-count-1 {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        min-height: 160px;
+        z-index: 2;
+        transform: translate(0%, 0%);
+        transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
+        &:hover {
+            transform: translate(0%, 0%) scale(1.03);
+            z-index: 3;
+        }
+    }
+
+    /* albumBox가 2개일 때 */
+    .albumBox-count-2.albumBox-idx-1 {
+        position: absolute;
+        width: 80%;
+        height: 90%;
+        left: 0;
+        top: 10%;
+        z-index: 1;
+        transform: translate(0%, 0%);
+        transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
+        &:hover {
+            transform: translate(0%, 0%) scale(1.03);
+            z-index: 3;
+        }
+    }
+    .albumBox-count-2.albumBox-idx-2 {
+        position: absolute;
+        width: 80%;
+        height: 90%;
+        left: 20%;
+        top: 0;
+        z-index: 0;
+        transform: translate(0%, 0%);
+        transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
+        &:hover {
+            transform: translate(0%, 0%) scale(1.03);
+            z-index: 3;
+        }
+    }
+
+    /* albumBox가 3개일 때*/
+    .albumBox-count-3.albumBox-idx-1 {
         position: absolute;
         width: 70%;
         height: 85%;
-        overflow: hidden;
-        box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.2);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        cursor: pointer;
-    }
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    /* 1번: 앞에 보이는 앨범 */
-    .albumBox:nth-of-type(1) {
         z-index: 2;
-        transform: translate(0%, 20%);
-
+        transform: translate(0%, 18%);
+        transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
         &:hover {
-            transform: translate(0%, 20%) scale(1.03);
-            box-shadow: 2px 4px 16px #00000029;
-        }
-    }
-
-    /* 2번: 중간 앨범 */
-    .albumBox:nth-of-type(2) {
-        z-index: 1;
-        transform: translate(20%, 10%);
-
-        &:hover {
-            transform: translate(20%, 10%) scale(1.03);
-            box-shadow: 2px 4px 16px #00000029;
+            transform: translate(0%, 18%) scale(1.03);
             z-index: 3;
         }
     }
-
-    /* 3번: 제일 뒤 앨범 */
-    .albumBox:nth-of-type(3) {
+    .albumBox-count-3.albumBox-idx-2 {
+        position: absolute;
+        width: 70%;
+        height: 85%;
+        z-index: 1;
+        transform: translate(20%, 9%);
+        transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
+        &:hover {
+            transform: translate(20%, 9%) scale(1.03);
+            z-index: 3;
+        }
+    }
+    .albumBox-count-3.albumBox-idx-3 {
+        position: absolute;
+        width: 70%;
+        height: 85%;
         z-index: 0;
         transform: translate(40%, 0%);
-
+        transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
         &:hover {
             transform: translate(40%, 0%) scale(1.03);
-            box-shadow: 2px 4px 16px #00000029;
             z-index: 3;
         }
+    }
+`;
 
-        @media (max-width: 1000px) { // SRightContainer 위치 조정
-            
+export const SNoAlbum = css`
+    position: relative;
+    width: 100%;
+    height: 320px;
+    min-height: 160px;
+    font-size: 1.1rem;
+    border-radius: 20px;
+    border: 3px dashed lightgray;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* 앨범 없음 안내 텍스트 영역 */
+    > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        
+        * {
+            color: gray;
+        }
+
+        span {
+            display: flex;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        svg {
+            font-size: 24px;
+            margin-right: 5px;
         }
     }
-    
+
+    button {
+        position: relative;
+        left: 0;
+        bottom: 0;
+        transform: none;
+        width: 160px;
+        height: 50px;
+        line-height: 50px;
+        font-size: 20px;
+        text-align: center;
+        font-family: sans-serif;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: #ccc;
+    }
+    button:before {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background: #81e7f9;
+        color: #fff;
+        transition: 0.5s;
+        transform-origin: bottom;
+        transform: translatey(-100%) rotatex(90deg);
+    }
+    button:hover:before {
+        transform: translatey(0) rotatex(0deg);
+    }
+
+    button:after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background: #6ec4d3;
+        color: #fff;
+        transition: 0.5s;
+        transform-origin: top;
+        transform: translatey(0) rotatex(0deg);
+    }
+    button:hover:after {
+        transform: translatey(100%) rotatex(90deg);
+    }
 `;
