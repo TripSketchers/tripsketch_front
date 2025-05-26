@@ -14,7 +14,6 @@ import useFirebaseAuth from "../../hooks/useFirebaseAuth";
 
 function TripAlbum(props) {
     const { firebaseUser, loading } = useFirebaseAuth();
-    console.log(firebaseUser);
 
     const { tripId } = useParams();
     const location = useLocation();
@@ -80,15 +79,12 @@ function TripAlbum(props) {
               })
         : [];
 
-    if (loading) {
-        return <div>로딩 중...</div>;
-    }
-
-    if (!firebaseUser) {
+    if (!firebaseUser || loading) { // 로그인 안했거나 로딩 중일 때
+        const intro = loading ? "로딩 중..." : "로그인 후 이용 가능합니다.";
         return (
             <NavLayout>
                 <NavContainer>
-                    <div>로그인이 필요합니다.</div>
+                    <div>{intro}</div>
                 </NavContainer>
             </NavLayout>
         );
