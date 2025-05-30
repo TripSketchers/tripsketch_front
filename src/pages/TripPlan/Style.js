@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 export const SLayout = css`
 	display: flex;
 	width: 100%;
-	height: calc(100vh - 140px);
+	height: calc(100vh - 160px);
 	overflow: hidden;
 	box-shadow: 0 0 6px rgba(0, 0, 0, 0.7);
 	.split {
