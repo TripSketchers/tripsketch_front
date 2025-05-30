@@ -5,6 +5,7 @@ import { IoMdMore, IoMdShare } from "react-icons/io";
 import { FaTrash } from "react-icons/fa6";
 import { instance } from "../../api/config/instance";
 import TogglePanel from "../TogglePanel/TogglePanel";
+import SharedModal from "../MypageComponents/SharedTrip/ShareModal/SharedModal";
 
 function TripCard({
     onClick,
@@ -15,6 +16,7 @@ function TripCard({
     dateRange,
     onDeleteSuccess,
 }) {
+    const [shareModalOpen, setshareModalOpen] = useState(false);
 
     const handleDeleteTrip = async () => {
         try {
@@ -30,7 +32,9 @@ function TripCard({
         }
     };
 
-    const handleShareBtnOnClick = () => {};
+    const handleShareBtnOnClick = () => {
+        setshareModalOpen(true)
+    };
 
     return (
         <>
@@ -62,6 +66,9 @@ function TripCard({
                 <div css={S.SLocation}>{location}</div>
                 <div css={S.SDateRange}>{dateRange}</div>
             </div>
+            {shareModalOpen && (
+                <SharedModal onClose={() => setshareModalOpen(false)} tripId={tripId} />
+            )}
         </>
     );
 }

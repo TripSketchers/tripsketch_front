@@ -44,3 +44,8 @@ export function getNday(startDate, todayDate) {
     const diff = differenceInDays(today, start) + 1; // n일차는 1부터 시작하므로 +1
     return `${Math.abs(diff)}일차`;
 }
+
+// 날짜 포맷 (yyyy-MM-dd ~ yyyy-MM-dd)
+export function tripDateFormatting(startDate, todayDate) {
+    return `${formatDate(startDate)} ~ ${formatDate(todayDate)}`;
+}
