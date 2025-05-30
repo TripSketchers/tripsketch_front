@@ -91,7 +91,6 @@ function PlaceSelectPanel({ text, categories }) {
                         ...place,
                         googlePlaceId: place.id, // ✅ ID 통일
                     };
-                    console.log("place.id:", place.id, "place.googlePlaceId:", place.googlePlaceId);
                     return [...prev, normalizedPlace];
                 }
             });

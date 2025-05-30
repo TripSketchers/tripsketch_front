@@ -13,16 +13,6 @@ export function TripProvider({ children }) {
     const [placeModalInfo, setPlaceModalInfo] = useState(null);
     const [focusedPlace, setFocusedPlace] = useState(null);
 
-    console.log("TripProvider initialized with default values", {
-        tripInfo,
-        tripDestination,
-        storedPlaces,
-        storedAccommodations,
-        schedules,
-        placeModalInfo,
-        focusedPlace,
-    });
-
     return (
         <TripContext.Provider
             value={{

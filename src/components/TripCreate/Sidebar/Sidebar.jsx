@@ -33,7 +33,7 @@ function Sidebar({ selectedStep, setSelectedStep }) {
                     title: tripInfo?.title || "여행 이름을 입력하세요",
                     startDate: tripInfo?.startDate,
                     endDate: tripInfo?.endDate,
-                    tripDestinationId: tripInfo?.tripDestinationId || 5,
+                    tripDestinationId: location.state.tripDestinationId || tripInfo?.tripDestinationId || 5,
                     transportType: selectedTransport,
                     tripDestinationKoName: tripInfo?.tripDestinationKoName || "여행지",
                 },

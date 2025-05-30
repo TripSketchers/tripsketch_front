@@ -4,6 +4,7 @@ import { useDrop } from "react-dnd";
 import * as S from "./Style";
 // ✅ calculateEndTime 삭제, minutesToTime/timeToMinutes 조합으로 대체
 import { minutesToTime, timeToMinutes } from "../../../utils/ScheduleTimeUtils";
+import { useTrip } from "../../Routes/TripContext";
 
 // 📌 상수 정의
 const PIXELS_PER_MINUTE = 1; // 1분 = 1px
@@ -11,6 +12,7 @@ const OFFSET_MINUTES = 360; // 새벽 6시 (360분)
 
 // 📥 DropZone 컴포넌트 (일정 드롭 가능 영역)
 function DropZone({ date, index, onDrop, children }) {
+    const { tripInfo } = useTrip(); // 여행 정보 가져오기
 	const dropBodyRef = useRef(null); // 드롭 영역 DOM 참조
 	const [previewTop, setPreviewTop] = useState(null); // 미리보기 위치 (Y 좌표)
 	const [previewHeight, setPreviewHeight] = useState(null); // 미리보기 높이
@@ -84,7 +86,7 @@ function DropZone({ date, index, onDrop, children }) {
 
 			if (item.schedule) {
 				// 기존 일정 드롭 시 endTime도 함께 전달
-				onDrop(item.schedule, date, startTime, endTime, dropBodyRef);
+				onDrop(item.schedule, date, startTime, endTime, tripInfo);
 			} else if (item.place) {
 				const newSchedule = {
 					tripScheduleId: Date.now(),

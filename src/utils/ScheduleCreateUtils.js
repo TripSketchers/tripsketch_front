@@ -16,7 +16,7 @@ export const initScheduleHandler = (setter) => {
 };
 
 // 🟢 새 일정 생성 및 추가 (분할/단일 모두 사용)
-export const createAndAddSchedule = (
+export const createSchedule = (
 	place,
 	date,
 	startTime,
@@ -44,22 +44,12 @@ export const createAndAddSchedule = (
 		place: { ...place },
 	});
 
-	// endTime이 주어지지 않은 경우 stayTime을 기준으로 계산
 	const calEndTime =
 		endTime || minutesToTime(timeToMinutes(startTime) + stayTime);
-	console.log("[createAndAddSchedule]", {
-		date,
-		startTime,
-		stayTime,
-		endTime,
-		calEndTime: calEndTime,
-		viewStartTime,
-		viewEndTime,
-	});
 
-	const splitSchedules = [generateSchedule(date, startTime, calEndTime)];
-
-	setSchedules((prev) => [...prev, ...splitSchedules]);
+	return [
+		generateSchedule(date, startTime, calEndTime)
+	];
 };
 
 // 🟢 기존 일정 분할 및 반영 (분할/단일 모두)
@@ -69,10 +59,10 @@ export const splitAndSetSchedule = (
 	dropStartTime,
 	dropEndTime
 ) => {
+	const result = [];
+
 	let startMin = timeToMinutes(dropStartTime);
 	let endMin = timeToMinutes(dropEndTime);
-
-	console.log(startMin, endMin);
 
 	if (
 		schedule.isSplit === true &&
@@ -84,22 +74,21 @@ export const splitAndSetSchedule = (
 		endMin += 1440; // 익일 처리
 	}
 
-	console.log(startMin, endMin);
-
 	const placeObj = schedule.place || schedule;
-
 	const viewStart = dropStartTime;
 	const viewEnd = dropEndTime;
 	const tripScheduleId = schedule.tripScheduleId;
 
 	// 📌 1. 전날로 넘어가는 경우
-	if (startMin < TIMELINE_START && endMin > TIMELINE_START) { //1740 420
+	if (startMin < TIMELINE_START && endMin > TIMELINE_START) {
 		const prevDate = new Date(dropDate);
 		prevDate.setDate(prevDate.getDate() - 1);
 		const prevDateStr = prevDate.toISOString().slice(0, 10);
 
 		const firstStayTime = TIMELINE_START - startMin;
-		createAndAddSchedule(
+		const secondStayTime = endMin - TIMELINE_START;
+
+		result.push(...createSchedule(
 			placeObj,
 			prevDateStr,
 			dropStartTime,
@@ -109,10 +98,9 @@ export const splitAndSetSchedule = (
 			viewEnd,
 			true,
 			tripScheduleId
-		);
+		));
 
-		const secondStayTime = endMin - TIMELINE_START;
-		createAndAddSchedule(
+		result.push(...createSchedule(
 			placeObj,
 			dropDate,
 			"06:00",
@@ -122,14 +110,17 @@ export const splitAndSetSchedule = (
 			viewEnd,
 			true,
 			tripScheduleId
-		);
-		return;
+		));
+
+		return result;
 	}
 
 	// 📌 2. 다음날로 넘어가는 경우
 	if (startMin < TIMELINE_END && endMin > TIMELINE_END) {
 		const firstStayTime = TIMELINE_END - startMin;
-		createAndAddSchedule(
+		const secondStayTime = endMin - TIMELINE_END;
+
+		result.push(...createSchedule(
 			placeObj,
 			dropDate,
 			dropStartTime,
@@ -139,14 +130,13 @@ export const splitAndSetSchedule = (
 			viewEnd,
 			true,
 			tripScheduleId
-		);
+		));
 
 		const nextDate = new Date(dropDate);
 		nextDate.setDate(nextDate.getDate() + 1);
 		const nextDateStr = nextDate.toISOString().slice(0, 10);
 
-		const secondStayTime = endMin - TIMELINE_END;
-		createAndAddSchedule(
+		result.push(...createSchedule(
 			placeObj,
 			nextDateStr,
 			"06:00",
@@ -156,14 +146,15 @@ export const splitAndSetSchedule = (
 			viewEnd,
 			true,
 			tripScheduleId
-		);
-		return;
+		));
+
+		return result;
 	}
 
 	// 📌 3. 분할 필요 없음
 	const totalStayTime = endMin - startMin;
 
-	createAndAddSchedule(
+	result.push(...createSchedule(
 		placeObj,
 		dropDate,
 		minutesToAbsTime(startMin),
@@ -173,5 +164,7 @@ export const splitAndSetSchedule = (
 		undefined,
 		false,
 		tripScheduleId
-	);
+	));
+
+	return result;
 };

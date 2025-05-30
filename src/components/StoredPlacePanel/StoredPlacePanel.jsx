@@ -58,18 +58,19 @@ function StoredPlacePanel({ text, onAddPlaceClick, isAddingPlace, onSave }) {
 								: storedPlaces.length}
 						</span>
 					</div>
-
-					<button
-						onClick={() => {
-							if (text === "숙소") {
-								setStoredAccommodations({});
-							} else {
-								setStoredPlaces([]);
-							}
-						}}
-					>
-						초기화
-					</button>
+					{isAddingPlace && (
+						<button
+							onClick={() => {
+								if (text === "숙소") {
+									setStoredAccommodations({});
+								} else {
+									setStoredPlaces([]);
+								}
+							}}
+						>
+							초기화
+						</button>
+					)}
 				</div>
 
 				<div css={S.SContentBox}>
@@ -92,7 +93,10 @@ function StoredPlacePanel({ text, onAddPlaceClick, isAddingPlace, onSave }) {
 												type="accommodation"
 												place={place}
 												// key에 날짜와 googlePlaceId를 조합
-												key={`${place.googlePlaceId || place.id}-${dateStr}`}
+												key={`${
+													place.googlePlaceId ||
+													place.id
+												}-${dateStr}`}
 												onRemove={() => {
 													const copy = {
 														...storedAccommodations,
@@ -124,6 +128,7 @@ function StoredPlacePanel({ text, onAddPlaceClick, isAddingPlace, onSave }) {
 											)
 										);
 									}}
+									disableRemove={!isAddingPlace}
 								/>
 						  ))}
 				</div>

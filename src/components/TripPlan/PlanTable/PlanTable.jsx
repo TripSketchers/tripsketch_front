@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { format, eachDayOfInterval } from "date-fns";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
@@ -6,13 +6,18 @@ import ScheduleCard from "../ScheduleCard/ScheduleCard";
 import DropZone from "../DropZone/DropZone";
 import { useTrip } from "../../Routes/TripContext";
 import useScheduleDropHandler from "../../../hooks/useScheduleDropHandler";
-import { formatHour } from "../../../utils/ScheduleTimeUtils";
+import {
+	formatHour,
+	getCardPositionAndHeight,
+	minutesToTime,
+	timeToMinutes,
+} from "../../../utils/ScheduleTimeUtils";
 import {
 	initScheduleHandler,
 	splitAndSetSchedule,
 } from "../../../utils/ScheduleCreateUtils";
 import TrashDropZone from "../TrashDropZone/TrashDropZone";
-import { instance } from "../../../api/config/instance";
+import { FaBus, FaCar } from "react-icons/fa6";
 
 function PlanTable() {
 	const { tripInfo, schedules, setSchedules, storedAccommodations } =
@@ -94,62 +99,31 @@ function PlanTable() {
 		});
 	}, [storedAccommodations]);
 
-	useEffect(() => {
-        if (!schedules || schedules.length === 0) return;
+	// ✅ 일정과 이동 블록을 합쳐 렌더링하는 유틸 함수
+	const renderDaySchedules = (daySchedules) => {
+		const result = [];
 
-        const computeTravelTimes = async () => {
-            const sorted = [...schedules].sort((a, b) => {
-                const aTime = `${a.date} ${a.startTime}`;
-                const bTime = `${b.date} ${b.startTime}`;
-                return aTime.localeCompare(bTime);
-            });
+		for (let i = 0; i < daySchedules.length; i++) {
+			const current = daySchedules[i];
+			result.push({ ...current, type: "schedule" });
 
-            for (let i = 0; i < sorted.length - 1; i++) {
-                const origin = sorted[i];
-                const dest = sorted[i + 1];
+			// 🔧 next 없이도 travelTime이 존재하면 travel block 추가
+			if (current.travelTime && current.travelTime > 0) {
+				const startMin = timeToMinutes(current.endTime);
+				const endMin = startMin + current.travelTime;
 
-                if (origin.place && dest.place) {
-                    const originLat = origin.place.latitude || origin.place.location?.latitude;
-                    const originLng = origin.place.longitude || origin.place.location?.longitude;
-                    const destLat = dest.place.latitude || dest.place.location?.latitude;
-                    const destLng = dest.place.longitude || dest.place.location?.longitude;
+				result.push({
+					id: `travel_${current.tripScheduleId}_${i}`,
+					startTime: current.endTime,
+					endTime: minutesToTime(endMin),
+					travelTime: current.travelTime,
+					type: "travel",
+				});
+			}
+		}
 
-                    if (!originLat || !originLng || !destLat || !destLng)
-                        continue;
-
-                    try {
-                        const res = await instance.get(
-                            "/trips/traveltime",
-                            {
-                                params: {
-                                    originLat,
-                                    originLng,
-                                    destLat,
-                                    destLng,
-                                    mode: "DRIVE", // 또는 "TRANSIT"
-                                },
-                                headers: {
-                                    Authorization:
-                                        localStorage.getItem("accessToken"),
-                                },
-                            }
-                        );
-
-                        const seconds = res.data ?? 0;
-                        origin.travelTime = seconds;
-                    } catch (err) {
-                        console.error("🚨 백엔드 경로 계산 실패", err);
-                        origin.travelTime = 0;
-                    }
-                }
-            }
-
-            setSchedules(sorted);
-        };
-
-        computeTravelTimes();
-    }, [schedules.length]);
-	
+		return result;
+	};
 
 	return (
 		<div css={S.SWrapper}>
@@ -176,15 +150,64 @@ function PlanTable() {
 								index={index}
 								onDrop={handleDrop}
 							>
-								{daySchedules.map((s, i) => (
-									<ScheduleCard
-										key={`${s.tripScheduleId}_${s.startTime}_${i}`}
-										schedule={s}
-										onToggleLock={onToggleLock}
-										onUpdate={onUpdate}
-										setIsDragging={setIsDragging}
-									/>
-								))}
+								{renderDaySchedules(daySchedules).map(
+									(item, i) => {
+										if (item.type === "schedule") {
+											return (
+												<ScheduleCard
+													key={`${item.tripScheduleId}_${item.startTime}_${i}`}
+													schedule={item}
+													onToggleLock={onToggleLock}
+													onUpdate={onUpdate}
+													setIsDragging={
+														setIsDragging
+													}
+												/>
+											);
+										}
+										if (item.type === "travel") {
+											const {
+												top: topPx,
+												height: heightPx,
+											} = getCardPositionAndHeight(
+												item.startTime,
+												item.endTime
+											);
+											return (
+												<div
+													key={item.id}
+													css={S.STravelTimeBlock(
+														topPx,
+														heightPx
+													)}
+													onClick={() => {
+														console.log(item);
+													}}
+												>
+													<div
+														css={S.STravelTimeText}
+													>
+														{tripInfo.transportType ===
+														0 ? (
+															<FaBus />
+														) : (
+															<FaCar />
+														)}
+														{item.travelTime / 60 >=
+															1 &&
+															`${Math.floor(
+																item.travelTime /
+																	60
+															)}시간 `}
+														{item.travelTime % 60}분
+														이동
+													</div>
+												</div>
+											);
+										}
+										return null;
+									}
+								)}
 							</DropZone>
 						);
 					})}
@@ -192,13 +215,7 @@ function PlanTable() {
 			</div>
 			<div css={S.STrashDropZone}>
 				{isDragging && (
-					<TrashDropZone
-						onDrop={(id) => {
-							setSchedules((prev) =>
-								prev.filter((s) => s.tripScheduleId !== id)
-							);
-						}}
-					/>
+					<TrashDropZone/>
 				)}
 			</div>
 		</div>

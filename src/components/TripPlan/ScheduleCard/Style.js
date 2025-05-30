@@ -10,7 +10,7 @@ export const SCard = (category) => css`
 	border: 1px solid #dbdbdb;
 	border-left: 4px solid ${getColorByCategory(category)};
 	padding: 0 8px;
-	background-color: white;
+	background-color: ${getColorByCategory(category, true)};
 	width: 100%;
 `;
 
@@ -49,6 +49,7 @@ export const SCardLabel = css`
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+    padding-bottom: 2px;
 `;
 
 export const SLocked = css`

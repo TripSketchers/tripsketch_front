@@ -7,7 +7,7 @@ import { useTrip } from "../../Routes/TripContext";
 import { getImageBlobUrl } from "../../../utils/ImageUtils";
 import { useDrag } from "react-dnd";
 
-function StoredPlaceBox({ index, type, place, onRemove }) {
+function StoredPlaceBox({ index, type, place, onRemove, disableRemove=false }) {
 	const { setFocusedPlace } = useTrip();
 	const [imgSrc, setImgSrc] = useState(place.imageUrl || fallbackImg);
 
@@ -60,16 +60,17 @@ function StoredPlaceBox({ index, type, place, onRemove }) {
 					</div>
 				</div>
 			</div>
-
-			<button
-				css={S.SDeleteBtn}
-				onClick={(e) => {
-					e.stopPropagation();
-					onRemove(place.googlePlaceId);
-				}}
-			>
-				<FaTrash />
-			</button>
+			{!disableRemove && (
+				<button
+					css={S.SDeleteBtn}
+					onClick={(e) => {
+						e.stopPropagation();
+						onRemove(place.googlePlaceId);
+					}}
+				>
+					<FaTrash />
+				</button>
+			)}
 		</div>
 	);
 }

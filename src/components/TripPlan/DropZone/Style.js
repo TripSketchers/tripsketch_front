@@ -4,7 +4,7 @@ export const SDayColumn = css`
 	display: flex;
 	flex-direction: column;
 	min-width: 200px;
-	background-color: #f8f8f8;
+	background-color:rgb(255, 255, 255);
 	border-left: 1px solid #ccc;
     flex-grow: 1;
 `;
