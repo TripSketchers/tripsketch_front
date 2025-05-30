@@ -24,6 +24,7 @@ export const createSchedule = (
 	endTime,
 	viewStartTime,
 	viewEndTime,
+    travelTime,
 	isSplit = false,
 	tripScheduleId
 ) => {
@@ -41,6 +42,7 @@ export const createSchedule = (
 		isSplit,
 		viewStartTime: viewStartTime || startTime,
 		viewEndTime: viewEndTime || endTime,
+        travelTime: travelTime,
 		place: { ...place },
 	});
 
@@ -96,6 +98,7 @@ export const splitAndSetSchedule = (
 			"30:00",
 			viewStart,
 			viewEnd,
+            0,
 			true,
 			tripScheduleId
 		));
@@ -108,6 +111,7 @@ export const splitAndSetSchedule = (
 			dropEndTime,
 			viewStart,
 			viewEnd,
+            schedule.travelTime,
 			true,
 			tripScheduleId
 		));
@@ -128,6 +132,7 @@ export const splitAndSetSchedule = (
 			"30:00",
 			viewStart,
 			viewEnd,
+            0,
 			true,
 			tripScheduleId
 		));
@@ -144,6 +149,7 @@ export const splitAndSetSchedule = (
 			undefined,
 			viewStart,
 			viewEnd,
+            schedule.travelTime,
 			true,
 			tripScheduleId
 		));
@@ -162,6 +168,7 @@ export const splitAndSetSchedule = (
 		minutesToAbsTime(endMin),
 		undefined,
 		undefined,
+        schedule.travelTime,
 		false,
 		tripScheduleId
 	));

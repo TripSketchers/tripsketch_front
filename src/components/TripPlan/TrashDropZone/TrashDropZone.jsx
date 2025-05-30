@@ -14,29 +14,50 @@ function TrashDropZone() {
 			const offset = monitor.getClientOffset();
 			if (!offset) return;
 
+			// 🔹 삭제 전 스케줄들 정렬
 			const prevSchedules = [...schedules].sort((a, b) => {
 				if (a.date < b.date) return -1;
 				if (a.date > b.date) return 1;
 				return timeToMinutes(a.startTime) - timeToMinutes(b.startTime);
 			});
 
+			// 🔹 삭제 대상 인덱스
 			const prevIndex = prevSchedules.findIndex(
 				(s) => s.tripScheduleId === item.id
 			);
 
+			// 🔹 삭제 후 임시 스케줄
 			const tempSchedules = prevSchedules.filter(
 				(s) => s.tripScheduleId !== item.id
 			);
 
-			const updated = await calculateTravelTimes(
-				prevSchedules,     // 삭제 전
-				tempSchedules,     // 삭제 후
-				prevIndex,         // 삭제된 인덱스
-				-1,                // currIndex 없음
+			// 🔹 travelTime 다시 계산
+			const travelResults = await calculateTravelTimes(
+				prevSchedules,
+				tempSchedules,
+				prevIndex,
+				-1,
 				tripInfo?.transportType
 			);
 
-			setSchedules(updated); // 삭제 및 travelTime 업데이트된 schedules 반영
+			// 🔹 tempSchedules에 travelTime 반영
+			const updatedSchedules = tempSchedules.map((s) => {
+				const travel = travelResults.find(
+					(res) => res.from === s.tripScheduleId
+				);
+				return {
+					...s,
+					travelTime: travel?.travelTime ?? 0,
+				};
+			});
+
+			// 🔹 마지막 schedule의 travelTime = 0
+			if (updatedSchedules.length > 0) {
+				updatedSchedules[updatedSchedules.length - 1].travelTime = 0;
+			}
+
+			// 🔹 반영
+			setSchedules(updatedSchedules);
 		},
 		collect: (monitor) => ({
 			isOver: monitor.isOver(),

@@ -90,18 +90,5 @@ export const calculateTravelTimes = async (
 
 	const travelResults = await Promise.all(travelPromises);
 
-	travelResults.forEach((res) => {
-		const idx = tempSchedules.findIndex(
-			(s) => s.tripScheduleId === res.from
-		);
-		if (idx !== -1) {
-			tempSchedules[idx].travelTime = res.travelTime ?? 0;
-		}
-	});
-
-	if (tempSchedules.length > 0) {
-		tempSchedules[tempSchedules.length - 1].travelTime = 0;
-	}
-
-	return tempSchedules;
+	return travelResults;
 };

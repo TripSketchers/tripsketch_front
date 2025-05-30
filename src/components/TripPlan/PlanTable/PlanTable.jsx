@@ -138,10 +138,19 @@ function PlanTable() {
 						))}
 					</div>
 					{tripDates.map((date, index) => {
-						let daySchedules = schedules.filter(
-							(s) =>
-								format(new Date(s.date), "yyyy-MM-dd") === date
-						);
+						let daySchedules = schedules.filter((s) => {
+							try {
+								const dateObj = new Date(s.date);
+								return (
+									s.date &&
+									!isNaN(dateObj.getTime()) &&
+									format(dateObj, "yyyy-MM-dd") === date
+								);
+							} catch (e) {
+								console.error("⛔ Invalid date:", s.date, s);
+								return false;
+							}
+						});
 
 						return (
 							<DropZone
@@ -213,11 +222,7 @@ function PlanTable() {
 					})}
 				</div>
 			</div>
-			<div css={S.STrashDropZone}>
-				{isDragging && (
-					<TrashDropZone/>
-				)}
-			</div>
+			<div css={S.STrashDropZone}>{isDragging && <TrashDropZone />}</div>
 		</div>
 	);
 }

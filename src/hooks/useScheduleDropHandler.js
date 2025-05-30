@@ -73,7 +73,7 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 		};
 
 		// 3️⃣ 삽입 후 정렬
-		let tempSchedules = [...baseSchedules, simulatedItem].sort((a, b) => {
+		const tempSchedules = [...baseSchedules, simulatedItem].sort((a, b) => {
 			if (a.date < b.date) return -1;
 			if (a.date > b.date) return 1;
 			return timeToMinutes(a.startTime) - timeToMinutes(b.startTime);
@@ -84,18 +84,50 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 		);
 
 		// 4️⃣ 영향 받는 스케줄들 travelTime 계산
-		if (prevIndex !== currIndex) {
-			tempSchedules = await calculateTravelTimes(
-				prevSchedules,
-				tempSchedules,
-				prevIndex,
-				currIndex,
-				tripInfo?.transportType
+		const travelResults = await calculateTravelTimes(
+			prevSchedules,
+			tempSchedules,
+			prevIndex,
+			currIndex,
+			tripInfo?.transportType
+		);
+
+		console.log("🚀 Travel Results:", travelResults);
+
+		travelResults.forEach((res) => {
+			const idx = tempSchedules.findIndex(
+				(s) => s.tripScheduleId === res.from
 			);
+			if (idx !== -1) {
+				tempSchedules[idx].travelTime = res.travelTime ?? 0;
+			}
+		});
+
+		if (tempSchedules.length > 0) {
+			tempSchedules[tempSchedules.length - 1].travelTime = 0;
 		}
 
+		const targetSchedule = tempSchedules.find(
+			(s) => s.tripScheduleId === droppedItem.tripScheduleId
+		);
+
+		const droppedItemWithTravelTime = {
+			...droppedItem,
+			travelTime: targetSchedule?.travelTime ?? 0,
+		};
+
+		const updatedBaseSchedules = baseSchedules.map((schedule) => {
+			const match = tempSchedules.find(
+				(temp) => temp.tripScheduleId === schedule.tripScheduleId
+			);
+			return {
+				...schedule,
+				travelTime: match?.travelTime ?? 0, // 없으면 기본값 0
+			};
+		});
+
 		// 6️⃣ 시간 겹침 조정
-		const daySchedules = baseSchedules.filter((s) => {
+		const daySchedules = updatedBaseSchedules.filter((s) => {
 			const scheduleStartAbs = getAbsoluteMinutes(s.startTime);
 			const scheduleDate = new Date(s.date);
 			const dropDateObj = new Date(dropDate);
@@ -112,7 +144,7 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 
 		const adjustedStartAbs = findOverlappingSlot(
 			daySchedules,
-			droppedItem,
+			droppedItemWithTravelTime,
 			dropStartAbs,
 			dropEndAbs
 		);
@@ -127,7 +159,7 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 		// 7️⃣ 새로운 일정 생성 및 병합
 		initScheduleHandler(setSchedules); // 내부 초기화만
 		const newSchedules = splitAndSetSchedule(
-			droppedItem,
+			droppedItemWithTravelTime,
 			dropDate,
 			adjustedStartTime,
 			adjustedEndTime
