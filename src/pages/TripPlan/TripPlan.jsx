@@ -20,6 +20,7 @@ function TripPlan() {
 	const [showPlaceSelectPanel, setShowPlaceSelectPanel] = useState(false);
 	const toggleStoredPanel = () => setIsStoredPanelOpen(!isStoredPanelOpen);
 	const categories = ["명소", "맛집", "카페", "숙소"];
+	const [initialSchedules, setInitialSchedules] = useState([]);
 
 	const { tripId } = useParams(); // URL에서 tripId 가져오기
 	const {
@@ -28,7 +29,7 @@ function TripPlan() {
 		setStoredPlaces,
 		setStoredAccommodations,
 		setSchedules,
-        setTripDestination,
+		setTripDestination,
 	} = useTrip();
 
 	useEffect(() => {
@@ -42,10 +43,13 @@ function TripPlan() {
 				const data = res.data;
 
 				setTripInfo(data.trip);
-                setTripDestination(data.tripDestination);
+				setTripDestination(data.tripDestination);
 				setStoredPlaces(data.storedPlaces);
-				setStoredAccommodations(convertArrayToAccommodationMap(data.storedAccommodations));
+				setStoredAccommodations(
+					convertArrayToAccommodationMap(data.storedAccommodations)
+				);
 				setSchedules(data.tripSchedules);
+				setInitialSchedules(data.tripSchedules);
 			} catch (err) {
 				console.error("여행 정보를 불러오는 데 실패했습니다.", err);
 			}
@@ -132,7 +136,7 @@ function TripPlan() {
 									)}
 								</button>
 							</div>
-							<PlanTable />
+							<PlanTable initialSchedules={initialSchedules} />
 						</div>
 					</div>
 					<div css={S.SMapContainer}>

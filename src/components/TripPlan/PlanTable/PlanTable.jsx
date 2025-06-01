@@ -14,16 +14,21 @@ import {
 } from "../../../utils/ScheduleTimeUtils";
 import {
 	initScheduleHandler,
+	mergeSplitSchedules,
 	splitAndSetSchedule,
 } from "../../../utils/ScheduleCreateUtils";
 import TrashDropZone from "../TrashDropZone/TrashDropZone";
 import { FaBus, FaCar } from "react-icons/fa6";
+import GradientBtn from "../../GradientBtn/GradientBtn";
+import { instance } from "../../../api/config/instance";
+import { isEqual } from "lodash";
 
-function PlanTable() {
+function PlanTable({ initialSchedules }) {
 	const { tripInfo, schedules, setSchedules, storedAccommodations } =
 		useTrip();
 	const { handleDrop } = useScheduleDropHandler(schedules, setSchedules);
 	const [isDragging, setIsDragging] = useState(false);
+	const [hasChanges, setHasChanges] = useState(false);
 
 	const startDate = tripInfo?.startDate || tripInfo?.trip?.startDate;
 	const endDate = tripInfo?.endDate || tripInfo?.trip?.endDate;
@@ -64,6 +69,8 @@ function PlanTable() {
 	};
 
 	useEffect(() => {
+        console.log(storedAccommodations);
+        
 		if (!storedAccommodations || !tripDates.length) return;
 
 		tripDates.forEach((date) => {
@@ -73,9 +80,11 @@ function PlanTable() {
 				(s) => s.tripScheduleId === `accommodation_${date}`
 			);
 
+            console.log(hasAccommodationSchedule);
+            
 			if (accommodation && !hasAccommodationSchedule) {
 				initScheduleHandler(setSchedules);
-				splitAndSetSchedule(
+				const result = splitAndSetSchedule(
 					{
 						tripScheduleId: `accommodation_${date}`,
 						tripId: tripInfo?.tripId ?? null,
@@ -83,7 +92,7 @@ function PlanTable() {
 						startTime: "23:00",
 						endTime: "32:00",
 						stayTime: 540,
-						travelTime: null,
+						travelTime: 0,
 						position: null,
 						isLocked: 0,
 						place: accommodation,
@@ -95,6 +104,7 @@ function PlanTable() {
 					"23:00",
 					"32:00"
 				);
+                setSchedules((prev) => [...prev, ...result]);
 			}
 		});
 	}, [storedAccommodations]);
@@ -124,6 +134,33 @@ function PlanTable() {
 
 		return result;
 	};
+
+	const handleSaveSchedules = async () => {
+		try {
+            const mergedSchedules = mergeSplitSchedules(schedules, tripInfo.tripId);
+			await instance.post(`/trips/${tripInfo.tripId}/schedules`, mergedSchedules, {
+				headers: {
+					Authorization: localStorage.getItem("accessToken"),
+				},
+			});
+			alert("저장되었습니다!");
+		} catch (err) {
+			console.error("🛑 저장 실패", err);
+			alert("저장에 실패했습니다.");
+		}
+	};
+
+	useEffect(() => {
+		if (
+			!isEqual(initialSchedules, schedules)
+		) {
+			setHasChanges(true);
+		} else {
+			setHasChanges(false);
+		}
+	}, [schedules, initialSchedules]);
+
+    console.log("🔄 현재 스케줄:", schedules);   
 
 	return (
 		<div css={S.SWrapper}>
@@ -222,7 +259,16 @@ function PlanTable() {
 					})}
 				</div>
 			</div>
-			<div css={S.STrashDropZone}>{isDragging && <TrashDropZone />}</div>
+			<div css={S.STrashDropZone}>
+				{isDragging ? (
+					<TrashDropZone />
+				) : hasChanges ? (
+					<GradientBtn
+						onClick={handleSaveSchedules}
+						text={"바뀐 계획 저장하기"}
+					/>
+				) : null}
+			</div>
 		</div>
 	);
 }

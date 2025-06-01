@@ -1,3 +1,5 @@
+import { addDays, format } from "date-fns";
+
 const TIMELINE_START = 360;   // 06:00
 const TIMELINE_END = 1800;    // 30:00
 const TIME_END = 1440;        // 24:00
@@ -83,4 +85,15 @@ export const normalizeTime = (timeStr) => {
     if (!timeStr) return "00:00";
     const min = timeToMinutes(timeStr);
     return minutesToTime(min % 1440);
+};
+
+// 하루를 넘으면 date 증가 + 시간 조정
+export const adjustTimeAndDate = (dateStr, timeStr) => {
+	const minutes = timeToMinutes(timeStr);
+	if (minutes >= 1440) {
+		const adjustedDate = format(addDays(new Date(dateStr), 1), "yyyy-MM-dd");
+		const adjustedTime = minutesToTime(minutes - 1440);
+		return { date: adjustedDate, time: adjustedTime };
+	}
+	return { date: dateStr, time: timeStr };
 };

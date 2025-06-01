@@ -41,17 +41,25 @@ function TrashDropZone() {
 			);
 
 			// 🔹 tempSchedules에 travelTime 반영
-			const updatedSchedules = tempSchedules.map((s) => {
-				const travel = travelResults.find(
-					(res) => res.from === s.tripScheduleId
-				);
-				return {
-					...s,
-					travelTime: travel?.travelTime ?? 0,
-				};
+			const updatedSchedules = [...tempSchedules];
+
+			travelResults.forEach((res) => {
+				const idxList = updatedSchedules
+					.map((s, i) => ({ schedule: s, index: i }))
+					.filter((s) => s.schedule.tripScheduleId === res.from);
+
+				if (idxList.length > 1) {
+					// split된 경우, 두 번째 스케줄에만 travelTime 부여
+					updatedSchedules[idxList[1].index].travelTime =
+						res?.travelTime ?? 0;
+				} else if (idxList.length === 1) {
+					// 일반 스케줄은 그대로 적용
+					updatedSchedules[idxList[0].index].travelTime =
+						res?.travelTime ?? 0;
+				}
 			});
 
-			// 🔹 마지막 schedule의 travelTime = 0
+			// 마지막 블록 travelTime = 0
 			if (updatedSchedules.length > 0) {
 				updatedSchedules[updatedSchedules.length - 1].travelTime = 0;
 			}
