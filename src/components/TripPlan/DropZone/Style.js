@@ -19,6 +19,7 @@ export const SDayHeader = css`
 	font-weight: bold;
 	background-color: white;
 	border-bottom: 1px solid #ccc;
+    pointer-events: none; // 자식 요소에서만 이벤트 처리
 `;
 
 export const SDropBody = css`

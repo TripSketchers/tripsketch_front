@@ -21,8 +21,20 @@ function ScheduleEditor({ schedule, popupPosition, onSave, onClose }) {
 	} = schedule || {};
 
 	// 원래 일정 기준 시간
-	const originStart = viewStartTime || startTime || "00:00"
-	const originEnd = viewEndTime || endTime || "00:00"
+	const originStart = viewStartTime || startTime || "00:00";
+
+// viewStartTime과 viewEndTime이 모두 있을 때만 익일 판단
+const originEnd =
+	viewStartTime && viewEndTime
+		? (() => {
+				const s = timeToMinutes(viewStartTime);
+				const e = timeToMinutes(viewEndTime);
+				const adjusted = e < s ? e + 1440 : e;
+				const normalized = adjusted >= 1440 ? adjusted - 1440 : adjusted;
+				return minutesToTime(normalized);
+		  })()
+		: viewEndTime || endTime || "00:00";
+
 	const originStay =
 		viewStartTime && viewEndTime
 			? (() => {
@@ -129,6 +141,7 @@ function ScheduleEditor({ schedule, popupPosition, onSave, onClose }) {
                 <input
                     type="number"
                     min={0}
+                    max={23}
                     value={stayHour}
                     onChange={(e) =>
                         handleStayChange(

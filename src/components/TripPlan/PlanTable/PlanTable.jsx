@@ -18,10 +18,10 @@ import {
 	splitAndSetSchedule,
 } from "../../../utils/ScheduleCreateUtils";
 import TrashDropZone from "../TrashDropZone/TrashDropZone";
-import { FaBus, FaCar } from "react-icons/fa6";
 import GradientBtn from "../../GradientBtn/GradientBtn";
 import { instance } from "../../../api/config/instance";
 import { isEqual } from "lodash";
+import TravelTimeBlock from "../TravelTimeBlock/TravelTimeBlock";
 
 function PlanTable({ initialSchedules }) {
 	const { tripInfo, schedules, setSchedules, storedAccommodations } =
@@ -46,20 +46,16 @@ function PlanTable({ initialSchedules }) {
 		...Array.from({ length: 5 }, (_, i) => i + 1),
 	];
 
-	// ✅ 일정 잠금/해제 토글 핸들러
 	const onToggleLock = (id) => {
-		setSchedules((prev) => {
-			const updated = prev.map((sch) => {
-				if (sch.tripScheduleId === id) {
-					return { ...sch, isLocked: sch.isLocked ? 0 : 1 };
-				}
-				return sch;
-			});
-			return updated;
-		});
+		setSchedules((prev) =>
+			prev.map((sch) =>
+				sch.tripScheduleId === id
+					? { ...sch, isLocked: sch.isLocked ? 0 : 1 }
+					: sch
+			)
+		);
 	};
 
-	// ✅ 일정 업데이트 핸들러
 	const onUpdate = (id, updates) => {
 		setSchedules((prev) =>
 			prev.map((item) =>
@@ -69,19 +65,14 @@ function PlanTable({ initialSchedules }) {
 	};
 
 	useEffect(() => {
-        console.log(storedAccommodations);
-        
 		if (!storedAccommodations || !tripDates.length) return;
 
 		tripDates.forEach((date) => {
 			const accommodation = storedAccommodations[date];
-			// tripScheduleId가 accommodation_${date}인 일정이 이미 있으면 추가하지 않음
 			const hasAccommodationSchedule = schedules.some(
 				(s) => s.tripScheduleId === `accommodation_${date}`
 			);
 
-            console.log(hasAccommodationSchedule);
-            
 			if (accommodation && !hasAccommodationSchedule) {
 				initScheduleHandler(setSchedules);
 				const result = splitAndSetSchedule(
@@ -104,12 +95,11 @@ function PlanTable({ initialSchedules }) {
 					"23:00",
 					"32:00"
 				);
-                setSchedules((prev) => [...prev, ...result]);
+				setSchedules((prev) => [...prev, ...result]);
 			}
 		});
 	}, [storedAccommodations]);
 
-	// ✅ 일정과 이동 블록을 합쳐 렌더링하는 유틸 함수
 	const renderDaySchedules = (daySchedules) => {
 		const result = [];
 
@@ -117,10 +107,21 @@ function PlanTable({ initialSchedules }) {
 			const current = daySchedules[i];
 			result.push({ ...current, type: "schedule" });
 
-			// 🔧 next 없이도 travelTime이 존재하면 travel block 추가
 			if (current.travelTime && current.travelTime > 0) {
 				const startMin = timeToMinutes(current.endTime);
 				const endMin = startMin + current.travelTime;
+
+				const origin = {
+					lat: current.place?.latitude ?? current.latitude,
+					lng: current.place?.longitude ?? current.longitude,
+				};
+				const next = daySchedules[i + 1];
+				const destination = next
+					? {
+							lat: next.place?.latitude ?? next.latitude,
+							lng: next.place?.longitude ?? next.longitude,
+					  }
+					: null;
 
 				result.push({
 					id: `travel_${current.tripScheduleId}_${i}`,
@@ -128,6 +129,8 @@ function PlanTable({ initialSchedules }) {
 					endTime: minutesToTime(endMin),
 					travelTime: current.travelTime,
 					type: "travel",
+					origin,
+					destination,
 				});
 			}
 		}
@@ -137,13 +140,22 @@ function PlanTable({ initialSchedules }) {
 
 	const handleSaveSchedules = async () => {
 		try {
-            const mergedSchedules = mergeSplitSchedules(schedules, tripInfo.tripId);
-			await instance.post(`/trips/${tripInfo.tripId}/schedules`, mergedSchedules, {
-				headers: {
-					Authorization: localStorage.getItem("accessToken"),
-				},
-			});
+			const mergedSchedules = mergeSplitSchedules(
+				schedules,
+				tripInfo.tripId
+			);
+			await instance.post(
+				`/trips/${tripInfo.tripId}/schedules`,
+				mergedSchedules,
+				{
+					headers: {
+						Authorization: localStorage.getItem("accessToken"),
+					},
+				}
+			);
 			alert("저장되었습니다!");
+			initialSchedules = schedules;
+			setHasChanges(false);
 		} catch (err) {
 			console.error("🛑 저장 실패", err);
 			alert("저장에 실패했습니다.");
@@ -151,16 +163,8 @@ function PlanTable({ initialSchedules }) {
 	};
 
 	useEffect(() => {
-		if (
-			!isEqual(initialSchedules, schedules)
-		) {
-			setHasChanges(true);
-		} else {
-			setHasChanges(false);
-		}
+		setHasChanges(!isEqual(initialSchedules, schedules));
 	}, [schedules, initialSchedules]);
-
-    console.log("🔄 현재 스케줄:", schedules);   
 
 	return (
 		<div css={S.SWrapper}>
@@ -175,7 +179,7 @@ function PlanTable({ initialSchedules }) {
 						))}
 					</div>
 					{tripDates.map((date, index) => {
-						let daySchedules = schedules.filter((s) => {
+						const daySchedules = schedules.filter((s) => {
 							try {
 								const dateObj = new Date(s.date);
 								return (
@@ -183,8 +187,7 @@ function PlanTable({ initialSchedules }) {
 									!isNaN(dateObj.getTime()) &&
 									format(dateObj, "yyyy-MM-dd") === date
 								);
-							} catch (e) {
-								console.error("⛔ Invalid date:", s.date, s);
+							} catch {
 								return false;
 							}
 						});
@@ -220,35 +223,15 @@ function PlanTable({ initialSchedules }) {
 												item.endTime
 											);
 											return (
-												<div
+												<TravelTimeBlock
+													topPx={topPx}
+													heightPx={heightPx}
 													key={item.id}
-													css={S.STravelTimeBlock(
-														topPx,
-														heightPx
-													)}
-													onClick={() => {
-														console.log(item);
-													}}
-												>
-													<div
-														css={S.STravelTimeText}
-													>
-														{tripInfo.transportType ===
-														0 ? (
-															<FaBus />
-														) : (
-															<FaCar />
-														)}
-														{item.travelTime / 60 >=
-															1 &&
-															`${Math.floor(
-																item.travelTime /
-																	60
-															)}시간 `}
-														{item.travelTime % 60}분
-														이동
-													</div>
-												</div>
+													item={item}
+													transportType={
+														tripInfo.transportType
+													}
+												/>
 											);
 										}
 										return null;

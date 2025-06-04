@@ -45,20 +45,14 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 		// 1️⃣ 기존 스케줄 삭제
 		const schedulesToRemove = isSplit
 			? schedules.filter(
-					(s) =>
-						s.tripScheduleId === droppedItem.tripScheduleId &&
-						s.viewStartTime === droppedItem.viewStartTime &&
-						s.viewEndTime === droppedItem.viewEndTime
+					(s) => s.tripScheduleId === droppedItem.tripScheduleId
 			  )
 			: [droppedItem];
 
 		const baseSchedules = schedules.filter(
 			(s) =>
 				!schedulesToRemove.some(
-					(r) =>
-						s.tripScheduleId === r.tripScheduleId &&
-						s.viewStartTime === r.viewStartTime &&
-						s.viewEndTime === r.viewEndTime
+					(r) => s.tripScheduleId === r.tripScheduleId
 				)
 		);
 
@@ -110,9 +104,23 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 			}
 		});
 
-		if (tempSchedules.length > 0) {
-			tempSchedules[tempSchedules.length - 1].travelTime = 0;
-		}
+		// ✅ 날짜별 마지막 스케줄 travelTime = 0 설정
+		const groupedByDate = {};
+
+		tempSchedules.forEach((s, i) => {
+			const date = s.date;
+			if (!groupedByDate[date]) {
+				groupedByDate[date] = [];
+			}
+			groupedByDate[date].push({ ...s, index: i });
+		});
+
+		Object.values(groupedByDate).forEach((daySchedules) => {
+			const last = daySchedules[daySchedules.length - 1];
+			if (last && tempSchedules[last.index]) {
+				tempSchedules[last.index].travelTime = 0;
+			}
+		});
 
 		const updatedBaseSchedules = baseSchedules.map((schedule) => {
 			const match = tempSchedules.find(

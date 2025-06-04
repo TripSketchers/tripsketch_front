@@ -33,6 +33,9 @@ export const STimeColumn = css`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+    * {
+        pointer-events: none; // 자식 요소에서만 이벤트 처리
+    }
 `;
 
 export const SStickyHeaderSpacer = css`
@@ -51,29 +54,6 @@ export const STimeRow = css`
 	border-top: 1px solid #ccc;
 	font-size: 12px;
 	color: #555;
-`;
-
-export const STravelTimeBlock = (top, height) => css`
-	position: absolute;
-	top: ${top}px;
-	height: ${height}px;
-	width: 100%;
-	background-color: rgb(242, 242, 242);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-`;
-
-export const STravelTimeText = css`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-	font-size: 12px;
-	color: #777;
-    padding: 2px 8px;
-    svg {
-        margin-right: 4px;
-    }
 `;
 
 export const STrashDropZone = css`

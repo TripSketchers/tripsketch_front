@@ -39,10 +39,18 @@ export const getTravelTimePromise = (origin, dest, transportType) => {
 			const seconds = res.data ?? 0;
 			const minutes = Math.round(seconds / 60);
 
-			// ✅ 결과를 반환하도록 수정
+			// ✅ origin, destination 포함해서 반환
 			return {
 				from: origin.tripScheduleId,
 				travelTime: minutes,
+				origin: {
+					lat: originLat,
+					lng: originLng,
+				},
+				destination: {
+					lat: destLat,
+					lng: destLng,
+				},
 			};
 		})
 		.catch((err) => {
@@ -50,6 +58,14 @@ export const getTravelTimePromise = (origin, dest, transportType) => {
 			return {
 				from: origin.tripScheduleId,
 				travelTime: 0,
+				origin: {
+					lat: originLat,
+					lng: originLng,
+				},
+				destination: {
+					lat: destLat,
+					lng: destLng,
+				},
 				error: true,
 			};
 		});
