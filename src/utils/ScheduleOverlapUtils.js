@@ -14,7 +14,7 @@ export const findOverlappingSlot = (daySchedules, droppedItem, dropStartAbs, dro
         const sEndAbs = getAbsoluteMinutes(s.endTime);
         const travelTime = s.travelTime ?? 0;
 
-        const isOverlap = dropStartAbs < sEndAbs + travelTime && dropEndAbs > sStartAbs;
+        const isOverlap = dropStartAbs < sEndAbs + travelTime && dropEndAbs + droppedItem.travelTime > sStartAbs;
         if (isOverlap) {
             console.log("  ↪️ 겹치는 일정 발견:", s);
         }

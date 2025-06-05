@@ -22,6 +22,7 @@ import GradientBtn from "../../GradientBtn/GradientBtn";
 import { instance } from "../../../api/config/instance";
 import { isEqual } from "lodash";
 import TravelTimeBlock from "../TravelTimeBlock/TravelTimeBlock";
+import useAutoScroll from "../../../hooks/useAutoScroll";
 
 function PlanTable({ initialSchedules }) {
 	const { tripInfo, schedules, setSchedules, storedAccommodations } =
@@ -29,6 +30,8 @@ function PlanTable({ initialSchedules }) {
 	const { handleDrop } = useScheduleDropHandler(schedules, setSchedules);
 	const [isDragging, setIsDragging] = useState(false);
 	const [hasChanges, setHasChanges] = useState(false);
+    const containerRef = useRef(null);
+    useAutoScroll(isDragging, containerRef, { scrollThreshold: 100, scrollSpeed: 5 });
 
 	const startDate = tripInfo?.startDate || tripInfo?.trip?.startDate;
 	const endDate = tripInfo?.endDate || tripInfo?.trip?.endDate;
@@ -167,7 +170,7 @@ function PlanTable({ initialSchedules }) {
 	}, [schedules, initialSchedules]);
 
 	return (
-		<div css={S.SWrapper}>
+		<div css={S.SWrapper} ref={containerRef}>
 			<div css={S.SLayout}>
 				<div css={S.SContainer}>
 					<div css={S.STimeColumn}>
