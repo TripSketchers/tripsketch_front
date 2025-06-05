@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 /** @jsxImportSource @emotion/react */
-import * as S from './Style';
+import * as S from "./Style";
 import { useQuery } from "@tanstack/react-query";
 import { instance } from "../../../api/config/instance";
 import TripCard from "../../TripCard/TripCard";
@@ -27,20 +27,24 @@ function SharedTrip({ filterType }) {
         refetchOnWindowFocus: false,
     });
 
-    console.log(getTripInvitations.data?.data?.tripList);
-
-    if (
-        getTripInvitations.isLoading ||
-        !getTripInvitations.data?.data?.tripList
-    )
+    if (getTripInvitations.isLoading) {
         return <div>로딩 중...</div>;
+    }
 
-    const tripList = getTripInvitations.data.data.tripList;
+    if (getTripInvitations.isError || !getTripInvitations.data?.data) {
+        return <div>데이터를 불러오는 데 실패했습니다.</div>;
+    }
+
+    const sharedTrips = getTripInvitations.data.data;
+
+    if (!sharedTrips.length) {
+        return <div>공유된 여행이 없습니다.</div>;
+    }
 
     // 필터링된 여행
     const today = new Date();
-    const filteredTrips = tripList.filter((trip) => {
-        const endDate = new Date(trip.endDate);
+    const filteredTrips = sharedTrips.filter(({ tripList }) => {
+        const endDate = new Date(tripList.endDate);
 
         if (filterType === "upcoming") return endDate >= today;
         if (filterType === "past") return endDate < today;
@@ -55,10 +59,12 @@ function SharedTrip({ filterType }) {
     return (
         <>
             <div css={S.STripBox}>
-                {currentTrips?.map((trip) => (
+                {currentTrips?.map(({ tripList: trip, shareId, sharedByUserEmail, status }) => (
                     <TripCard
                         onClick={() => {
-                            navigate(`/trip/plan/${trip.tripId}`);
+                            if (status === "accept") {
+                                navigate(`/trip/plan/${trip.tripId}`);
+                            }
                         }}
                         key={trip.tripId}
                         tripId={trip.tripId}
@@ -70,6 +76,13 @@ function SharedTrip({ filterType }) {
                             trip.endDate
                         )}
                         onDeleteSuccess={() => getTripInvitations.refetch()}
+                        isShared={true}
+                        status={status}
+                        shareId={shareId}
+                        sharedByUserEmail={sharedByUserEmail}
+                        onRespondToInvitation={() =>
+                            getTripInvitations.refetch()
+                        }
                     />
                 ))}
             </div>

@@ -150,27 +150,32 @@ function SharedModal({ tripId, onClose }) {
             )}
             <div css={S.SSharedUsersContainer}>
                 <h3>공유된 사용자</h3>
-                {sharedUsers?.data?.length === 0 ? (
-                    <p>공유된 사용자가 없습니다.</p>
-                ) : (
-                    <ul>
-                        {sharedUsers?.data?.map((user) => (
-                            <li key={user.shareId} className="shared-user-item">
-                                <span>{user.email}</span>
-                                <button
-                                    onClick={() =>
-                                        handleCancelShare(
-                                            user.tripId,
-                                            user.shareId
-                                        )
-                                    }
+                <div>
+                    {sharedUsers?.data?.length === 0 ? (
+                        <p>공유된 사용자가 없습니다.</p>
+                    ) : (
+                        <ul>
+                            {sharedUsers?.data?.map((user) => (
+                                <li
+                                    key={user.shareId}
+                                    className="shared-user-item"
                                 >
-                                    공유 취소
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                )}
+                                    <span>{user.email}</span>
+                                    <button
+                                        onClick={() =>
+                                            handleCancelShare(
+                                                user.tripId,
+                                                user.shareId
+                                            )
+                                        }
+                                    >
+                                        공유 취소
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
             </div>
         </ModalLayout>
     );

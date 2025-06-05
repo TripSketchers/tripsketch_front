@@ -96,6 +96,10 @@ export const SSharedUsersContainer = css`
         margin-bottom: 10px;
     }
 
+    div {
+        min-height: 28px;
+    }
+
     ul {
         list-style-type: none;
         padding: 0;
@@ -104,7 +108,7 @@ export const SSharedUsersContainer = css`
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
+            padding-bottom: 8px;
             border-bottom: 1px solid #e5e7eb;
 
             span {

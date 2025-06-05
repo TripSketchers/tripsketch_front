@@ -27,10 +27,10 @@ function MyTrip({ filterType }) {
         refetchOnWindowFocus: false,
     });
 
-    if (getTripsQuery.isLoading || !getTripsQuery.data?.data?.tripList)
+    if (getTripsQuery.isLoading || !getTripsQuery.data?.data)
         return <div>로딩 중...</div>;
 
-    const tripList = getTripsQuery.data.data.tripList;
+    const tripList = getTripsQuery.data.data;
 
     // 필터링된 여행
     const today = new Date();

@@ -50,7 +50,8 @@ function TogglePanel({ triggerIcon, menuItems }) {
 
     return (
         <div ref={panelRef} css={S.SPanelWrapper}>
-            <button css={S.SMenu}
+            <button
+                css={S.SMenu}
                 onClick={(e) => {
                     e.stopPropagation();
                     setIsPanelOpen((prev) => !prev);
@@ -78,7 +79,10 @@ function TogglePanel({ triggerIcon, menuItems }) {
                     title={selectedConfirmInfo.title}
                     message={selectedConfirmInfo.message}
                     confirmText={selectedConfirmInfo.confirmText}
-                    onClose={() => setIsModalOpen(false)}
+                    onClose={() => {
+                        setIsModalOpen(false);
+                        setIsPanelOpen(false);
+                    }}
                     onConfirm={handleConfirm}
                 />
             )}
