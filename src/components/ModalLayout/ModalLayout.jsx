@@ -4,6 +4,7 @@ import * as S from './Style';
 
 function ModalLayout({ children, onClose }) {
     const handleBackdropClick = (e) => {
+		e.stopPropagation();
 		onClose(); // 모달 바깥 클릭 시 닫기
 	};
 

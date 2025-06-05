@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { instance } from "./api/config/instance";
 import AccountRoute from "./components/Routes/AccountRoute";
 import TripRoute from "./components/Routes/TripRoute";
+import Toast from "./components/Toast/Toast";
 
 const wrapper = css`
   width: 100%;
@@ -55,6 +56,7 @@ function App() {
           <Route path='/account/*' element={ <AccountRoute/> }/>
           <Route path='/trip/*' element={ <TripRoute/> }/>
         </Routes>
+        <Toast />
       </div>
       <Footer/>
     </div>

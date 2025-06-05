@@ -23,22 +23,67 @@ export const SHeader = css`
     display: flex;
     justify-content: space-between;
     align-items: end;
-    a {
-        border-radius: 10px;
-        padding: 10px 15px;
-        color: white;
-        font-size: 16px;
-        background-color: rgb(0, 175, 206);
-    }
 `;
 
 export const STitleBox = css`
-    border-bottom: 4px solid #5c86b3;
-    padding: 10px 0;
     width: max-content;
-    h1 {
-        font-size: 22px;
+    display: flex;
+    justify-content: space-between;
+
+    div {
+        display: inline-block;
+        vertical-align: middle;
+        padding: 10px 0;
+        margin-right: 20px;
+        font-size: 20px;
+        font-weight: 500;
+        -webkit-transform: perspective(1px) translateZ(0);
+        transform: perspective(1px) translateZ(0);
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+        position: relative;
+        -webkit-transition-property: color, font-weight;
+        transition-property: color, font-weight;
+        -webkit-transition-duration: 0.5s;
+        transition-duration: 0.5s;
+        cursor: pointer;
+    }
+
+    .active {
         font-weight: 600;
+    }
+
+    div:before {
+        content: "";
+        position: absolute;
+
+        z-index: -1;
+        height: 3px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #5c86b3;
+        -webkit-transform: scaleX(0);
+        transform: scaleX(0);
+        -webkit-transform-origin: 0 50%;
+        transform-origin: 0 50%;
+        -webkit-transition-property: transform;
+        transition-property: transform;
+        -webkit-transition-duration: 0.5s;
+        transition-duration: 0.5s;
+        -webkit-transition-timing-function: ease-out;
+        transition-timing-function: ease-out;
+    }
+
+    .active:before {
+        -webkit-transform: scaleX(1);
+        transform: scaleX(1);
+        -webkit-transition-timing-function: cubic-bezier(
+            0.52,
+            1.64,
+            0.37,
+            0.66
+        );
+        transition-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
     }
 `;
 

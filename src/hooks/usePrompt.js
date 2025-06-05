@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { clearPhotos } from "../api/DB/AlbumDB";
 
 function usePrompt(shouldBlock, message) {
     useEffect(() => {
@@ -15,6 +16,7 @@ function usePrompt(shouldBlock, message) {
                 // 사용자가 '확인'을 눌렀으므로 다시 popstate 되도록 한 번 더 뒤로 가기
                 window.removeEventListener("popstate", handlePopState); // 무한 루프 방지
                 window.history.back();
+                clearPhotos();
             } else {
                 // 사용자가 '취소'를 누르면 다시 pushState로 현재 상태를 유지
                 window.history.pushState(null, "", window.location.pathname);
