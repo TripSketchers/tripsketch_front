@@ -29,6 +29,9 @@ function MyTrip({ filterType }) {
 
     if (getTripsQuery.isLoading || !getTripsQuery.data?.data)
         return <div>로딩 중...</div>;
+    if(getTripsQuery.data?.data.length == 0) {
+        return <div>생성한 여행이 존재하지 않습니다.</div>;
+    }
 
     const tripList = getTripsQuery.data.data;
 
