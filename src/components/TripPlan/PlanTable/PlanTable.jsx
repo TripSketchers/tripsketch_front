@@ -12,11 +12,7 @@ import {
 	minutesToTime,
 	timeToMinutes,
 } from "../../../utils/ScheduleTimeUtils";
-import {
-	initScheduleHandler,
-	mergeSplitSchedules,
-	splitAndSetSchedule,
-} from "../../../utils/ScheduleCreateUtils";
+import { mergeSplitSchedules } from "../../../utils/ScheduleCreateUtils";
 import TrashDropZone from "../TrashDropZone/TrashDropZone";
 import GradientBtn from "../../GradientBtn/GradientBtn";
 import { instance } from "../../../api/config/instance";
@@ -25,13 +21,15 @@ import TravelTimeBlock from "../TravelTimeBlock/TravelTimeBlock";
 import useAutoScroll from "../../../hooks/useAutoScroll";
 
 function PlanTable({ initialSchedules }) {
-	const { tripInfo, schedules, setSchedules, storedAccommodations } =
-		useTrip();
+	const { tripInfo, schedules, setSchedules } = useTrip();
 	const { handleDrop } = useScheduleDropHandler(schedules, setSchedules);
 	const [isDragging, setIsDragging] = useState(false);
 	const [hasChanges, setHasChanges] = useState(false);
-    const containerRef = useRef(null);
-    useAutoScroll(isDragging, containerRef, { scrollThreshold: 100, scrollSpeed: 5 });
+	const containerRef = useRef(null);
+	useAutoScroll(isDragging, containerRef, {
+		scrollThreshold: 100,
+		scrollSpeed: 5,
+	});
 
 	const startDate = tripInfo?.startDate || tripInfo?.trip?.startDate;
 	const endDate = tripInfo?.endDate || tripInfo?.trip?.endDate;
@@ -62,46 +60,10 @@ function PlanTable({ initialSchedules }) {
 	const onUpdate = (id, updates) => {
 		setSchedules((prev) =>
 			prev.map((item) =>
-				item.tripScheduleId === id ? { ...item, ...updates } : item
+				item.splitId === id ? { ...item, ...updates } : item
 			)
 		);
 	};
-
-	useEffect(() => {
-		if (!storedAccommodations || !tripDates.length) return;
-
-		tripDates.forEach((date) => {
-			const accommodation = storedAccommodations[date];
-			const hasAccommodationSchedule = schedules.some(
-				(s) => s.tripScheduleId === `accommodation_${date}`
-			);
-
-			if (accommodation && !hasAccommodationSchedule) {
-				initScheduleHandler(setSchedules);
-				const result = splitAndSetSchedule(
-					{
-						tripScheduleId: `accommodation_${date}`,
-						tripId: tripInfo?.tripId ?? null,
-						date: date,
-						startTime: "23:00",
-						endTime: "32:00",
-						stayTime: 540,
-						travelTime: 0,
-						position: null,
-						isLocked: 0,
-						place: accommodation,
-						isAccommodation: true,
-						viewStartTime: "23:00",
-						viewEndTime: "32:00",
-					},
-					date,
-					"23:00",
-					"32:00"
-				);
-				setSchedules((prev) => [...prev, ...result]);
-			}
-		});
-	}, [storedAccommodations]);
 
 	const renderDaySchedules = (daySchedules) => {
 		const result = [];
@@ -184,12 +146,7 @@ function PlanTable({ initialSchedules }) {
 					{tripDates.map((date, index) => {
 						const daySchedules = schedules.filter((s) => {
 							try {
-								const dateObj = new Date(s.date);
-								return (
-									s.date &&
-									!isNaN(dateObj.getTime()) &&
-									format(dateObj, "yyyy-MM-dd") === date
-								);
+								return s.date === date;
 							} catch {
 								return false;
 							}

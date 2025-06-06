@@ -1,6 +1,7 @@
 import {
 	adjustMinutes,
 	adjustTimeAndDate,
+	getAbsoluteMinutes,
 	minutesToAbsTime,
 	minutesToTime,
 	timeToMinutes,
@@ -27,7 +28,11 @@ export const createSchedule = (
 	viewEndTime,
 	travelTime,
 	isSplit = false,
-	tripScheduleId
+	tripScheduleId,
+    isAccommodation = 0,
+    splitId = tripScheduleId ||
+			place.tripScheduleId ||
+			Date.now() + Math.random(),
 ) => {
 	const generateSchedule = (date, startTime, endTime) => ({
 		tripScheduleId:
@@ -45,6 +50,8 @@ export const createSchedule = (
 		viewEndTime: viewEndTime || endTime,
 		travelTime: travelTime,
 		place: { ...place },
+        isAccommodation: isAccommodation,
+        splitId: splitId
 	});
 
 	const calEndTime =
@@ -100,7 +107,9 @@ export const splitAndSetSchedule = (
 				viewEnd,
 				0,
 				true,
-				tripScheduleId
+				tripScheduleId,
+                schedule.isAccommodation,
+                `${tripScheduleId}_1`
 			)
 		);
 
@@ -115,7 +124,9 @@ export const splitAndSetSchedule = (
 				viewEnd,
 				schedule.travelTime,
 				true,
-				tripScheduleId
+				tripScheduleId,
+                schedule.isAccommodation,
+                `${tripScheduleId}_2`
 			)
 		);
 
@@ -138,7 +149,9 @@ export const splitAndSetSchedule = (
 				viewEnd,
 				0,
 				true,
-				tripScheduleId
+				tripScheduleId,
+                schedule.isAccommodation,
+                `${tripScheduleId}_1`
 			)
 		);
 
@@ -157,7 +170,9 @@ export const splitAndSetSchedule = (
 				viewEnd,
 				schedule.travelTime,
 				true,
-				tripScheduleId
+				tripScheduleId,
+                schedule.isAccommodation,
+                `${tripScheduleId}_2`
 			)
 		);
 
@@ -178,7 +193,9 @@ export const splitAndSetSchedule = (
 			undefined,
 			schedule.travelTime,
 			false,
-			tripScheduleId
+			tripScheduleId,
+            schedule.isAccommodation,
+            null
 		)
 	);
 
@@ -198,37 +215,29 @@ export const mergeSplitSchedules = (schedules, tripId) => {
 
 			const merged = {
 				...existing,
-				startTime:
-					timeToMinutes(schedule.startTime) <
-					timeToMinutes(existing.startTime)
-						? schedule.startTime
-						: existing.startTime,
-				endTime:
-					timeToMinutes(schedule.endTime) >
-					timeToMinutes(existing.endTime)
-						? schedule.endTime
-						: existing.endTime,
-				stayTime: (schedule.stayTime ?? 0) + (existing.stayTime ?? 0),
-				// 필요에 따라 viewStartTime, viewEndTime 등도 병합 가능
+				startTime: schedule.viewStartTime,
+				endTime: schedule.viewEndTime,
+				stayTime: getAbsoluteMinutes(schedule.viewEndTime) - getAbsoluteMinutes(schedule.viewStartTime),
 			};
 
 			mergedMap.set(id, merged);
 		}
 	}
+
 	return Array.from(mergedMap.values()).map((s) => {
 		const { isSplit, viewStartTime, viewEndTime, ...rest } = s;
 
-		// 🔥 날짜 및 시간 조정 (30:00 → 06:00 + 다음날)
-		const { date: adjustedDate, time: adjustedEndTime } = adjustTimeAndDate(
-			rest.date,
-			rest.endTime
-		);
+		// ✅ start, end 모두 날짜 조정
+		const adjustedStart = adjustTimeAndDate(rest.date, rest.startTime);
+		const adjustedEnd = adjustTimeAndDate(rest.date, rest.endTime);
 
+		// ✅ date는 startTime 기준으로 유지
 		return {
 			...rest,
-            tripId: tripId,
-			date: adjustedDate,
-			endTime: adjustedEndTime,
+			tripId: tripId,
+			date: adjustedStart.date,
+			startTime: adjustedStart.time,
+			endTime: adjustedEnd.time,
 			tripScheduleId: 0,
 		};
 	});

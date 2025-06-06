@@ -89,11 +89,21 @@ export const normalizeTime = (timeStr) => {
 
 // 하루를 넘으면 date 증가 + 시간 조정
 export const adjustTimeAndDate = (dateStr, timeStr) => {
-	const minutes = timeToMinutes(timeStr);
-	if (minutes >= 1440) {
-		const adjustedDate = format(addDays(new Date(dateStr), 1), "yyyy-MM-dd");
-		const adjustedTime = minutesToTime(minutes - 1440);
-		return { date: adjustedDate, time: adjustedTime };
+	const totalMin = timeToMinutes(timeStr);
+
+	if (totalMin < 1440) {
+		return { date: dateStr, time: timeStr };
+	} else {
+		const dateObj = new Date(dateStr);
+		dateObj.setDate(dateObj.getDate() + 1);
+
+		const adjustedMinutes = totalMin - 1440;
+		const hours = String(Math.floor(adjustedMinutes / 60)).padStart(2, "0");
+		const minutes = String(adjustedMinutes % 60).padStart(2, "0");
+
+		return {
+			date: dateObj.toISOString().split("T")[0],
+			time: `${hours}:${minutes}`,
+		};
 	}
-	return { date: dateStr, time: timeStr };
 };

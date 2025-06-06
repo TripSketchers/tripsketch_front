@@ -111,18 +111,8 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 
         console.log("🚀 Temp Schedules:", tempSchedules);
 
-        const updatedBaseSchedules = baseSchedules.map((schedule) => {
-			const match = tempSchedules.find(
-				(temp) => temp.tripScheduleId === schedule.tripScheduleId
-			);
-			return {
-				...schedule,
-				travelTime: match?.travelTime ?? 0, // 없으면 기본값 0
-			};
-		});
-
 		// 6️⃣ 시간 겹침 조정
-		const daySchedules = updatedBaseSchedules.filter((s) => {
+		const daySchedules = tempSchedules.filter((s) => {
 			const scheduleStartAbs = getAbsoluteMinutes(s.startTime);
 			const scheduleDate = new Date(s.date);
 			const dropDateObj = new Date(dropDate);

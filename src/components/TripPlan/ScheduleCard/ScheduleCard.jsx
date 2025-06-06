@@ -9,6 +9,8 @@ import {
 	getDisplayStayTime,
 	normalizeTime,
 } from "../../../utils/ScheduleTimeUtils";
+import { useTrip } from "../../Routes/TripContext";
+import { useScheduleResizeHandler } from "../../../hooks/useScheduleResizeHandler";
 
 function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
 	const {
@@ -20,9 +22,14 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
 		viewStartTime,
 		viewEndTime,
 		place,
+		position,
+		date,
+		travelTime = 0,
 	} = schedule;
+
 	const [showEditor, setShowEditor] = useState(false);
 	const [selectedSchedule, setSelectedSchedule] = useState(null);
+	const [isResizing, setIsResizing] = useState(false);
 
 	const PIXELS_PER_MINUTE = 1;
 	const { top: topPx, height: heightPx } = getCardPositionAndHeight(
@@ -35,19 +42,26 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
 	const [popupPosition, setPopupPosition] = useState("below");
 	const cardRef = useRef(null);
 
+	const { schedules } = useTrip();
+	const { handleMouseDown } = useScheduleResizeHandler({
+		schedules,
+		setIsResizing,
+		onUpdate,
+	});
+
 	// 🐭 DnD 드래그 설정
 	const [{ isDragging }, dragRef] = useDrag({
 		type: "SCHEDULE",
-		canDrag: !isLocked && !showEditor,
+		canDrag: () => !isLocked && !showEditor && !isResizing,
 		collect: (monitor) => ({
 			isDragging: monitor.isDragging(),
 		}),
 		item: () => {
-			if (setIsDragging) setIsDragging(true); // ✅ 드래그 시작 시
-			return { id: schedule.tripScheduleId, schedule, topPx }; // 원래 item 내용
+			if (setIsDragging) setIsDragging(true);
+			return { id: tripScheduleId, schedule, topPx };
 		},
 		end: () => {
-			if (setIsDragging) setIsDragging(false); // ✅ 드래그 종료 시
+			if (setIsDragging) setIsDragging(false);
 		},
 	});
 
@@ -68,18 +82,14 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
 	const getPopupPosition = (triggerElement, popupHeight = 200) => {
 		const rect = triggerElement.getBoundingClientRect();
 		const viewportHeight = window.innerHeight;
-
 		const spaceBelow = viewportHeight - rect.bottom;
-		const shouldShowAbove = spaceBelow < popupHeight;
-
-		return shouldShowAbove ? "above" : "below";
+		return spaceBelow < popupHeight ? "above" : "below";
 	};
 
-	// 원래 전체 일정 기준 머무는 시간(분) 계산
 	const displayStayTime =
 		viewStartTime && viewEndTime
 			? getDisplayStayTime(viewStartTime, viewEndTime)
-			: stayTime ?? 0; // stayTime도 undefined일 수 있으니 기본값 0
+			: stayTime ?? 0;
 
 	const displayStart = normalizeTime(viewStartTime || startTime || "00:00");
 	const displayEnd = normalizeTime(viewEndTime || endTime || "00:00");
@@ -87,8 +97,8 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
 	return (
 		<div
 			ref={(el) => {
-				dragRef(el);
 				cardRef.current = el;
+				dragRef(el);
 			}}
 			css={S.SCard(schedule?.place?.category)}
 			style={{
@@ -96,9 +106,20 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
 				height: `${heightPx}px`,
 				opacity: isDragging ? 0.5 : 1,
 				cursor: isLocked ? "not-allowed" : "move",
+				userSelect: "none",
 			}}
 			onClick={handleEditClick}
 		>
+			{/* 🔼 상단 리사이즈 핸들 */}
+			<div
+				css={S.SResizeHandleTop}
+				onMouseDown={handleMouseDown({
+					direction: "top",
+					schedule,
+				})}
+			/>
+
+			{/* ✏️ 콘텐츠 */}
 			<div css={S.SContainer}>
 				{compactView ? (
 					<div css={S.SCompactText}>
@@ -124,7 +145,7 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
 				)}
 			</div>
 
-			{/* 🔒 잠금 버튼 */}
+			{/* 🔒 잠금 토글 */}
 			<div
 				css={S.SLocked}
 				onClick={(e) => {
@@ -135,7 +156,7 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
 				{isLocked === 1 ? <FaLock /> : <FaLockOpen />}
 			</div>
 
-			{/* ✏️ 편집기 팝업 */}
+			{/* ✏️ 편집기 */}
 			{showEditor && (
 				<ScheduleEditor
 					schedule={selectedSchedule}
@@ -147,6 +168,15 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
 					onClose={() => setShowEditor(false)}
 				/>
 			)}
+
+			{/* 🔽 하단 리사이즈 핸들 */}
+			<div
+				css={S.SResizeHandleBottom}
+				onMouseDown={handleMouseDown({
+					direction: "bottom",
+					schedule,
+				})}
+			/>
 		</div>
 	);
 }

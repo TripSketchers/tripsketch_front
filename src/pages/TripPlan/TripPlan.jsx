@@ -14,6 +14,8 @@ import { instance } from "../../api/config/instance";
 import { useTrip } from "../../components/Routes/TripContext";
 import PlaceDetailModal from "../../components/PlaceDetailModal/PlaceDetailModal";
 import { convertArrayToAccommodationMap } from "../../utils/StoredAccommdationsUtils";
+import { splitAndSetSchedule } from "../../utils/ScheduleCreateUtils";
+import { eachDayOfInterval, format } from "date-fns";
 
 function TripPlan() {
 	const [isStoredPanelOpen, setIsStoredPanelOpen] = useState(true);
@@ -45,11 +47,68 @@ function TripPlan() {
 				setTripInfo(data.trip);
 				setTripDestination(data.tripDestination);
 				setStoredPlaces(data.storedPlaces);
-				setStoredAccommodations(
-					convertArrayToAccommodationMap(data.storedAccommodations)
+
+				const accommodationMap = convertArrayToAccommodationMap(
+					data.storedAccommodations
 				);
-				setSchedules(data.tripSchedules);
-				setInitialSchedules(data.tripSchedules);
+				setStoredAccommodations(accommodationMap);
+
+				const updatedSchedules = [];
+
+				// ✅ 기존 스케줄 분할
+				data.tripSchedules.forEach((schedule) => {
+					const result = splitAndSetSchedule(
+						schedule,
+						schedule.date,
+						schedule.startTime,
+						schedule.endTime
+					);
+					updatedSchedules.push(...result);
+				});
+
+				const tripDates =
+					data.trip.startDate && data.trip.endDate
+						? eachDayOfInterval({
+								start: new Date(data.trip.startDate),
+								end: new Date(data.trip.endDate),
+						  }).map((d) => format(d, "yyyy-MM-dd"))
+						: [];
+
+				// ✅ 숙소 스케줄 추가
+				tripDates?.forEach((date) => {
+					const accommodation = accommodationMap[date];
+
+					const hasAccommodationSchedule = updatedSchedules.some(
+						(s) => s.date === date && s.isAccommodation === 1
+					);
+
+					if (accommodation && !hasAccommodationSchedule) {
+						const result = splitAndSetSchedule(
+							{
+								tripScheduleId: `accommodation_${date}`,
+								tripId: data.trip.tripId,
+								date,
+								startTime: "23:00",
+								endTime: "32:00",
+								stayTime: 540,
+								travelTime: 0,
+								position: null,
+								isLocked: 0,
+								place: accommodation,
+								isAccommodation: 1,
+								viewStartTime: "23:00",
+								viewEndTime: "32:00",
+							},
+							date,
+							"23:00",
+							"32:00"
+						);
+						updatedSchedules.push(...result);
+					}
+				});
+
+				setSchedules(updatedSchedules);
+				setInitialSchedules(updatedSchedules);
 			} catch (err) {
 				console.error("여행 정보를 불러오는 데 실패했습니다.", err);
 			}
@@ -136,7 +195,10 @@ function TripPlan() {
 									)}
 								</button>
 							</div>
-							<PlanTable initialSchedules={initialSchedules} />
+							<PlanTable
+								initialSchedules={initialSchedules}
+								setInitialSchedules={setInitialSchedules}
+							/>
 						</div>
 					</div>
 					<div css={S.SMapContainer}>

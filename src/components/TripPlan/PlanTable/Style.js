@@ -7,6 +7,12 @@ export const SWrapper = css`
 	width: 100%;
 	height: 100%;
 	overflow: auto;
+	* {
+		-webkit-user-select: none; /* Safari */
+		-moz-user-select: none; /* Firefox */
+		-ms-user-select: none; /* IE10+/Edge */
+		user-select: none;
+	}
 `;
 
 export const SLayout = css`
@@ -33,9 +39,9 @@ export const STimeColumn = css`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-    * {
-        pointer-events: none; // 자식 요소에서만 이벤트 처리
-    }
+	* {
+		pointer-events: none; // 자식 요소에서만 이벤트 처리
+	}
 `;
 
 export const SStickyHeaderSpacer = css`
