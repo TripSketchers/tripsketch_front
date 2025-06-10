@@ -29,10 +29,10 @@ export const createSchedule = (
 	travelTime,
 	isSplit = false,
 	tripScheduleId,
-    isAccommodation = 0,
-    splitId = tripScheduleId ||
-			place.tripScheduleId ||
-			Date.now() + Math.random(),
+	isAccommodation = 0,
+	splitId = tripScheduleId ||
+		place.tripScheduleId ||
+		Date.now() + Math.random()
 ) => {
 	const generateSchedule = (date, startTime, endTime) => ({
 		tripScheduleId:
@@ -50,8 +50,8 @@ export const createSchedule = (
 		viewEndTime: viewEndTime || endTime,
 		travelTime: travelTime,
 		place: { ...place },
-        isAccommodation: isAccommodation,
-        splitId: splitId
+		isAccommodation: isAccommodation,
+		splitId: splitId,
 	});
 
 	const calEndTime =
@@ -108,8 +108,8 @@ export const splitAndSetSchedule = (
 				0,
 				true,
 				tripScheduleId,
-                schedule.isAccommodation,
-                `${tripScheduleId}_1`
+				schedule.isAccommodation,
+				`${tripScheduleId}_1`
 			)
 		);
 
@@ -125,8 +125,8 @@ export const splitAndSetSchedule = (
 				schedule.travelTime,
 				true,
 				tripScheduleId,
-                schedule.isAccommodation,
-                `${tripScheduleId}_2`
+				schedule.isAccommodation,
+				`${tripScheduleId}_2`
 			)
 		);
 
@@ -150,8 +150,8 @@ export const splitAndSetSchedule = (
 				0,
 				true,
 				tripScheduleId,
-                schedule.isAccommodation,
-                `${tripScheduleId}_1`
+				schedule.isAccommodation,
+				`${tripScheduleId}_1`
 			)
 		);
 
@@ -171,8 +171,8 @@ export const splitAndSetSchedule = (
 				schedule.travelTime,
 				true,
 				tripScheduleId,
-                schedule.isAccommodation,
-                `${tripScheduleId}_2`
+				schedule.isAccommodation,
+				`${tripScheduleId}_2`
 			)
 		);
 
@@ -194,8 +194,8 @@ export const splitAndSetSchedule = (
 			schedule.travelTime,
 			false,
 			tripScheduleId,
-            schedule.isAccommodation,
-            null
+			schedule.isAccommodation,
+			null
 		)
 	);
 
@@ -217,7 +217,10 @@ export const mergeSplitSchedules = (schedules, tripId) => {
 				...existing,
 				startTime: schedule.viewStartTime,
 				endTime: schedule.viewEndTime,
-				stayTime: getAbsoluteMinutes(schedule.viewEndTime) - getAbsoluteMinutes(schedule.viewStartTime),
+				stayTime:
+					getAbsoluteMinutes(schedule.viewEndTime) -
+					getAbsoluteMinutes(schedule.viewStartTime),
+				travelTime: schedule.travelTime,
 			};
 
 			mergedMap.set(id, merged);

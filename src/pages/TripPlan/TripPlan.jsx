@@ -16,6 +16,7 @@ import PlaceDetailModal from "../../components/PlaceDetailModal/PlaceDetailModal
 import { convertArrayToAccommodationMap } from "../../utils/StoredAccommdationsUtils";
 import { splitAndSetSchedule } from "../../utils/ScheduleCreateUtils";
 import { eachDayOfInterval, format } from "date-fns";
+import { timeToMinutes } from "../../utils/ScheduleTimeUtils";
 
 function TripPlan() {
 	const [isStoredPanelOpen, setIsStoredPanelOpen] = useState(true);
@@ -79,7 +80,12 @@ function TripPlan() {
 					const accommodation = accommodationMap[date];
 
 					const hasAccommodationSchedule = updatedSchedules.some(
-						(s) => s.date === date && s.isAccommodation === 1
+						(s) =>
+							s.date === date &&
+							s.isAccommodation === 1 &&
+                            timeToMinutes(s.viewStartTime) >= 1380 &&
+                            timeToMinutes(s.viewEndTime) <= 1920 &&
+                            timeToMinutes(s.startTime) != 360
 					);
 
 					if (accommodation && !hasAccommodationSchedule) {

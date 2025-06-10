@@ -1,12 +1,6 @@
 import { instance } from "../api/config/instance";
 
 export const getTravelTimePromise = (origin, dest, transportType) => {
-	console.log(
-		"🚗 경로 계산 시작 from",
-		origin.place?.name || origin.name,
-		"to",
-		dest.place?.name || dest.name
-	);
 	if (!origin || !dest) return null;
 
 	const originLat = origin.place?.latitude ?? origin?.latitude;

@@ -86,8 +86,6 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 			tripInfo?.transportType
 		);
 
-		console.log("🚀 Travel Results:", travelResults);
-
 		travelResults.forEach((res) => {
 			const idxList = tempSchedules
 				.map((s, i) => ({ schedule: s, index: i }))
@@ -109,8 +107,6 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 			tempSchedules[tempSchedules.length - 1].travelTime = 0;
 		}
 
-        console.log("🚀 Temp Schedules:", tempSchedules);
-
 		// 6️⃣ 시간 겹침 조정
 		const daySchedules = tempSchedules.filter((s) => {
 			const scheduleStartAbs = getAbsoluteMinutes(s.startTime);
@@ -126,8 +122,6 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 			}
 			return false;
 		});
-
-        console.log("🚀 Day Schedules:", daySchedules);
 
 		const adjustedStartAbs = findOverlappingSlot(
 			daySchedules,

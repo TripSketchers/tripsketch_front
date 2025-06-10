@@ -59,9 +59,10 @@ function PlanTable({ initialSchedules }) {
 
 	const onUpdate = (id, updates) => {
 		setSchedules((prev) =>
-			prev.map((item) =>
-				item.splitId === id ? { ...item, ...updates } : item
-			)
+			prev.map((item) => {
+				const itemId = item.splitId ?? item.tripScheduleId;
+				return itemId === id ? { ...item, ...updates } : item;
+			})
 		);
 	};
 
