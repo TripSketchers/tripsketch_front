@@ -11,11 +11,34 @@ import { useNavigate } from "react-router-dom";
 import { IoIosImages } from "react-icons/io";
 import { getNightandDays } from "../../../utils/DateUtils";
 
-function RecentTrips({ getUpcomingTrip }) {
+function RecentTrips() {
     const navigate = useNavigate();
+
+    const getUpcomingTrip = useQuery({
+        queryKey: ["getTripDestinations"],
+        queryFn: async () => {
+            try {
+                const options = {
+                    headers: {
+                        Authorization: localStorage.getItem("accessToken"),
+                    },
+                };
+                const response = await instance.get(
+                    `/main/upcoming-trip`,
+                    options
+                );
+                return response.data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        retry: 0,
+        refetchOnWindowFocus: false,
+    });
+
     const { dDay, period } = getNightandDays(
-        getUpcomingTrip?.startDate,
-        getUpcomingTrip?.endDate
+        getUpcomingTrip?.data?.startDate,
+        getUpcomingTrip?.data?.endDate
     );
 
     const getRecentAlbums = useQuery({
@@ -45,42 +68,60 @@ function RecentTrips({ getUpcomingTrip }) {
             <div css={S.SContainer}>
                 <div css={S.SLeftContainer}>
                     <h2>다가오는 여행 일정보기</h2>
-                    <div
-                        css={S.STripBox}
-                        onClick={() =>
-                            navigate(`/trip/plan/${getUpcomingTrip?.tripId}`)
-                        }
-                    >
-                        <div className="info">
-                            <div className="dDay">{dDay}</div>
-                            <span className="tripTitle">
-                                {getUpcomingTrip.title}
-                            </span>
+                    {getUpcomingTrip?.data ? (
+                        <div
+                            css={S.STripBox}
+                            onClick={() =>
+                                navigate(
+                                    `/trip/plan/${getUpcomingTrip?.tripId}`
+                                )
+                            }
+                        >
+                            <div className="info">
+                                <div className="dDay">{dDay}</div>
+                                <span className="tripTitle">
+                                    {getUpcomingTrip?.data?.title}
+                                </span>
+                            </div>
+                            <div className="summary">
+                                <h3 className="containIcon">
+                                    <FaLocationDot />
+                                    {
+                                        getUpcomingTrip.data
+                                            ?.tripDestinationKoName
+                                    }
+                                </h3>
+                                <span className="containIcon">
+                                    <BiSolidCalendarCheck />
+                                    {getUpcomingTrip.data?.startDate} ~{" "}
+                                    {getUpcomingTrip.data?.endDate} ({period})
+                                </span>
+                                <span className="containIcon">
+                                    {getUpcomingTrip.data?.transportType ==
+                                    0 ? (
+                                        <>
+                                            <FaBus /> 대중교통
+                                        </>
+                                    ) : (
+                                        <>
+                                            <AiFillCar /> 자동차
+                                        </>
+                                    )}
+                                </span>
+                            </div>
+                            <img src={getUpcomingTrip.data?.img} alt="" />
                         </div>
-                        <div className="summary">
-                            <h3 className="containIcon">
-                                <FaLocationDot />
-                                {getUpcomingTrip.tripDestinationKoName}
-                            </h3>
-                            <span className="containIcon">
-                                <BiSolidCalendarCheck />
-                                {getUpcomingTrip.startDate} ~{" "}
-                                {getUpcomingTrip.endDate} ({period})
-                            </span>
-                            <span className="containIcon">
-                                {getUpcomingTrip.transportType == 0 ? (
-                                    <>
-                                        <FaBus /> 대중교통
-                                    </>
-                                ) : (
-                                    <>
-                                        <AiFillCar /> 자동차
-                                    </>
-                                )}
-                            </span>
-                        </div>
-                        <img src={getUpcomingTrip.img} alt="" />
-                    </div>
+                    ) : (
+                        <div css={S.SNoAlbum}>
+                                <div>
+                                    <span>
+                                        <IoIosImages /> 예정된 여행이 없습니다
+                                        <br />
+                                    </span>
+                                    <p>새로운 여행계획을 세워보세요!</p>
+                                </div>
+                            </div>
+                    )}
                 </div>
                 <div css={S.SRightContainer}>
                     <h2>최근 앨범 보러가기</h2>

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import MainImg1 from "../../../assets/MainImg1.jpg";
-import MainImg2 from "../../../assets/MainImg2.jpg";
-import MainImg3 from "../../../assets/MainImg3.jpg";
+import MainImg1 from "../../../assets/Santorini.jpg";
+import MainImg2 from "../../../assets/Amsterdam.jpg";
+import MainImg3 from "../../../assets/Copenhagen.jpg";
 
 const images = [
     {
