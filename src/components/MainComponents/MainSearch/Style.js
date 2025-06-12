@@ -9,9 +9,8 @@ export const SLayout = css`
 `;
 
 export const SImg = css`
-    display: block;
     width: 100%;
-    height: 100%;
+    height: 900px;
     object-fit: cover;
 `;
 
@@ -47,6 +46,8 @@ export const SSearchContainer = css`
     width: 700px;
     top: 35%;
     left: calc(50% - 350px);
+    * {
+    }
 
     & > div {
         display: flex;
@@ -60,9 +61,12 @@ export const SSearchContainer = css`
     h1 {
         //문구
         margin-bottom: 50px;
-        font-size: 34px;
+        font-size: 40px;
         line-height: 50px;
+        letter-spacing: 1.5px;
         font-weight: 700;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+        color: white;
     }
 `;
 
@@ -73,7 +77,8 @@ export const SSearchBox = css`
     align-items: center;
     width: 100%;
 
-    & > div:first-of-type { // SearchInput 컴포넌트 height 조정
+    & > div:first-of-type {
+        // SearchInput 컴포넌트 height 조정
         height: 50px;
     }
 `;
@@ -144,10 +149,21 @@ export const STripDestinationName = css`
     flex-direction: column;
     text-align: left;
     font-size: 12px;
-    
+
     span {
         margin-bottom: 5px;
         font-size: 16px;
         font-weight: 500;
     }
+`;
+
+export const SImgDescription = css`
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: 0;
+
+    font-weight: 700;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+    color: white;
 `;

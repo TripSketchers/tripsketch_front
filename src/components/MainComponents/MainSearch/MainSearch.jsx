@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import MainImg1 from "../../../assets/MainImg1.jpg";
-import MainImg2 from "../../../assets/MainImg2.jpg";
-import MainImg3 from "../../../assets/MainImg3.jpg";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import SearchInput from "../../SearchInput/SearchInput";
 import { instance } from "../../../api/config/instance";
 import { FaLocationDot } from "react-icons/fa6";
+import SliderContainer from "../../SliderContainer/SliderContainer";
+import { mainImages } from "./MainImages";
 
 function MainSearch(props) {
     const queryClient = useQueryClient();
@@ -18,20 +17,7 @@ function MainSearch(props) {
     const [isShow, setIsShow] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState("");
 
-    // 이미지 슬라이드 관련 상태
-    const images = [MainImg1, MainImg2, MainImg3];
     const [currentImg, setCurrentImg] = useState(0);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentImg((prev) => (prev + 1) % images.length);
-        }, 5000);
-        return () => clearInterval(interval);
-    }, [images.length]);
-
-    const handleStartBtn = () => {
-        navigate("/auth/signin");
-    };
 
     const getTripDestinations = useQuery({
         queryKey: ["getTripDestinations", searchKeyword],
@@ -64,14 +50,20 @@ function MainSearch(props) {
 
     return (
         <div css={S.SLayout}>
-            <img
-                src={images[currentImg]}
-                css={S.SImg}
-                alt="메인 배경"
-                draggable={false}
-            />
+            <SliderContainer onAfterChange={(index) => setCurrentImg(index)}>
+                {mainImages.map((img, idx) => (
+                    <div key={img.id}>
+                        <img
+                            src={img.src}
+                            css={S.SImg}
+                            draggable={false}
+                            alt={img.description}
+                        />
+                    </div>
+                ))}
+            </SliderContainer>
             <div css={S.SIndicator}>
-                {images.map((_, idx) => (
+                {mainImages.map((_, idx) => (
                     <span
                         key={idx}
                         className={`dot${idx === currentImg ? " active" : ""}`}
@@ -83,7 +75,7 @@ function MainSearch(props) {
             <div css={S.SSearchContainer}>
                 <div>
                     <h1>
-                        나만의 여행을
+                        {mainImages[currentImg].location}에서 나만의 여행을
                         <br />
                         스케치 해보세요
                     </h1>
@@ -95,7 +87,10 @@ function MainSearch(props) {
                                 onSearch={(value) => setSearchKeyword(value)}
                             />
                         ) : (
-                            <button css={S.SStartBtn} onClick={handleStartBtn}>
+                            <button
+                                css={S.SStartBtn}
+                                onClick={() => navigate("/auth/signin")}
+                            >
                                 시작하기
                             </button>
                         )}
@@ -129,6 +124,9 @@ function MainSearch(props) {
                         )}
                     </div>
                 </div>
+            </div>
+            <div css={S.SImgDescription}>
+                위치 : {mainImages[currentImg].description}
             </div>
         </div>
     );
