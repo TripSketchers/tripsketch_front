@@ -102,3 +102,38 @@ export const calculateTravelTimes = async (
 
 	return travelResults;
 };
+
+export const calculateAllTravelTimes = async (schedules, transportType = 1) => {
+  if (!Array.isArray(schedules) || schedules.length < 2) return schedules;
+
+  const updatedSchedules = [...schedules];
+
+  const travelPromises = [];
+
+  for (let i = 0; i < schedules.length - 1; i++) {
+    const from = schedules[i];
+    const to = schedules[i + 1];
+
+    if (
+      from.date !== to.date ||
+      !from.place || !to.place ||
+      (!from.place.latitude && !from.latitude) ||
+      (!to.place.latitude && !to.latitude)
+    ) continue;
+
+    travelPromises.push(
+      getTravelTimePromise(from, to, transportType).then((res) => ({
+        index: i, // ✅ from에 저장
+        travelTime: res.travelTime,
+      }))
+    );
+  }
+
+  const travelResults = await Promise.all(travelPromises);
+
+  travelResults.forEach(({ index, travelTime }) => {
+    updatedSchedules[index].travelTime = travelTime; // ✅ 출발지에 저장
+  });
+
+  return updatedSchedules;
+};

@@ -113,12 +113,9 @@ export const useScheduleResizeHandler = ({
 				let newEnd = initialEnd;
 
 				if (direction === "top") {
-					newStart = Math.min(
-						initialEnd - 1,
-						Math.max(0, initialStart + deltaMinutes)
-					);
 					newStart = Math.max(
-						newStart,
+						360,
+						initialStart + deltaMinutes,
 						getAdjacentLimit("top", {
 							position,
 							date,
@@ -127,12 +124,9 @@ export const useScheduleResizeHandler = ({
 						})
 					);
 				} else {
-					newEnd = Math.max(
-						initialStart + 1,
-						initialEnd + deltaMinutes
-					);
 					newEnd = Math.min(
-						newEnd,
+						1800,
+						initialEnd + deltaMinutes,
 						getAdjacentLimit("bottom", {
 							position,
 							date,
@@ -143,6 +137,9 @@ export const useScheduleResizeHandler = ({
 				}
 
 				const newStay = newEnd - newStart;
+
+				// ✅ 최소 머무는 시간 보장
+				if (newStay < 5) return;
 
 				const { isSplit, current, other, isBlockB } = findSplitBlocks({
 					schedules,

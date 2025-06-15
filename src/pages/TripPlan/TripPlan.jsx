@@ -14,9 +14,14 @@ import { instance } from "../../api/config/instance";
 import { useTrip } from "../../components/Routes/TripContext";
 import PlaceDetailModal from "../../components/PlaceDetailModal/PlaceDetailModal";
 import { convertArrayToAccommodationMap } from "../../utils/StoredAccommdationsUtils";
-import { splitAndSetSchedule } from "../../utils/ScheduleCreateUtils";
+import {
+	mergeSplitSchedules,
+	splitAndSetSchedule,
+} from "../../utils/ScheduleCreateUtils";
 import { eachDayOfInterval, format } from "date-fns";
 import { timeToMinutes } from "../../utils/ScheduleTimeUtils";
+import { calculateAllTravelTimes } from "../../utils/ScheduleTravelUtils";
+import { adjustScheduleTimes } from "../../utils/ScheduleOverlapUtils";
 
 function TripPlan() {
 	const [isStoredPanelOpen, setIsStoredPanelOpen] = useState(true);
@@ -43,20 +48,17 @@ function TripPlan() {
 						Authorization: localStorage.getItem("accessToken"),
 					},
 				});
-				const data = res.data;
 
+				const data = res.data;
 				setTripInfo(data.trip);
 				setTripDestination(data.tripDestination);
 				setStoredPlaces(data.storedPlaces);
-
 				const accommodationMap = convertArrayToAccommodationMap(
 					data.storedAccommodations
 				);
 				setStoredAccommodations(accommodationMap);
 
 				const updatedSchedules = [];
-
-				// ✅ 기존 스케줄 분할
 				data.tripSchedules.forEach((schedule) => {
 					const result = splitAndSetSchedule(
 						schedule,
@@ -75,19 +77,15 @@ function TripPlan() {
 						  }).map((d) => format(d, "yyyy-MM-dd"))
 						: [];
 
-				// ✅ 숙소 스케줄 추가
 				tripDates?.forEach((date) => {
 					const accommodation = accommodationMap[date];
-
 					const hasAccommodationSchedule = updatedSchedules.some(
 						(s) =>
 							s.date === date &&
 							s.isAccommodation === 1 &&
-                            timeToMinutes(s.viewStartTime) >= 1380 &&
-                            timeToMinutes(s.viewEndTime) <= 1920 &&
-                            timeToMinutes(s.startTime) != 360
+							s?.place?.googlePlaceId ===
+								accommodation?.googlePlaceId
 					);
-
 					if (accommodation && !hasAccommodationSchedule) {
 						const result = splitAndSetSchedule(
 							{
@@ -113,8 +111,55 @@ function TripPlan() {
 					}
 				});
 
-				setSchedules(updatedSchedules);
-				setInitialSchedules(updatedSchedules);
+				// 🚨 transportType이 바뀐 경우에만 travelTime 계산
+				const currentTransportType = parseInt(
+					localStorage.getItem("transportType") ?? "1"
+				); // default: 1
+				const lastUsedTransportType = parseInt(
+					localStorage.getItem("lastUsedTransportType") ?? "-1"
+				);
+
+				if (currentTransportType !== lastUsedTransportType) {
+					console.log(
+						"🚗 교통 수단 변경 감지 → travelTime 재계산 실행"
+					);
+					const travelSchedules = await calculateAllTravelTimes(
+						updatedSchedules,
+						currentTransportType
+					);
+					const adjustedSchedules =
+						adjustScheduleTimes(travelSchedules);
+
+					setSchedules(adjustedSchedules);
+					setInitialSchedules(adjustedSchedules);
+
+					localStorage.setItem(
+						"lastUsedTransportType",
+						currentTransportType
+					);
+
+					try {
+						const mergedSchedules = mergeSplitSchedules(
+							adjustedSchedules,
+							data.trip.tripId
+						);
+						await instance.post(
+							`/trips/${tripId}/schedules`,
+							mergedSchedules,
+							{
+								headers: {
+									Authorization:
+										localStorage.getItem("accessToken"),
+								},
+							}
+						);
+					} catch (err) {
+						console.error("🛑 travelTime 일정 저장 실패", err);
+					}
+				} else {
+					setSchedules(updatedSchedules);
+					setInitialSchedules(updatedSchedules);
+				}
 			} catch (err) {
 				console.error("여행 정보를 불러오는 데 실패했습니다.", err);
 			}

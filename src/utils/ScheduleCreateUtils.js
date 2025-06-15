@@ -125,7 +125,7 @@ export const splitAndSetSchedule = (
 				schedule.travelTime,
 				true,
 				tripScheduleId,
-				schedule.isAccommodation,
+				0,
 				`${tripScheduleId}_2`
 			)
 		);
@@ -171,7 +171,7 @@ export const splitAndSetSchedule = (
 				schedule.travelTime,
 				true,
 				tripScheduleId,
-				schedule.isAccommodation,
+				0,
 				`${tripScheduleId}_2`
 			)
 		);

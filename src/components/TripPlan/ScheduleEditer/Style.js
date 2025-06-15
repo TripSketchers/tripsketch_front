@@ -2,15 +2,17 @@ import { css } from "@emotion/react";
 
 export const SBubbleEditor = css`
 	position: absolute;
-	left: 0;
+	left: 50%; /* 📍 부모 기준으로 가운데 */
+	transform: translateX(-50%);
 	padding: 12px;
 	background-color: #fff;
 	border: 1px solid #ddd;
 	border-radius: 8px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-	z-index: 50;
+	z-index: 999;
 	display: flex;
 	flex-direction: column;
+	width: 95%;
 
 	label {
 		font-weight: bold;
@@ -83,5 +85,5 @@ export const SEditorRow = css`
 `;
 
 export const STimeInput = css`
-	width: 50px;
+	width: 40px;
 `;

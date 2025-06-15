@@ -23,17 +23,18 @@ function ScheduleEditor({ schedule, popupPosition, onSave, onClose }) {
 	// 원래 일정 기준 시간
 	const originStart = viewStartTime || startTime || "00:00";
 
-// viewStartTime과 viewEndTime이 모두 있을 때만 익일 판단
-const originEnd =
-	viewStartTime && viewEndTime
-		? (() => {
-				const s = timeToMinutes(viewStartTime);
-				const e = timeToMinutes(viewEndTime);
-				const adjusted = e < s ? e + 1440 : e;
-				const normalized = adjusted >= 1440 ? adjusted - 1440 : adjusted;
-				return minutesToTime(normalized);
-		  })()
-		: viewEndTime || endTime || "00:00";
+	// viewStartTime과 viewEndTime이 모두 있을 때만 익일 판단
+	const originEnd =
+		viewStartTime && viewEndTime
+			? (() => {
+					const s = timeToMinutes(viewStartTime);
+					const e = timeToMinutes(viewEndTime);
+					const adjusted = e < s ? e + 1440 : e;
+					const normalized =
+						adjusted >= 1440 ? adjusted - 1440 : adjusted;
+					return minutesToTime(normalized);
+			  })()
+			: viewEndTime || endTime || "00:00";
 
 	const originStay =
 		viewStartTime && viewEndTime
@@ -62,6 +63,18 @@ const originEnd =
 		return () =>
 			document.removeEventListener("mousedown", handleClickOutside);
 	}, [onClose]);
+
+	useEffect(() => {
+		const handleKeyDown = (e) => {
+			if (e.key === "Enter") {
+				handleSave();
+			}
+		};
+		document.addEventListener("keydown", handleKeyDown);
+		return () => {
+			document.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [start, end, stayHour, stayMinute]); // 의존성은 변경 가능성 있는 값들
 
 	// 🟢 시작 시간 변경 → 종료 시간 자동 변경
 	const handleStartChange = (newStart) => {
@@ -116,60 +129,60 @@ const originEnd =
 		onClose?.();
 	};
 
-    return (
-        <div
-            css={[
-                S.SBubbleEditor,
-                popupPosition === "above" ? S.SPopupAbove : S.SPopupBelow,
-            ]}
-            ref={editorRef}
-        >
-            <label>시작 시간</label>
-            <input
-                type="time"
-                value={start}
-                onChange={(e) => handleStartChange(e.target.value)}
-            />
-            <label>종료 시간</label>
-            <input
-                type="time"
-                value={end}
-                onChange={(e) => handleEndChange(e.target.value)}
-            />
-            <label>머무는 시간</label>
-            <div css={S.SEditorRow}>
-                <input
-                    type="number"
-                    min={0}
-                    max={23}
-                    value={stayHour}
-                    onChange={(e) =>
-                        handleStayChange(
-                            Math.max(0, parseInt(e.target.value, 10) || 0),
-                            stayMinute
-                        )
-                    }
-                    css={S.STimeInput}
-                />
-                <span>시간</span>
-                <input
-                    type="number"
-                    min={0}
-                    max={59}
-                    value={stayMinute}
-                    onChange={(e) =>
-                        handleStayChange(
-                            stayHour,
-                            Math.max(0, parseInt(e.target.value, 10) || 0)
-                        )
-                    }
-                    css={S.STimeInput}
-                />
-                <span>분</span>
-            </div>
-            <button onClick={handleSave}>저장</button>
-        </div>
-    );
+	return (
+		<div
+			css={[
+				S.SBubbleEditor,
+				popupPosition === "above" ? S.SPopupAbove : S.SPopupBelow,
+			]}
+			ref={editorRef}
+		>
+			<label>시작 시간</label>
+			<input
+				type="time"
+				value={start}
+				onChange={(e) => handleStartChange(e.target.value)}
+			/>
+			<label>종료 시간</label>
+			<input
+				type="time"
+				value={end}
+				onChange={(e) => handleEndChange(e.target.value)}
+			/>
+			<label>머무는 시간</label>
+			<div css={S.SEditorRow}>
+				<input
+					type="number"
+					min={0}
+					max={23}
+					value={stayHour}
+					onChange={(e) =>
+						handleStayChange(
+							Math.max(0, parseInt(e.target.value, 10) || 0),
+							stayMinute
+						)
+					}
+					css={S.STimeInput}
+				/>
+				<span>시간</span>
+				<input
+					type="number"
+					min={0}
+					max={59}
+					value={stayMinute}
+					onChange={(e) =>
+						handleStayChange(
+							stayHour,
+							Math.max(0, parseInt(e.target.value, 10) || 0)
+						)
+					}
+					css={S.STimeInput}
+				/>
+				<span>분</span>
+			</div>
+			<button onClick={handleSave}>저장</button>
+		</div>
+	);
 }
 
 export default ScheduleEditor;

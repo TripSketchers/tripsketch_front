@@ -12,7 +12,7 @@ export const timeToMinutes = (timeStr) => {
 
 // 📌 총 분(minute) → "HH:MM" 포맷
 export const minutesToTime = (totalMinutes) => {
-    const hours = String(Math.floor(totalMinutes / 60) % 24).padStart(2, "0");
+    const hours = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
     const minutes = String(totalMinutes % 60).padStart(2, "0");
     return `${hours}:${minutes}`;
 };

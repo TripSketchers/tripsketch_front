@@ -80,12 +80,15 @@ function PlanTable({ initialSchedules }) {
 				const origin = {
 					lat: current.place?.latitude ?? current.latitude,
 					lng: current.place?.longitude ?? current.longitude,
+					name: current.place?.name ?? current.name ?? "", // ✅ 이름 포함
 				};
+
 				const next = daySchedules[i + 1];
 				const destination = next
 					? {
 							lat: next.place?.latitude ?? next.latitude,
 							lng: next.place?.longitude ?? next.longitude,
+							name: next.place?.name ?? next.name ?? "", // ✅ 이름 포함
 					  }
 					: null;
 

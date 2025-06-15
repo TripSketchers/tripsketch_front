@@ -69,7 +69,7 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
 		console.log(schedule);
 
 		e.stopPropagation();
-		if (!isLocked) {
+		if (!isLocked && !isResizing) {
 			setSelectedSchedule(schedule);
 			if (cardRef.current) {
 				const position = getPopupPosition(cardRef.current);
@@ -113,10 +113,14 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
 			{/* 🔼 상단 리사이즈 핸들 */}
 			<div
 				css={S.SResizeHandleTop}
-				onMouseDown={handleMouseDown({
-					direction: "top",
-					schedule,
-				})}
+				onMouseDown={
+					isLocked
+						? undefined // 🔒 잠금 시 리사이즈 막기
+						: handleMouseDown({
+								direction: "top",
+								schedule,
+						  })
+				}
 			/>
 
 			{/* ✏️ 콘텐츠 */}
@@ -172,10 +176,14 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
 			{/* 🔽 하단 리사이즈 핸들 */}
 			<div
 				css={S.SResizeHandleBottom}
-				onMouseDown={handleMouseDown({
-					direction: "bottom",
-					schedule,
-				})}
+				onMouseDown={
+					isLocked
+						? undefined // 🔒 잠금 시 리사이즈 막기
+						: handleMouseDown({
+								direction: "bottom",
+								schedule,
+						  })
+				}
 			/>
 		</div>
 	);
