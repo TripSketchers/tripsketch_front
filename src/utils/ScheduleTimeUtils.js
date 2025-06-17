@@ -1,5 +1,3 @@
-import { addDays, format } from "date-fns";
-
 const TIMELINE_START = 360;   // 06:00
 const TIMELINE_END = 1800;    // 30:00
 const TIME_END = 1440;        // 24:00
@@ -12,13 +10,6 @@ export const timeToMinutes = (timeStr) => {
 
 // 📌 총 분(minute) → "HH:MM" 포맷
 export const minutesToTime = (totalMinutes) => {
-    const hours = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
-    const minutes = String(totalMinutes % 60).padStart(2, "0");
-    return `${hours}:${minutes}`;
-};
-
-// 📌 총 분(minute) → "HH:MM" 포맷
-export const minutesToAbsTime = (totalMinutes) => {
     const hours = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
     const minutes = String(totalMinutes % 60).padStart(2, "0");
     return `${hours}:${minutes}`;
@@ -50,7 +41,7 @@ export const calculateTotalStayTime = (droppedItem, startTime, endTime) => {
         let start = timeToMinutes(droppedItem.viewStartTime);
         let end = timeToMinutes(droppedItem.viewEndTime);
         [start, end] = adjustMinutes(start, end);
-        return end - start;
+        return (end - start < 0 ? -1 : 1) * (end - start);
     } else {
         let start = timeToMinutes(startTime);
         let end = timeToMinutes(endTime);
@@ -87,23 +78,8 @@ export const normalizeTime = (timeStr) => {
     return minutesToTime(min % 1440);
 };
 
-// 하루를 넘으면 date 증가 + 시간 조정
-export const adjustTimeAndDate = (dateStr, timeStr) => {
-	const totalMin = timeToMinutes(timeStr);
-
-	if (totalMin < 1440) {
-		return { date: dateStr, time: timeStr };
-	} else {
-		const dateObj = new Date(dateStr);
-		dateObj.setDate(dateObj.getDate() + 1);
-
-		const adjustedMinutes = totalMin - 1440;
-		const hours = String(Math.floor(adjustedMinutes / 60)).padStart(2, "0");
-		const minutes = String(adjustedMinutes % 60).padStart(2, "0");
-
-		return {
-			date: dateObj.toISOString().split("T")[0],
-			time: `${hours}:${minutes}`,
-		};
-	}
-};
+export const getPrevDate = (dateStr) => {
+	const date = new Date(dateStr);
+	date.setDate(date.getDate() - 1);
+	return date.toISOString().slice(0, 10);
+}

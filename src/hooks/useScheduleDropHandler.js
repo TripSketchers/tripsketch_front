@@ -6,12 +6,16 @@ import { findOverlappingSlot } from "../utils/ScheduleOverlapUtils";
 import {
 	calculateTotalStayTime,
 	getAbsoluteMinutes,
-	minutesToAbsTime,
+	minutesToTime,
 	timeToMinutes,
 } from "../utils/ScheduleTimeUtils";
-import { calculateTravelTimes } from "../utils/ScheduleTravelUtils";
+import {
+	calculateTravelTimes,
+	calculateAllTravelTimes,
+} from "../utils/ScheduleTravelUtils";
 
 const TIMELINE_START = 360; // 06:00
+const TIME_END = 1440; // 24:00
 const TIMELINE_END = 1800; // 30:00 (익일 06:00)
 
 export default function useScheduleDropHandler(schedules, setSchedules) {
@@ -28,8 +32,8 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 			startTime,
 			endTime
 		);
-		const dropStartAbs = getAbsoluteMinutes(startTime);
-		const dropEndAbs = getAbsoluteMinutes(endTime);
+		const dropStartAbs = timeToMinutes(startTime);
+		const dropEndAbs = timeToMinutes(endTime);
 
 		// 기존 위치 저장
 		const prevSchedules = [...schedules].sort((a, b) => {
@@ -61,8 +65,8 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 			...droppedItem,
 			tripScheduleId:
 				droppedItem.tripScheduleId ?? Date.now() + Math.random(),
-			startTime: minutesToAbsTime(dropStartAbs),
-			endTime: minutesToAbsTime(dropStartAbs + totalStayTime),
+			startTime: minutesToTime(dropStartAbs),
+			endTime: minutesToTime(dropStartAbs + totalStayTime),
 			date: dropDate,
 		};
 
@@ -130,12 +134,18 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 			dropEndAbs
 		);
 
-		if (adjustedStartAbs === null) return;
+		if (adjustedStartAbs === null) {
+			// ✅ 조정될 자리가 없는 경우 전체 이동 시간 재계산
+			const restored = await calculateAllTravelTimes(
+				prevSchedules,
+				tripInfo?.transportType
+			);
+			setSchedules(restored);
+			return;
+		}
 
-		const adjustedStartTime = minutesToAbsTime(adjustedStartAbs);
-		const adjustedEndTime = minutesToAbsTime(
-			adjustedStartAbs + totalStayTime
-		);
+		const adjustedStartTime = minutesToTime(adjustedStartAbs);
+		const adjustedEndTime = minutesToTime(adjustedStartAbs + totalStayTime);
 
 		// 7️⃣ 새로운 일정 생성 및 병합
 		initScheduleHandler(setSchedules); // 내부 초기화만

@@ -27,8 +27,8 @@ function Sidebar({ selectedStep, setSelectedStep }) {
 		try {
 			// ✅ 선택한 교통수단 저장
 			localStorage.setItem("transportType", selectedTransport);
-			const lastUsedTransportType = parseInt(localStorage.getItem("lastUsedTransportType") ?? "1"); // 다음 진입 시 강제 비교 발생
-
+            console.log(storedAccommodations);
+            
 			const mergedAccommodations =
 				convertStoredAccommodationMapToArray(storedAccommodations);
 

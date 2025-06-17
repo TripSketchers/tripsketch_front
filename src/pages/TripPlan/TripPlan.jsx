@@ -79,13 +79,27 @@ function TripPlan() {
 
 				tripDates?.forEach((date) => {
 					const accommodation = accommodationMap[date];
+
 					const hasAccommodationSchedule = updatedSchedules.some(
-						(s) =>
-							s.date === date &&
-							s.isAccommodation === 1 &&
-							s?.place?.googlePlaceId ===
+						(s) => {
+							if (!s.isAccommodation || !s.place) return false;
+							if (
+								s.place.googlePlaceId !==
 								accommodation?.googlePlaceId
+							)
+								return false;
+
+							const sStart = timeToMinutes(s.startTime);
+							const sEnd = timeToMinutes(s.endTime);
+
+							// ✅ 그 날짜의 "밤" (23:00 ~ 06:00 다음날) 일정이 있는지 확인
+							return (
+								s.date === date &&
+								(sStart >= 1380 || sEnd > 1440) // 23:00 이후 또는 "32:00" 같은 경우
+							);
+						}
 					);
+
 					if (accommodation && !hasAccommodationSchedule) {
 						const result = splitAndSetSchedule(
 							{

@@ -25,7 +25,7 @@ function DropZone({ date, index, onDrop, children }) {
 		const totalMinutes =
 			Math.max(-OFFSET_MINUTES, clampedMinutes) + OFFSET_MINUTES; // 최소 6시부터 시작
 
-		const hour = Math.floor(totalMinutes / 60) % 24;
+		const hour = Math.floor(totalMinutes / 60);
 		const minute = totalMinutes % 60;
 		const startTime = `${hour.toString().padStart(2, "0")}:${minute
 			.toString()

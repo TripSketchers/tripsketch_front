@@ -2,7 +2,6 @@ import {
 	addDays,
 	format,
 	parseISO,
-	isEqual,
 	eachDayOfInterval,
 } from "date-fns";
 
@@ -40,8 +39,11 @@ export function convertStoredAccommodationMapToArray(
 			};
 		} else {
 			const prevCheckOut = parseISO(current.checkOutDate); // 이전 묶음의 종료일
-			const isConsecutive = isEqual(date, prevCheckOut); // 날짜 연속 여부
-			const isSamePlace = place.id === current.place.id; // 같은 숙소인지
+			const isConsecutive =
+				format(date, "yyyy-MM-dd") ===
+				format(prevCheckOut, "yyyy-MM-dd");
+			const isSamePlace =
+				place?.googlePlaceId === current.place?.googlePlaceId;
 
 			if (isConsecutive && isSamePlace) {
 				// ✅ 같은 숙소 + 연속 날짜 → 하나의 묶음으로 연결
