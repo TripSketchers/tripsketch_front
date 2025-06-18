@@ -84,7 +84,7 @@ function SigninContainer({ isSignin, isRightPanelActive }) {
 
             if (!isSignin) {
                 alert("회원가입이 완료되었습니다!");
-                window.location.replace("/signin");
+                window.location.replace("/auth/signin");
             } else {
                 localStorage.setItem(
                     "accessToken",
@@ -93,6 +93,7 @@ function SigninContainer({ isSignin, isRightPanelActive }) {
                 const firebaseToken = response.data.firebaseToken;
                 try {
                     await signInWithCustomToken(auth, firebaseToken);
+                    window.location.replace("/");
                 } catch (e) {
                     console.error("로그인 실패", e);
                 }
@@ -102,8 +103,6 @@ function SigninContainer({ isSignin, isRightPanelActive }) {
             if (errors?.email) alert(errors.email);
             else if (errors?.password) alert(errors.password);
             else if (errors?.signin) alert(errors.signin);
-        } finally {
-            window.location.replace("/");
         }
     };
 

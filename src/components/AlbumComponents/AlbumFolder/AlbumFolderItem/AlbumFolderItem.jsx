@@ -34,14 +34,20 @@ function AlbumFolderItem({ album, photo, onClickFolder }) {
 
     return (
         <div css={S.SFolder} onClick={() => onClickFolder(album.albumId)}>
-            <FaFolder className="folderFrame" />
+            <div css={S.SfolderIconWrapper}>
+                <FaFolder className="folderFrame" />
+            </div>
             <div css={S.SFolderPhotoFrame}>
                 <img src={photo} alt="앨범" />
             </div>
             <div css={S.SFolderInner}>
                 <div className="innerBox">
                     <TogglePanel
-                        triggerIcon={<IoMdMore style={{fontSize:"34px", color:"white"}}/>}
+                        triggerIcon={
+                            <IoMdMore
+                                style={{ fontSize: "34px", color: "white" }}
+                            />
+                        }
                         menuItems={[
                             {
                                 icon: <IoMdTrash />,
@@ -49,8 +55,7 @@ function AlbumFolderItem({ album, photo, onClickFolder }) {
                                 action: handleDelete,
                                 confirm: {
                                     title: "폴더를 삭제하시겠어요?",
-                                    message:
-                                        "삭제 시 복구할 수 없습니다.",
+                                    message: "삭제 시 복구할 수 없습니다.",
                                     confirmText: "삭제",
                                 },
                             },

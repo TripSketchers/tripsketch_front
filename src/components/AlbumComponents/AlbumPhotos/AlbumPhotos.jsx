@@ -6,6 +6,7 @@ import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { FaTrash } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
 import PhotoBox from "./PhotoBox/PhotoBox";
+import Swal from "sweetalert2";
 
 function AlbumPhotos({ albums }) {
     const { tripId } = useParams();
@@ -95,7 +96,12 @@ function AlbumPhotos({ albums }) {
                 }),
             };
             await instance.delete(`/trips/${tripId}/album/photos`, option);
-            alert(`사진  삭제 완료`);
+            // alert(`사진 삭제 완료`);
+            Swal.fire({
+                icon: "success",
+                title: "사진 삭제 완료!",
+                text: "사진 삭제가 성공적으로 처리되었습니다.",
+            });
             queryClient.invalidateQueries(["getAlbum", tripId]);
         } catch (error) {
             console.log(error);
@@ -133,7 +139,6 @@ function AlbumPhotos({ albums }) {
         );
     }, [checkedPhoto, albumPhotoQueries]);
 
-
     return (
         <div css={S.SLayout}>
             <div css={S.SSelectMode}>
@@ -148,7 +153,10 @@ function AlbumPhotos({ albums }) {
                             <button onClick={handleDeleteSelected}>
                                 <FaTrash /> 삭제
                             </button>
-                            <button className="cancel" onClick={() => setSelectMode(false)}>
+                            <button
+                                className="cancel"
+                                onClick={() => setSelectMode(false)}
+                            >
                                 취소
                             </button>
                         </>
@@ -169,7 +177,7 @@ function AlbumPhotos({ albums }) {
                         css={S.SAlbumContainer}
                     >
                         <div css={S.SScheduleBox}>
-                            <span>{album.dayDiff}</span> &nbsp;|&nbsp;&nbsp;
+                            <span>{album.dayDiff}</span>&nbsp;|&nbsp;
                             {album.date} {album.placeName}
                         </div>
                         <div css={S.SAlbumBox}>

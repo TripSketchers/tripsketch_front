@@ -37,11 +37,11 @@ function AlbumFolder({ albums, setShowSorting, stateAlbumId }) {
                     <AlbumPhotos albums={[selectedAlbum]} />
                 </div>
             ) : (
-                <>
+                <div css={S.SFolderLayout}>
                     {Object.entries(albumsByDate).map(([date, items]) => (
                         <div key={date}>
                             <div css={S.SDateBox}>
-                                <span>{items[0].dayDiff}</span> | {date}
+                                <span>{items[0].dayDiff}</span>&nbsp;|&nbsp;{date}
                             </div>
                             <div css={S.SFolderContainer}>
                                 {items.map((item) => (
@@ -58,7 +58,7 @@ function AlbumFolder({ albums, setShowSorting, stateAlbumId }) {
                             </div>
                         </div>
                     ))}
-                </>
+                </div>
             )}
         </div>
     );
