@@ -12,7 +12,13 @@ import {
 import { useTrip } from "../../Routes/TripContext";
 import { useScheduleResizeHandler } from "../../../hooks/useScheduleResizeHandler";
 
-function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
+function ScheduleCard({
+	schedule,
+	onToggleLock,
+	onUpdate,
+	setIsDragging,
+	showPlaceSelectPanel,
+}) {
 	const {
 		tripScheduleId,
 		startTime,
@@ -52,7 +58,7 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
 	// 🐭 DnD 드래그 설정
 	const [{ isDragging }, dragRef] = useDrag({
 		type: "SCHEDULE",
-		canDrag: () => !isLocked && !showEditor && !isResizing,
+		canDrag: () => !isLocked && !showEditor && !isResizing && !showPlaceSelectPanel,
 		collect: (monitor) => ({
 			isDragging: monitor.isDragging(),
 		}),
@@ -105,7 +111,7 @@ function ScheduleCard({ schedule, onToggleLock, onUpdate, setIsDragging }) {
 				top: `${topPx}px`,
 				height: `${heightPx}px`,
 				opacity: isDragging ? 0.5 : 1,
-				cursor: isLocked ? "not-allowed" : "move",
+				cursor: isLocked || showPlaceSelectPanel ? "not-allowed" : "move",
 				userSelect: "none",
 			}}
 			onClick={handleEditClick}

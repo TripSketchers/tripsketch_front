@@ -96,6 +96,7 @@ function DropZone({ date, index, onDrop, children }) {
 					endTime,
 					isLocked: 0,
 					isSplit: false,
+                    travelTime: 0,
 					viewStartTime: startTime,
 					viewEndTime: endTime,
 					place: item.place, // ✅ place 객체 그대로 저장

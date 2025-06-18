@@ -20,7 +20,7 @@ import { isEqual } from "lodash";
 import TravelTimeBlock from "../TravelTimeBlock/TravelTimeBlock";
 import useAutoScroll from "../../../hooks/useAutoScroll";
 
-function PlanTable({ initialSchedules }) {
+function PlanTable({ initialSchedules, showPlaceSelectPanel }) {
 	const { tripInfo, schedules, setSchedules } = useTrip();
 	const { handleDrop } = useScheduleDropHandler(schedules, setSchedules);
 	const [isDragging, setIsDragging] = useState(false);
@@ -174,6 +174,9 @@ function PlanTable({ initialSchedules }) {
 													onUpdate={onUpdate}
 													setIsDragging={
 														setIsDragging
+													}
+													showPlaceSelectPanel={
+														showPlaceSelectPanel
 													}
 												/>
 											);
