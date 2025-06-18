@@ -1,9 +1,8 @@
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 
 export const STripTable = css`
-    position: relative; //내부 요소 상대 위치
+    position: relative;
     display: flex;
-    text-align: center;
     font-size: 18px;
 
     .title {
@@ -12,10 +11,13 @@ export const STripTable = css`
 
     div:nth-child(2) {
         flex: 1;
+        min-width: 0; /* ✅ 이거 꼭 추가! */
     }
 
     ul {
+        width: 100%;
         padding: 3px;
+        margin: 0;
     }
 `;
 
@@ -25,10 +27,12 @@ export const SScroll = css`
     height: 535px;
     overflow-y: auto;
     list-style: none;
-    width: 100%;
 
-    &::-webkit-scrollbar{
-        width: 3px; /* 스크롤바 너비 */
+    flex: 1;
+    min-width: 0;
+
+    &::-webkit-scrollbar {
+        width: 3px;
     }
 `;
 
@@ -41,6 +45,10 @@ export const SSelectSchedule = (isActive) => css`
     text-align: center;
     background-color: ${isActive ? "#51748b" : "white"};
     color: ${isActive ? "white" : ""};
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 
     &:active {
         background-color: #d6d6d6;

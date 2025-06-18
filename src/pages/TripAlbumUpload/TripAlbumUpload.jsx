@@ -24,6 +24,14 @@ function TripAlbumUpload() {
 
     const [hasUnsavedPhotos, setHasUnsavedPhotos] = useState(false);
 
+    useEffect(() => {
+        const auth = getAuth();
+        if (!auth.currentUser) {
+            alert("로그인이 필요합니다!");
+            navigate("/auth/signin");
+        }
+    }, []);
+
     // usePrompt로 페이지 이동을 차단
     usePrompt(
         hasUnsavedPhotos,
@@ -32,7 +40,12 @@ function TripAlbumUpload() {
 
     const handleUploadBtn = async () => {
         const auth = getAuth();
-        console.log(auth.currentUser); // null이면 로그인 안 된 상태
+
+        if (!auth.currentUser) {
+            alert("로그인이 필요합니다!");
+            navigate("/auth/signin");
+            return;
+        }
         setIsLoading(true); // 로딩 시작
         const photos = await getAllPhotos(); //IndexedDB에서 사진 가져오기
 

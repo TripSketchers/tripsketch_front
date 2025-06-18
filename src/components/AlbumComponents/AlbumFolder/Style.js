@@ -15,6 +15,10 @@ export const SSortingBox = css`
     }
 `;
 
+export const SFolderLayout = css`
+    padding-top: 5px;
+`;
+
 export const SDateBox = css`
     span {
         font-weight: 600;

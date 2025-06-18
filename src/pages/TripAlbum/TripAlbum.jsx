@@ -11,23 +11,21 @@ import { instance } from "../../api/config/instance";
 import { HiPlus } from "react-icons/hi";
 import { getNday } from "../../utils/DateUtils";
 import useFirebaseAuth from "../../hooks/useFirebaseAuth";
+import Loading from "../../components/Loading/Loading";
 
 function TripAlbum(props) {
     const { firebaseUser, loading } = useFirebaseAuth();
-
     const { tripId } = useParams();
     const location = useLocation();
-    // 상태로 전달된 값 읽기
 
+    // 상태로 전달된 값 읽기
     const stateViewType = location.state?.viewType;
     const stateAlbumId = location.state?.albumId;
     const [viewType, setViewType] = useState(stateViewType ?? 0);
     const [sorting, setSorting] = useState(0); //최신순 : 0, 과거순: 1
     const [showSorting, setShowSorting] = useState(true);
 
-    const handleSortingClick = (num) => {
-        setSorting(num);
-    };
+    console.log(firebaseUser);
 
     const handleRadioChange = (event) => {
         setViewType(event.target.value === "Whole" ? 0 : 1);
@@ -84,13 +82,13 @@ function TripAlbum(props) {
         return (
             <NavLayout>
                 <NavContainer>
-                    <div>{intro}</div>
+                    <Loading content={loading}/>
                 </NavContainer>
             </NavLayout>
         );
     }
 
-    if (getAlbum.isLoading) return <div>로딩 중...</div>;
+    if (getAlbum.isLoading) return <Loading />;
     if (getAlbum.isError) return <div>데이터를 불러오지 못했습니다.</div>;
 
     return (
@@ -128,14 +126,14 @@ function TripAlbum(props) {
                         <div css={S.SSortingBox}>
                             <span
                                 className={sorting === 0 ? "selected" : ""}
-                                onClick={() => handleSortingClick(0)}
+                                onClick={() => setSorting(0)}
                             >
                                 오래된 순
                             </span>
                             &nbsp;&nbsp;|&nbsp;&nbsp;
                             <span
                                 className={sorting === 1 ? "selected" : ""}
-                                onClick={() => handleSortingClick(1)}
+                                onClick={() => setSorting(1)}
                             >
                                 최신순
                             </span>

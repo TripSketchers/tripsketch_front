@@ -1,17 +1,21 @@
 import React from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 /** @jsxImportSource @emotion/react */
-import * as S from './Style';
+import * as S from "./Style";
 
-function Loading(props) {
+function Loading({ content }) {
     return (
         <div css={S.SLayout}>
-            <DotLottieReact
-                src="https://lottie.host/4affde3c-24b1-4c33-9578-efd0c49a09f0/7hm1WPjAYB.lottie"
-                loop
-                autoplay
-                css={S.SContainer}
-            />
+            <div class="loading">
+                <h2>{content || "로딩 중입니다. 잠시만 기다려주세요."}</h2>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     );
 }

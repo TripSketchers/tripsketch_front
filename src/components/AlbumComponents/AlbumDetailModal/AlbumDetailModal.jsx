@@ -8,6 +8,7 @@ import { instance } from "../../../api/config/instance";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import ConfirmModal from "../../ConfirmModal/ConfirmModal";
+import Swal from 'sweetalert2';
 
 function AlbumDetailModal({ photo, onClose }) {
     const { tripId } = useParams();
@@ -35,7 +36,11 @@ function AlbumDetailModal({ photo, onClose }) {
                 `/trips/${tripId}/album/photos/${photo.photoId}`,
                 option
             );
-            alert(`사진 ${photo.photoId} 삭제 완료`);
+            Swal.fire({
+                icon: "success",
+                title: "사진 삭제 완료!",
+                text: "사진 삭제가 성공적으로 처리되었습니다.",
+            });
             setIsEditing(false); // 편집 모드 종료
             onClose();
             queryClient.invalidateQueries(["getAlbum", tripId]);
@@ -65,7 +70,7 @@ function AlbumDetailModal({ photo, onClose }) {
     };
 
     return (
-        <div css={S.backdrop} onClick={() => onClose()} >
+        <div css={S.backdrop} onClick={() => onClose()}>
             <div css={S.modal} onClick={(e) => e.stopPropagation()}>
                 <div css={S.closeBtn} onClick={() => onClose()}>
                     <button>
@@ -81,7 +86,7 @@ function AlbumDetailModal({ photo, onClose }) {
                             <div>{memo}</div>
                         ) : (
                             <textarea
-                            	autoFocus
+                                autoFocus
                                 value={memo}
                                 onChange={handleMemoChange}
                                 placeholder="사진에 대한 추억을 적어보세요!"
@@ -96,7 +101,7 @@ function AlbumDetailModal({ photo, onClose }) {
                             <div>
                                 <button
                                     css={S.deleteBtn}
-                                    onClick={()=>setIsModalOpen(true)}
+                                    onClick={() => setIsModalOpen(true)}
                                 >
                                     <FaTrash />
                                 </button>
@@ -109,7 +114,7 @@ function AlbumDetailModal({ photo, onClose }) {
                                 <button
                                     className="cancel"
                                     onClick={() => {
-                                        setIsEditing(false)
+                                        setIsEditing(false);
                                     }}
                                 >
                                     취소

@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 
 export const SLayout = css`
     position: relative;
-    padding-top: 10px;
+    padding-top: 5px;
 `;
 
 export const SSelectMode = css`
