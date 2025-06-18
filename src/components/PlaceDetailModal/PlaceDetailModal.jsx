@@ -1,7 +1,7 @@
 import React from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import { useTrip } from "../TripCreate/TripContext";
+import { useTrip } from "../Routes/TripContext";
 import { FaStar } from "react-icons/fa";
 import fallbackImg from "../../assets/fallbackImg.png";
 import ModalLayout from "../ModalLayout/ModalLayout";

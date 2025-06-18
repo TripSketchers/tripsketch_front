@@ -7,19 +7,16 @@ import { instance } from "../../api/config/instance";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { FaPlus } from "react-icons/fa";
 import AccommodationModal from "../AccommodationModal/AccommodationModal";
-import { useTrip } from "../TripCreate/TripContext";
 import { useLocation } from "react-router-dom";
 import qs from "qs";
+import { useTrip } from "../Routes/TripContext";
 
 function PlaceSelectPanel({ text, categories }) {
-    const location = useLocation();
-    // 구조분해 할당으로 변수에 담기
-    const { lowLat, lowLng, highLat, highLng } = location.state;
-
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
     const [selectedPlace, setSelectedPlace] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState("");
+
     const categoryTypeMap = {
         명소: "tourist_attraction",
         맛집: "restaurant",
@@ -28,12 +25,16 @@ function PlaceSelectPanel({ text, categories }) {
     };
 
     const {
-        dateRange,
+        tripDestination,
         storedPlaces,
         setStoredPlaces,
         setStoredAccommodations,
         setFocusedPlace,
     } = useTrip();
+
+    const location = useLocation();
+    // 구조분해 할당으로 변수에 담기
+    const { lowLat, lowLng, highLat, highLng } = tripDestination || location?.state || {};
 
     const {
         data,
@@ -59,11 +60,15 @@ function PlaceSelectPanel({ text, categories }) {
             });
             return res.data;
         },
-        getNextPageParam: (lastPage) => {
-            return lastPage?.nextPageToken || undefined; // ✅ nextPageToken으로 다음 요청
-        },
+        getNextPageParam: (lastPage) => lastPage?.nextPageToken || undefined,
         staleTime: 1000 * 60 * 5,
+        enabled: !!lowLat && !!lowLng && !!highLat && !!highLng,
     });
+
+            
+    if (!lowLat || !lowLng || !highLat || !highLng) {
+        return <div>위치 정보 로딩 중...</div>;
+    }
 
     const handleAccommodationConfirm = (selectedMap) => {
         setStoredAccommodations((prev) => ({ ...prev, ...selectedMap }));
@@ -78,17 +83,15 @@ function PlaceSelectPanel({ text, categories }) {
             setShowModal(true);
         } else {
             setStoredPlaces((prev) => {
-                const exists = prev.some((p) => p.id === place.id);
+                const exists = prev.some((p) => p.googlePlaceId === place.id);
                 if (exists) {
-                    return prev.filter((p) => p.id !== place.id);
+                    return prev.filter((p) => p.googlePlaceId !== place.id);
                 } else {
-                    return [
-                        ...prev,
-                        {
-                            ...place,
-                            stayTime: 120, // 기본 2시간
-                        },
-                    ];
+                    const normalizedPlace = {
+                        ...place,
+                        googlePlaceId: place.id, // ✅ ID 통일
+                    };
+                    return [...prev, normalizedPlace];
                 }
             });
         }
@@ -96,19 +99,17 @@ function PlaceSelectPanel({ text, categories }) {
 
     const isPlaceAdded = (place) => {
         if (text === "숙소") return false;
-        return storedPlaces.some((p) => p.id === place.id);
+        return storedPlaces.some((p) => p.googlePlaceId === place.id);
     };
 
     return (
         <div css={S.SLayout}>
             <div css={S.SSearchBox}>
                 <SearchInput
-                    placeholder={`${text}명을 입력하세요`}
+                    placeholder={`${text === "숙소" ? "숙소" : "장소"}명을 입력하세요`}
                     onSearch={(value) => {
                         setSearchKeyword(value);
-                        value
-                            ? setSelectedCategory(null)
-                            : setSelectedCategory(categories[0]);
+                        setSelectedCategory(value ? null : categories[0]);
                     }}
                 />
             </div>
@@ -131,15 +132,16 @@ function PlaceSelectPanel({ text, categories }) {
 
                 {data?.pages.map((page, pageIndex) =>
                     page.places
-                        .filter((place) => {
-                            return (
-                                !selectedCategory || // ✅ 카테고리 선택 안 됐으면 무조건 통과
+                        .filter(
+                            (place) =>
+                                !selectedCategory ||
                                 selectedCategory === place.category
-                            );
-                        })
+                        )
                         .map((place, i) => (
                             <PlaceBox
-                                key={place.id ?? `${pageIndex}-${i}`}
+                                key={
+                                    place.googlePlaceId || place.id
+                                }
                                 place={place}
                                 onToggle={(e) => {
                                     e.stopPropagation();
@@ -177,7 +179,6 @@ function PlaceSelectPanel({ text, categories }) {
                 <AccommodationModal
                     onClose={() => setShowModal(false)}
                     onConfirm={handleAccommodationConfirm}
-                    dateRange={dateRange}
                     selectedPlace={selectedPlace}
                 />
             )}

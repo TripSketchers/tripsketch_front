@@ -1,14 +1,23 @@
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import React, { useEffect, useRef } from "react";
-import { useTrip } from "../TripContext";
+import { useTrip } from "../../Routes/TripContext";
 import { getColorByCategory } from "../../../utils/CategoryUtils";
 import { useLocation } from "react-router-dom";
 
 const GOOGLE_MAP_LIBRARIES = ["places"];
 
 function Map({ selectedStep }) {
+    const {
+        tripDestination,
+        storedPlaces,
+        storedAccommodations,
+        setPlaceModalInfo,
+        focusedPlace,
+        setFocusedPlace,
+    } = useTrip();
+
     const location = useLocation();
-    const item = location.state;
+    const { lowLat, lowLng, highLat, highLng } = tripDestination || location?.state || {};
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
@@ -17,13 +26,6 @@ function Map({ selectedStep }) {
     });
 
     const mapRef = useRef(null);
-    const {
-        storedPlaces,
-        storedAccommodations,
-        setPlaceModalInfo,
-        focusedPlace,
-        setFocusedPlace,
-    } = useTrip();
 
     const containerStyle = {
         width: "100%",
@@ -31,8 +33,8 @@ function Map({ selectedStep }) {
     };
 
     const defaultCenter = {
-        lat: (item.lowLat + item.highLat) / 2,
-        lng: (item.lowLng + item.highLng) / 2,
+        lat: (lowLat + highLat) / 2,
+        lng: (lowLng + highLng) / 2,
     };
 
     // 📍 핀 마커
@@ -70,9 +72,9 @@ function Map({ selectedStep }) {
         };
     };
 
-    // 지도 중심 이동
+    // 📌 지도 중심 이동
     useEffect(() => {
-        if (!isLoaded) return;
+        if (!isLoaded || !mapRef.current) return;
 
         const places =
             selectedStep === 2
@@ -89,13 +91,14 @@ function Map({ selectedStep }) {
     }, [
         isLoaded,
         selectedStep,
+        tripDestination,
         storedPlaces,
         storedAccommodations,
         focusedPlace,
     ]);
 
     // ✅ 아직 로딩 중이면 표시
-    if (!isLoaded || !window.google?.maps) {
+    if (!isLoaded || !window.google?.maps || !lowLat || !lowLng || !highLat || !highLng) {
         return <div>지도 불러오는 중...</div>;
     }
 
@@ -110,45 +113,41 @@ function Map({ selectedStep }) {
             }}
         >
             {selectedStep === 2 &&
-                storedPlaces.map((place, idx) =>
-                    place.location ? (
-                        <Marker
-                            key={place.id}
-                            position={{
-                                lat: place.location.latitude,
-                                lng: place.location.longitude,
-                            }}
-                            icon={createPinMarkerIcon(
-                                idx + 1,
-                                getColorByCategory(place.category)
-                            )}
-                            onClick={() => {
-                                setPlaceModalInfo(place);
-                                setFocusedPlace(place);
-                            }}
-                        />
-                    ) : null
-                )}
+                storedPlaces.map((place, idx) => (
+                    <Marker
+                        key={place.id}
+                        position={{
+                            lat: place?.location?.latitude || place?.latitude,
+                            lng: place?.location?.longitude || place?.longitude,
+                        }}
+                        icon={createPinMarkerIcon(
+                            idx + 1,
+                            getColorByCategory(place.category)
+                        )}
+                        onClick={() => {
+                            setPlaceModalInfo(place);
+                            setFocusedPlace(place);
+                        }}
+                    />
+                ))}
 
             {selectedStep === 3 &&
-                Object.values(storedAccommodations).map((place) =>
-                    place.location ? (
-                        <Marker
-                            key={place.id}
-                            position={{
-                                lat: place.location.latitude,
-                                lng: place.location.longitude,
-                            }}
-                            icon={createBedMarkerIcon(
-                                getColorByCategory(place.category)
-                            )}
-                            onClick={() => {
-                                setPlaceModalInfo(place);
-                                setFocusedPlace(place);
-                            }}
-                        />
-                    ) : null
-                )}
+                Object.values(storedAccommodations).map((place) => (
+                    <Marker
+                        key={place.id}
+                        position={{
+                            lat: place?.location?.latitude || place?.latitude,
+                            lng: place?.location?.longitude || place?.longitude,
+                        }}
+                        icon={createBedMarkerIcon(
+                            getColorByCategory(place.category)
+                        )}
+                        onClick={() => {
+                            setPlaceModalInfo(place);
+                            setFocusedPlace(place);
+                        }}
+                    />
+                ))}
         </GoogleMap>
     );
 }

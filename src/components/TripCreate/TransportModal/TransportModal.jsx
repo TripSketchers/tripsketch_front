@@ -3,9 +3,15 @@ import React, { useState } from "react";
 import * as S from "./Style";
 import ModalLayout from "../../ModalLayout/ModalLayout";
 import { FaBus, FaCar } from "react-icons/fa";
+import { useTrip } from "../../Routes/TripContext";
 
 function TransportModal({ onClose, onSelect }) {
-    const [selected, setSelected] = useState(null);
+    const { tripInfo } = useTrip();
+    const [selected, setSelected] = useState(
+        tripInfo?.transportType ?? null
+    );
+
+    const isEdit = !!tripInfo?.tripId; // tripId가 있으면 수정 모드
 
     const handleConfirm = async () => {
         if (selected !== null) {
@@ -41,7 +47,7 @@ function TransportModal({ onClose, onSelect }) {
                 onClick={handleConfirm}
                 disabled={selected === null}
             >
-                여행 생성
+                {isEdit ? "여행 수정" : "여행 생성"}
             </button>
         </ModalLayout>
     );

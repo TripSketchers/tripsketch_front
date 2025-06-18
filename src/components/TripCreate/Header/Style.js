@@ -1,5 +1,4 @@
 import { css } from "@emotion/react";
-import image from "../../../assets/w1.jpg";
 
 export const SLayout = (image) => css`
     display: flex;

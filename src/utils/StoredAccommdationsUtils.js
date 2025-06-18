@@ -1,4 +1,9 @@
-import { addDays, format, parseISO, isEqual } from "date-fns";
+import {
+	addDays,
+	format,
+	parseISO,
+	eachDayOfInterval,
+} from "date-fns";
 
 /**
  * storedAccommodations Map을 배열로 변환하면서,
@@ -9,14 +14,17 @@ import { addDays, format, parseISO, isEqual } from "date-fns";
  * @param {string} [dateToRemove] - 제거할 날짜 (예: "2025-05-14"), 없으면 전체 변환만 수행
  * @returns {Array} - [{ place, checkInDate, checkOutDate }, ...]
  */
-export function convertStoredAccommodationMapToArray(accommodationMap, dateToRemove) {
+export function convertStoredAccommodationMapToArray(
+	accommodationMap,
+	dateToRemove
+) {
 	// ✅ 날짜-숙소 쌍을 배열로 변환, 제거할 날짜는 제외
 	const dateEntries = Object.entries(accommodationMap)
 		.filter(([date]) => date !== dateToRemove) // ❌ 제거 대상 날짜 제외
 		.sort(([a], [b]) => new Date(a) - new Date(b)); // 📅 날짜 오름차순 정렬
 
-	const grouped = [];     // 최종 결과 (숙소 묶음들)
-	let current = null;     // 현재 묶고 있는 숙소 정보
+	const grouped = []; // 최종 결과 (숙소 묶음들)
+	let current = null; // 현재 묶고 있는 숙소 정보
 
 	for (let i = 0; i < dateEntries.length; i++) {
 		const [dateStr, place] = dateEntries[i];
@@ -31,8 +39,11 @@ export function convertStoredAccommodationMapToArray(accommodationMap, dateToRem
 			};
 		} else {
 			const prevCheckOut = parseISO(current.checkOutDate); // 이전 묶음의 종료일
-			const isConsecutive = isEqual(date, prevCheckOut); // 날짜 연속 여부
-			const isSamePlace = place.id === current.place.id;  // 같은 숙소인지
+			const isConsecutive =
+				format(date, "yyyy-MM-dd") ===
+				format(prevCheckOut, "yyyy-MM-dd");
+			const isSamePlace =
+				place?.googlePlaceId === current.place?.googlePlaceId;
 
 			if (isConsecutive && isSamePlace) {
 				// ✅ 같은 숙소 + 연속 날짜 → 하나의 묶음으로 연결
@@ -55,4 +66,32 @@ export function convertStoredAccommodationMapToArray(accommodationMap, dateToRem
 	if (current) grouped.push(current);
 
 	return grouped;
+}
+
+/**
+ * 서버에서 받아온 [{ place, checkInDate, checkOutDate }, ...] 데이터를
+ * 프론트에서 사용하던 날짜별 Map 형태로 변환.
+ *
+ * @param {Array} accommodations - 서버 응답 데이터
+ * @returns {Object} - { "yyyy-MM-dd": place, ... }
+ */
+export function convertArrayToAccommodationMap(accommodations) {
+	const map = {};
+
+	accommodations.forEach(({ place, checkInDate, checkOutDate }) => {
+		const start = parseISO(checkInDate);
+		const end = parseISO(checkOutDate);
+
+		const stayDates = eachDayOfInterval({
+			start,
+			end: addDays(end, -1), // checkOutDate는 마지막 날 포함 안 하니까 -1
+		});
+
+		stayDates.forEach((date) => {
+			const dateStr = format(date, "yyyy-MM-dd");
+			map[dateStr] = place;
+		});
+	});
+
+	return map;
 }

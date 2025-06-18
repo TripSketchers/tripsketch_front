@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
-import logo from "../../assets/TripSketch_가로.png";
+import logo from "../../assets/TripSketch.png";
 import * as S from "./Style";
 import { Link, useLocation } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -35,6 +35,7 @@ function Header(props) {
         <div css={S.SLayout(isScrolled, isMain)}>
             <Link to={"/"}>
                 <img src={logo} />
+                <h1>Trip Sketch</h1>
             </Link>
             <div css={S.SContainer}>
                 {!!principalState?.data?.data ? (

@@ -1,57 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import { FaCalendar } from "react-icons/fa";
-import { differenceInCalendarDays, format } from "date-fns";
-import { useTrip } from "../TripContext";
 import { useLocation } from "react-router-dom";
+import { formatDateRange } from "../../../utils/DateUtils";
+import { useTrip } from "../../Routes/TripContext";
 
 function Header({ selectedStep, onOpenModal }) {
-    const { dateRange, tripName, setTripName } = useTrip();
+    const { tripDestination, tripInfo, setTripInfo } = useTrip();
     const [isEditing, setIsEditing] = useState(false);
+	const [tempTripName, setTempTripName] = useState(tripInfo?.title || "");
 
     const location = useLocation();
-    const item = location.state;
+    const { img, koName } = tripDestination || location?.state || {};
 
-    const handleNameClick = () => {
-        setIsEditing(true);
-    };
+	// tripInfo.title이 바뀌면 tempTripName도 동기화
+	useEffect(() => {
+		setTempTripName(tripInfo?.title || "");
+	}, [tripInfo?.title]);
 
-    const handleBlur = () => {
-        setIsEditing(false);
-    };
+	const handleBlur = () => {
+		setIsEditing(false);
+		setTripInfo((prev) => ({
+			...prev,
+			title: tempTripName,
+		}));
+	};
 
-    const formatDateRange = (startDate, endDate) => {
-        if (!startDate || !endDate) return "";
-        const formattedStart = format(startDate, "yyyy.MM.dd");
-        const formattedEnd = format(endDate, "yyyy.MM.dd");
-        const duration = differenceInCalendarDays(endDate, startDate) + 1;
-        return `${formattedStart} - ${formattedEnd} (${duration}일)`;
-    };
+	const handleKeyDown = (e) => {
+		if (e.key === "Enter") {
+			e.preventDefault();
+			setIsEditing(false);
+			setTripInfo((prev) => ({
+				...prev,
+				title: tempTripName,
+			}));
+		}
+	};
+
+    if (!img || !koName) {
+        return <div>로딩 중...</div>;
+    }
 
     return (
-        <div css={S.SLayout(item.img)}>
-            <div css={S.STitle(isEditing)} onClick={handleNameClick}>
+        <div css={S.SLayout(img || "")}>
+            <div css={S.STitle(isEditing)} onClick={() => setIsEditing(true)}>
                 {isEditing ? (
                     <input
                         type="text"
-                        value={tripName}
-                        onChange={(e) => setTripName(e.target.value)}
+                        value={tempTripName}
+                        onChange={(e) => setTempTripName(e.target.value)}
                         onBlur={handleBlur}
+						onKeyDown={handleKeyDown}
                         autoFocus
                         css={S.SInput}
                     />
                 ) : (
-                    <span>{tripName}</span>
+                    <span>{tripInfo?.title || "여행 이름을 입력하세요"}</span>
                 )}
             </div>
             <div>
-                <div css={S.STripDes}>{item.koName}</div>
+                <div css={S.STripDes}>{koName}</div>
                 <div css={S.SDateBox}>
                     <div>
                         {formatDateRange(
-                            dateRange.startDate,
-                            dateRange.endDate
+							tripInfo?.startDate,
+							tripInfo?.endDate
                         )}
                     </div>
                     {selectedStep === 1 && (
