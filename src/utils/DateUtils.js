@@ -51,3 +51,8 @@ export const formatDateRange = (startDate, endDate) => {
 	const duration = differenceInCalendarDays(endDate, startDate) + 1;
 	return `${formattedStart} - ${formattedEnd} (${duration}일)`;
 };
+
+// 날짜 포맷 (yyyy-MM-dd ~ yyyy-MM-dd)
+export function tripDateFormatting(startDate, todayDate) {
+    return `${formatDate(startDate)} ~ ${formatDate(todayDate)}`;
+}

@@ -10,6 +10,8 @@ export const SMessage = css`
 	margin: 40px 0;
 	font-size: 14px;
 	color: #555;
+	white-space: pre-line;
+	line-height: 24px;
 `;
 
 export const buttonGroup = css`
