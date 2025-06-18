@@ -8,23 +8,29 @@ export const Common = css`
         box-sizing: border-box;
         font-family: 'Spoqa Han Sans Neo', 'sans-serif' !important; 
         color: #444444;
-    }
-    /* 전체 스크롤바에만 스타일 적용 */
-    html::-webkit-scrollbar {
-        width: 15px;
-    }
 
-    html::-webkit-scrollbar-track {
-        background-color: #dbdbdb;
-        border-radius: 1rem;
-    }
+        ::-webkit-scrollbar {
+            width: 14px;
+            height: 14px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            outline: none;
+            border-radius: 10px;
+            border: 4px solid transparent;
+            box-shadow: inset 6px 6px 0 rgba(34, 34, 34, 0.15);
+            cursor: pointer;
+        }
 
-    /* 스크롤바 thumb */
-    html::-webkit-scrollbar-thumb {
-        background-color: #51748b;
-        border-radius: 1rem;
-        /* Thumb을 작게 보이게 하려면 padding을 줘서 작아 보이게 하는 방식 사용 */
-        border: 3px solid #dbdbdb; /* 배경색과 동일하게 처리해 테두리처럼 보이게 */
+        ::-webkit-scrollbar-thumb:hover {
+            border: 4px solid transparent;
+            box-shadow: inset 6px 6px 0 rgba(34, 34, 34, 0.3);
+        }
+
+        ::-webkit-scrollbar-track {
+            box-shadow: none;
+            background-color: transparent;
+        }
     }
 
     a {

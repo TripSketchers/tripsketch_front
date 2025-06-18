@@ -4,30 +4,13 @@ import * as S from "./Style";
 import fallbackImg from "../../../assets/fallbackImg.png";
 import { FaStar } from "react-icons/fa";
 import { FaPlus, FaCheck } from "react-icons/fa6";
-import { instance } from "../../../api/config/instance";
-import { useTrip } from "../../TripCreate/TripContext";
+import { useTrip } from "../../Routes/TripContext";
+import { getImageBlobUrl } from "../../../utils/ImageUtils";
 
 function PlaceBox({ place, onToggle, isAdded }) {
 	const imgRef = useRef();
 	const [imgSrc, setImgSrc] = useState(place.imageUrl || null); // ✅ place.imageUrl 먼저 확인
 	const { setPlaceModalInfo } = useTrip();
-
-	// ✅ 백엔드를 통해서 blob 이미지를 가져오는 함수
-	const getImageBlobUrl = async (photoReference) => {
-		if (!photoReference) return "";
-		try {
-			const res = await instance.get(`/photo?ref=${photoReference}`, {
-				headers: {
-					Authorization: localStorage.getItem("accessToken"),
-				},
-				responseType: "blob",
-			});
-			return URL.createObjectURL(res.data);
-		} catch (err) {
-			console.error("이미지 로딩 실패", err);
-			return "";
-		}
-	};
 
 	useEffect(() => {
 		if (imgSrc) return; // ✅ imageUrl 이미 있으면 요청 X
@@ -37,9 +20,9 @@ function PlaceBox({ place, onToggle, isAdded }) {
 			([entry]) => {
 				if (entry.isIntersecting) {
 					const loadImage = async () => {
-						if (place.photos?.[0]?.name) {
+						if (place.photos?.[0]?.name || place.photoReference) {
 							const blobUrl = await getImageBlobUrl(
-								place.photos[0].name
+								place.photos[0].name || place.photoReference
 							);
 							setImgSrc(blobUrl);
 							place.imageUrl = blobUrl; // ✅ place 객체에 저장

@@ -4,7 +4,7 @@ import * as S from "./Style";
 import { IoSearch } from "react-icons/io5";
 
 function SearchInput({ placeholder, onSearch, setIsShow }) {
-    const [searchValue, setSearchValue] = useState(null);
+    const [searchValue, setSearchValue] = useState("");
 
     const handleChange = (e) => {
         setSearchValue(e.target.value); // 입력값 업데이트

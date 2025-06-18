@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import Header from "../Header/Header";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
@@ -6,7 +7,11 @@ import TripDate from "../TripDate/TripDate";
 import TripStepPanel from "../TripStepPanel/TripStepPanel";
 
 function TripSelectContainer({ selectedStep }) {
-	const [showModal, setShowModal] = useState(true);
+	const location = useLocation();
+	// editMode면 false, 아니면 true
+	const [showModal, setShowModal] = useState(
+		location.state?.editMode ? false : true
+	);
 
 	return (
 		<div css={S.SLayout(selectedStep)}>

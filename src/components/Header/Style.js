@@ -6,6 +6,7 @@ export const SLayout = (isScrolled, isMain) => css`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 30px;
     width: 100%;
     height: 100px;
     background-color: transparent;
@@ -15,8 +16,28 @@ export const SLayout = (isScrolled, isMain) => css`
         : "background-color: transparent;"};
     transition: background-color 0.3s, color 0.3s;
 
+    a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
+
     img {
-        height: 100px;
+        height: 90px;
+    }
+
+    h1 {
+        font-size: 45px;
+        font-weight: 400;
+        margin-left: 10px;
+        font-family: "Ultra", serif !important;
+        ${(isMain && !!isScrolled) || !isMain
+            ? "color: #a1c8f6;"
+            : "color: white;"}
+        ${(isMain && !!isScrolled) || !isMain
+            ? ""
+            : "text-shadow: 2px 2px 4px rgb(135, 135, 135);"}
+        
     }
 
     .loginName, path {
@@ -27,7 +48,7 @@ export const SLayout = (isScrolled, isMain) => css`
 `;
 
 export const SContainer = css`
-    margin-right: 30px;
+    /* margin-right: 30px; */
 `;
 
 export const SLoginBox = css`

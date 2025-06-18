@@ -32,12 +32,12 @@ export const SIndexBox = css`
     color: rgb(170, 170, 170);
 `;
 
-export const SInfoContainer = (isPlace) => css`
+export const SInfoContainer = css`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     margin: 0 5px 0 10px;
-    width: ${isPlace ? "70px" : "150px"};
+    width: 150px;
     height: 100%;
     span {
         line-height: 16px;
