@@ -44,7 +44,7 @@ function PlaceSelectPanel({ text, categories }) {
         isLoading,
         error,
     } = useInfiniteQuery({
-        queryKey: ["places", selectedCategory, searchKeyword],
+        queryKey: ["places", selectedCategory, searchKeyword, lowLat, lowLng, highLat, highLng],
         queryFn: async ({ pageParam = "" }) => {
             const res = await instance.get("/places", {
                 params: {
@@ -100,7 +100,7 @@ function PlaceSelectPanel({ text, categories }) {
     const isPlaceAdded = (place) => {
         if (text === "숙소") return false;
         return storedPlaces.some((p) => p.googlePlaceId === place.id);
-    };
+    };    
 
     return (
         <div css={S.SLayout}>

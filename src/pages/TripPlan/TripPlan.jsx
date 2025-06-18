@@ -178,10 +178,6 @@ function TripPlan() {
         }
     };
 
-	useEffect(() => {
-		fetchTripInfo();
-	}, []);
-
 	const handleSaveStoredPlaces = async () => {
 		const formattedPlaces = storedPlaces.map((place) => ({
 			place: {
@@ -209,6 +205,10 @@ function TripPlan() {
 		// 저장 후 최신 데이터 다시 불러오기
 		await fetchTripInfo();
 	};
+
+	useEffect(() => {
+		fetchTripInfo();
+	}, []);
 
 	return (
 		<NavLayout>
