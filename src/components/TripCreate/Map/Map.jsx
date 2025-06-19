@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { useTrip } from "../../Routes/TripContext";
 import { getColorByCategory } from "../../../utils/CategoryUtils";
 import { useLocation } from "react-router-dom";
+import Loading from "../../Loading/Loading";
 
 const GOOGLE_MAP_LIBRARIES = ["places"];
 
@@ -99,7 +100,7 @@ function Map({ selectedStep }) {
 
     // ✅ 아직 로딩 중이면 표시
     if (!isLoaded || !window.google?.maps || !lowLat || !lowLng || !highLat || !highLng) {
-        return <div>지도 불러오는 중...</div>;
+        return <Loading content={"지도 정보 불러오는 중..."}/>;
     }
 
     return (
