@@ -330,8 +330,17 @@ function Map({ selectedStep }) {
 										  )
 								}
 								onClick={() => {
-									setPlaceModalInfo(schedule.place);
-									setFocusedPlace(schedule.place);
+									const matched = storedPlaces.find(
+										(p) => p.googlePlaceId === schedule.place.googlePlaceId
+									);
+									const enrichedPlace = matched?.imageUrl
+										? {
+												...schedule.place,
+												imageUrl: matched.imageUrl,
+										  }
+										: schedule.place;
+									setPlaceModalInfo(enrichedPlace);
+									setFocusedPlace(enrichedPlace);
 								}}
 							/>
 						);
