@@ -13,6 +13,8 @@ export function TripProvider({ children }) {
     const [placeModalInfo, setPlaceModalInfo] = useState(null);
     const [focusedPlace, setFocusedPlace] = useState(null);
 
+    const [selectedDayIdx, setSelectedDayIdx] = useState(null); // 선택된 일차 인덱스
+
     return (
         <TripContext.Provider
             value={{
@@ -30,6 +32,8 @@ export function TripProvider({ children }) {
                 setPlaceModalInfo,
                 focusedPlace,
                 setFocusedPlace,
+                selectedDayIdx,
+                setSelectedDayIdx
             }}
         >
             {children}

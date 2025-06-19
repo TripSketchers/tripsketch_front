@@ -48,7 +48,7 @@ function ScheduleCard({
 	const [popupPosition, setPopupPosition] = useState("below");
 	const cardRef = useRef(null);
 
-	const { schedules } = useTrip();
+	const { schedules, setFocusedPlace, setSelectedDayIdx } = useTrip();
 	const { handleMouseDown } = useScheduleResizeHandler({
 		schedules,
 		setIsResizing,
@@ -58,7 +58,8 @@ function ScheduleCard({
 	// 🐭 DnD 드래그 설정
 	const [{ isDragging }, dragRef] = useDrag({
 		type: "SCHEDULE",
-		canDrag: () => !isLocked && !showEditor && !isResizing && !showPlaceSelectPanel,
+		canDrag: () =>
+			!isLocked && !showEditor && !isResizing && !showPlaceSelectPanel,
 		collect: (monitor) => ({
 			isDragging: monitor.isDragging(),
 		}),
@@ -111,10 +112,18 @@ function ScheduleCard({
 				top: `${topPx}px`,
 				height: `${heightPx}px`,
 				opacity: isDragging ? 0.5 : 1,
-				cursor: isLocked || showPlaceSelectPanel ? "not-allowed" : "move",
+				cursor:
+					isLocked || showPlaceSelectPanel ? "not-allowed" : "move",
 				userSelect: "none",
 			}}
-			onClick={handleEditClick}
+			onClick={() => {
+				// ✅ 클릭 시 해당 장소를 focusedPlace로 설정 (지도에서 panTo)
+				if (place) {
+					setFocusedPlace(place);
+					setSelectedDayIdx(null);
+				}
+				handleEditClick({ stopPropagation: () => {} });
+			}}
 		>
 			{/* 🔼 상단 리사이즈 핸들 */}
 			<div

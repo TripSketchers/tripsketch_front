@@ -237,7 +237,7 @@ function TripPlan() {
 													text={"계획"}
 													categories={categories}
 												/>
-												<PlaceDetailModal />
+												
 											</>
 										)}
 										<StoredPlacePanel
@@ -271,9 +271,10 @@ function TripPlan() {
 						</div>
 					</div>
 					<div css={S.SMapContainer}>
-						<Map selectedStep={2} />
+						<Map selectedStep={4} />
 					</div>
 				</Split>
+                <PlaceDetailModal />
 			</div>
 		</NavLayout>
 	);

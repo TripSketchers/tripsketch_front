@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from "react";
 import { useDrop } from "react-dnd";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-// ✅ calculateEndTime 삭제, minutesToTime/timeToMinutes 조합으로 대체
 import { minutesToTime, timeToMinutes } from "../../../utils/ScheduleTimeUtils";
 import { useTrip } from "../../Routes/TripContext";
 
@@ -12,10 +11,10 @@ const OFFSET_MINUTES = 360; // 새벽 6시 (360분)
 
 // 📥 DropZone 컴포넌트 (일정 드롭 가능 영역)
 function DropZone({ date, index, onDrop, children }) {
-    const { tripInfo } = useTrip(); // 여행 정보 가져오기
-	const dropBodyRef = useRef(null); // 드롭 영역 DOM 참조
-	const [previewTop, setPreviewTop] = useState(null); // 미리보기 위치 (Y 좌표)
-	const [previewHeight, setPreviewHeight] = useState(null); // 미리보기 높이
+    const { tripInfo, selectedDayIdx, setSelectedDayIdx, setFocusedPlace } = useTrip(); // ✅ useTrip에서 상태 사용
+    const dropBodyRef = useRef(null); // 드롭 영역 DOM 참조
+    const [previewTop, setPreviewTop] = useState(null); // 미리보기 위치 (Y 좌표)
+    const [previewHeight, setPreviewHeight] = useState(null); // 미리보기 높이
 
 	// 🕒 마우스 위치를 시간으로 변환
 	const calculateTimeFromPosition = (clientY, sourceY, containerTop) => {
@@ -126,7 +125,14 @@ function DropZone({ date, index, onDrop, children }) {
 	return (
 		<div css={S.SDayColumn}>
 			{/* 📅 날짜 헤더 */}
-			<div css={S.SDayHeader}>
+			<div
+				css={S.SDayHeader(selectedDayIdx === index)}
+				onClick={() => {
+					// 이미 선택된 일차를 다시 클릭하면 전체 보기(null)
+					setSelectedDayIdx(selectedDayIdx === index ? null : index);
+                    setFocusedPlace(null); // 선택된 장소 초기화
+				}}
+			>
 				{index + 1}일차 {date}
 			</div>
 

@@ -16,7 +16,7 @@ function PlaceDetailModal() {
 			<div css={S.SModalWrapper}>
 				<div css={S.SInfoBox}>
 					<h2 css={S.STitle}>
-						{placeModalInfo.displayName?.text || "이름 없음"}
+						{placeModalInfo.displayName?.text || placeModalInfo.name || "이름 없음"}
 					</h2>
 					{placeModalInfo.rating && (
 						<div css={S.SLikeBox}>
@@ -32,7 +32,7 @@ function PlaceDetailModal() {
 						📌 {placeModalInfo.category || "카테고리 없음"}
 					</p>
 					<p css={S.SAddress}>
-						주소 : {placeModalInfo.formattedAddress || "주소 정보 없음"}
+						주소 : {placeModalInfo.formattedAddress || placeModalInfo.address || "주소 정보 없음"}
 					</p>
 					<button
 						css={S.SCloseBtn}
