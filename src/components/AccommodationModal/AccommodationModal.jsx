@@ -11,11 +11,15 @@ import ModalLayout from "../ModalLayout/ModalLayout";
 function AccommodationModal({ onClose, onConfirm, selectedPlace }) {
     const { tripInfo, storedAccommodations } = useTrip();
 
+    const toKSTDate = (dateStr) => {
+        return new Date(dateStr + "T00:00:00+09:00");
+    }
+
     const stayDays =
         tripInfo?.startDate && tripInfo?.endDate
             ? eachDayOfInterval({
-                  start: new Date(tripInfo.startDate),
-                  end: addDays(new Date(tripInfo.endDate), -1),
+                  start: toKSTDate(tripInfo.startDate),
+                  end: addDays(toKSTDate(tripInfo.endDate), -1),
               })
             : [];
 

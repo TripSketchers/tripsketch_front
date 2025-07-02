@@ -9,7 +9,7 @@ export const SDayColumn = css`
     flex-grow: 1;
 `;
 
-export const SDayHeader = css`
+export const SDayHeader = (isSelected) => css`
 	position: sticky;
 	top: 0;
 	z-index: 5;
@@ -17,9 +17,10 @@ export const SDayHeader = css`
 	text-align: center;
 	line-height: 40px;
 	font-weight: bold;
-	background-color: white;
+	background-color: ${isSelected ? "#cccccc" : "white"};
+    ${isSelected && "color: white;"}
 	border-bottom: 1px solid #ccc;
-    pointer-events: none; // 자식 요소에서만 이벤트 처리
+    cursor: pointer;
 `;
 
 export const SDropBody = css`

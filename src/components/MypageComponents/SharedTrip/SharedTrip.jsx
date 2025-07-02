@@ -7,6 +7,7 @@ import TripCard from "../../TripCard/TripCard";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../../Pagination/Pagination";
 import { getDday, tripDateFormatting } from "../../../utils/DateUtils";
+import Loading from "../../Loading/Loading";
 
 function SharedTrip({ filterType }) {
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ function SharedTrip({ filterType }) {
     });
 
     if (getTripInvitations.isLoading) {
-        return <div>로딩 중...</div>;
+        return <Loading />;
     }
 
     if (getTripInvitations.isError || !getTripInvitations.data?.data) {

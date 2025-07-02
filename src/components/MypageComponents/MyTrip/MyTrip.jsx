@@ -7,6 +7,7 @@ import { instance } from "../../../api/config/instance";
 import TripCard from "../../TripCard/TripCard";
 import { getDday, tripDateFormatting } from "../../../utils/DateUtils";
 import Pagination from "../../Pagination/Pagination";
+import Loading from "../../Loading/Loading";
 
 function MyTrip({ filterType }) {
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ function MyTrip({ filterType }) {
     });
 
     if (getTripsQuery.isLoading || !getTripsQuery.data?.data)
-        return <div>로딩 중...</div>;
+        return <Loading />;
     if(getTripsQuery.data?.data.length == 0) {
         return <div>생성한 여행이 존재하지 않습니다.</div>;
     }

@@ -5,6 +5,7 @@ import { FaCalendar } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { formatDateRange } from "../../../utils/DateUtils";
 import { useTrip } from "../../Routes/TripContext";
+import Loading from "../../Loading/Loading";
 
 function Header({ selectedStep, onOpenModal }) {
     const { tripDestination, tripInfo, setTripInfo } = useTrip();
@@ -39,7 +40,7 @@ function Header({ selectedStep, onOpenModal }) {
 	};
 
     if (!img || !koName) {
-        return <div>로딩 중...</div>;
+        return <Loading />;
     }
 
     return (

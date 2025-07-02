@@ -64,6 +64,8 @@ export const STimeRow = css`
 
 export const STrashDropZone = css`
 	position: sticky;
+    left:0; 
+    right:0;
 	bottom: 0;
 	height: 0; // 공간 확보
 	display: flex;
