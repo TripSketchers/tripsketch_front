@@ -46,14 +46,19 @@ function TripAlbumUpload() {
             navigate("/auth/signin");
             return;
         }
-        setIsLoading(true); // 로딩 시작
         const photos = await getAllPhotos(); //IndexedDB에서 사진 가져오기
-
+        
         if (photos.length === 0) {
             alert("업로드할 사진이 없어요!");
             return;
         }
-
+        if (selectedPlaceId.length === 0) {
+            alert("장소를 선택해주세요!");
+            return;
+        }
+        
+        setIsLoading(true); // 로딩 시작
+        
         try {
             const uploadPromises = photos.map(async (photo) => {
                 const storageRef = ref(
@@ -97,7 +102,7 @@ function TripAlbumUpload() {
         <NavLayout>
             <NavContainer>
                 {isLoading ? (
-                    <Loading />
+                    <Loading content={"업로드 중입니다. 잠시만 기다려주세요!"}/>
                 ) : (
                     <div css={S.SLayout}>
                         <div css={S.SLeftContainer}>

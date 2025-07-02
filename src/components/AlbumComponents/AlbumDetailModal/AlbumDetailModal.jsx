@@ -8,22 +8,15 @@ import { instance } from "../../../api/config/instance";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import ConfirmModal from "../../ConfirmModal/ConfirmModal";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
+import SwalAlert from "../../SwalAlert/SwalAlert";
 
 function AlbumDetailModal({ photo, onClose }) {
     const { tripId } = useParams();
     const queryClient = useQueryClient();
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [memo, setMemo] = useState(photo.memo); // 메모 상태
     const [isEditing, setIsEditing] = useState(false); // 편집 모드
-
-    const handleEditBtn = () => {
-        setIsEditing(true);
-    };
-
-    const handleMemoChange = (e) => {
-        setMemo(e.target.value);
-    };
 
     const handleDelete = async () => {
         try {
@@ -36,12 +29,6 @@ function AlbumDetailModal({ photo, onClose }) {
                 `/trips/${tripId}/album/photos/${photo.photoId}`,
                 option
             );
-            Swal.fire({
-                icon: "success",
-                title: "사진 삭제 완료!",
-                text: "사진 삭제가 성공적으로 처리되었습니다.",
-            });
-            setIsEditing(false); // 편집 모드 종료
             onClose();
             queryClient.invalidateQueries(["getAlbum", tripId]);
         } catch (error) {
@@ -62,11 +49,34 @@ function AlbumDetailModal({ photo, onClose }) {
                 memo,
                 option
             );
-            alert("사진 메모 수정 완료!");
+            SwalAlert({
+                title: "사진 메모 수정 완료!",
+                icon: "success",
+            });
             setIsEditing(false); // 편집 모드 종료
+            queryClient.invalidateQueries(["getAlbum", tripId]);
         } catch (error) {
             alert(error.response.data.sendFail);
         }
+    };
+
+    const handleDeleteConfirm = () => {
+        SwalAlert({
+            title: "사진을 삭제하시겠어요?",
+            text: "삭제 시 복구할 수 없습니다.",
+            icon: "warning",
+            confirmButtonText: "삭제",
+            cancelButtonText: "취소",
+            showCancelButton: true,
+            onConfirm: () => {
+                handleDelete();
+                Swal.fire({
+                    icon: "success",
+                    title: "삭제 완료",
+                    text: "사진이 성공적으로 삭제되었습니다.",
+                });
+            },
+        });
     };
 
     return (
@@ -88,7 +98,7 @@ function AlbumDetailModal({ photo, onClose }) {
                             <textarea
                                 autoFocus
                                 value={memo}
-                                onChange={handleMemoChange}
+                                onChange={(e) => setMemo(e.target.value)}
                                 placeholder="사진에 대한 추억을 적어보세요!"
                             />
                         )}
@@ -101,11 +111,14 @@ function AlbumDetailModal({ photo, onClose }) {
                             <div>
                                 <button
                                     css={S.deleteBtn}
-                                    onClick={() => setIsModalOpen(true)}
+                                    onClick={handleDeleteConfirm}
                                 >
                                     <FaTrash />
                                 </button>
-                                <button css={S.editBtn} onClick={handleEditBtn}>
+                                <button
+                                    css={S.editBtn}
+                                    onClick={() => setIsEditing(true)}
+                                >
                                     <MdEdit />
                                 </button>
                             </div>
@@ -129,15 +142,6 @@ function AlbumDetailModal({ photo, onClose }) {
                         )}
                     </div>
                 </div>
-                {isModalOpen && (
-                    <ConfirmModal
-                        title="사진을 삭제하시겠어요?"
-                        message="삭제 시 복구할 수 없습니다."
-                        confirmText="삭제"
-                        onClose={() => setIsModalOpen(false)}
-                        onConfirm={handleDelete}
-                    />
-                )}
             </div>
         </div>
     );

@@ -64,7 +64,16 @@ function PhotoBox({
                         )}
                         <div
                             css={S.wrapper}
-                            onClick={() => handlePhotoClick(photo, album)}
+                            onClick={() => {
+                                if (selectMode) {
+                                    handleCheckboxChange(
+                                        photo.photoId,
+                                        album.albumId
+                                    );
+                                } else {
+                                    handlePhotoClick(photo, album);
+                                }
+                            }}
                         >
                             {!isLoaded && <div css={S.placeholder} />}
                             <img

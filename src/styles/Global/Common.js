@@ -1,19 +1,20 @@
-import { css } from '@emotion/react';
-import reset from 'styled-reset';
+import { css } from "@emotion/react";
+import reset from "styled-reset";
 /** @jsxImportSource @emotion/react */
+import colors from "../../constants/color";
 
 export const Common = css`
     ${reset}
     * {
         box-sizing: border-box;
-        font-family: 'Spoqa Han Sans Neo', 'sans-serif' !important; 
+        font-family: "Spoqa Han Sans Neo", "sans-serif" !important;
         color: #444444;
 
         ::-webkit-scrollbar {
             width: 14px;
             height: 14px;
         }
-        
+
         ::-webkit-scrollbar-thumb {
             outline: none;
             border-radius: 10px;
@@ -42,14 +43,43 @@ export const Common = css`
         cursor: pointer;
     }
 
-    button{
-        background: inherit ; 
-        border:none; 
-        box-shadow:none; 
-        border-radius:0; 
-        padding:0; 
-        overflow:visible; 
-        cursor:pointer;
+    button {
+        background: inherit;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+        overflow: visible;
+        cursor: pointer;
     }
-    
+
+    .my-swal-popup {
+        font-family: "Spoqa Han Sans Neo", sans-serif;
+        font-size: 16px;
+        border-radius: 1.5rem;
+        padding: 2rem;
+    }
+
+    .swal2-icon {
+        margin: 0 auto 20px auto; /* 위아래 마진 재조정 */
+        transform: none !important; /* 위치 비틀림 제거 */
+    }
+
+    .my-swal-confirm {
+        background-color: ${colors.primaryButton};
+        color: white;
+
+        &:hover {
+            background-color:  ${colors.primaryButtonHover};
+        }
+    }
+
+    .my-swal-cancel {
+        background-color: ${colors.primaryCancelButton};
+        color: white;
+
+        &:hover {
+            background-color:  ${colors.primaryCancelButtonHover};
+        }
+    }
 `;

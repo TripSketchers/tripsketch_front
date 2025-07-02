@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as S from "./Style";
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
 import { IoMdMore } from "react-icons/io";
+import SwalAlert from "../SwalAlert/SwalAlert";
 
 function TogglePanel({ triggerIcon, menuItems }) {
     const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -30,9 +31,23 @@ function TogglePanel({ triggerIcon, menuItems }) {
         e.stopPropagation();
         if (item.confirm) {
             // 이 메뉴는 모달 띄우기
-            setSelectedAction(() => item.action);
-            setSelectedConfirmInfo(item.confirm);
-            setIsModalOpen(true);
+            // setSelectedAction(() => item.action);
+            // setSelectedConfirmInfo(item.confirm);
+            SwalAlert({
+                title: "앨범을 삭제하시겠어요?",
+                text: "앨범 안의 사진도 모두 삭제됩니다.",
+                icon: "warning",
+                confirmButtonText: "삭제",
+                showCancelButton: true,
+                onConfirm: () => {
+                    item.action(e);
+                    SwalAlert({
+                        icon: "success",
+                        title: "삭제 완료",
+                        text: "사진이 성공적으로 삭제되었습니다.",
+                    });
+                },
+            });
         } else {
             // 그냥 바로 액션 실행
             item.action(e);

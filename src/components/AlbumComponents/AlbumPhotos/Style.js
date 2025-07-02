@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors from "../../../constants/color";
 
 export const SLayout = css`
     position: relative;
@@ -7,7 +8,7 @@ export const SLayout = css`
 
 export const SSelectMode = css`
     position: absolute;
-    top: 0;
+    top: -5px;
     right: 0;
     z-index: 1;
 
@@ -18,10 +19,10 @@ export const SSelectMode = css`
     button {
         display: flex;
         align-items: center;
-        font-size: 16px;
-        background-color: #51748b;
+        font-size: 14px;
+        background-color: ${colors.primaryButton};
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-        padding: 5px;
+        padding: 5px 10px;
         border-radius: 10px;
         color: white;
 
@@ -30,7 +31,7 @@ export const SSelectMode = css`
         }
 
         :hover {
-            background-color: rgb(47, 102, 136);
+            background-color: ${colors.primaryButtonHover};
             color:rgb(211, 13, 13);
             * {
                 color: rgb(211, 13, 13);
@@ -45,6 +46,10 @@ export const SSelectMode = css`
 
     .cancel:hover {
         color: #dbdbdb;
+    }
+
+    svg {
+        margin-right: 5px;
     }
 `;
 

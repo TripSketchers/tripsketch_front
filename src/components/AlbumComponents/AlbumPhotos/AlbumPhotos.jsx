@@ -6,7 +6,7 @@ import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { FaTrash } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
 import PhotoBox from "./PhotoBox/PhotoBox";
-import Swal from "sweetalert2";
+import SwalAlert from "../../SwalAlert/SwalAlert";
 
 function AlbumPhotos({ albums }) {
     const { tripId } = useParams();
@@ -81,6 +81,25 @@ function AlbumPhotos({ albums }) {
             staleTime: Infinity,
         })),
     });
+
+    const handleDeleteConfirm = () => {
+        SwalAlert({
+            title: "사진을 삭제하시겠어요?",
+            text: "삭제 시 복구할 수 없습니다.",
+            icon: "warning",
+            confirmButtonText: "삭제",
+            showCancelButton: true,
+            onConfirm: () => {
+                handleDeleteSelected();
+                SwalAlert({
+                    icon: "success",
+                    title: "삭제 완료",
+                    text: "사진이 성공적으로 삭제되었습니다.",
+                });
+            },
+        });
+    };
+
     const handleDeleteSelected = async () => {
         try {
             const option = {
@@ -96,12 +115,6 @@ function AlbumPhotos({ albums }) {
                 }),
             };
             await instance.delete(`/trips/${tripId}/album/photos`, option);
-            // alert(`사진 삭제 완료`);
-            Swal.fire({
-                icon: "success",
-                title: "사진 삭제 완료!",
-                text: "사진 삭제가 성공적으로 처리되었습니다.",
-            });
             queryClient.invalidateQueries(["getAlbum", tripId]);
         } catch (error) {
             console.log(error);
@@ -111,7 +124,7 @@ function AlbumPhotos({ albums }) {
         setSelectMode(false);
     };
 
-    const handlePhotoSelectAll = () => {
+    const handlePhotoSelectAll = () => {    //전체 선택
         const newSet = new Set();
 
         if (!isAllChecked) {
@@ -150,7 +163,7 @@ function AlbumPhotos({ albums }) {
                                 checked={isAllChecked}
                                 onClick={handlePhotoSelectAll}
                             />
-                            <button onClick={handleDeleteSelected}>
+                            <button onClick={handleDeleteConfirm}>
                                 <FaTrash /> 삭제
                             </button>
                             <button
