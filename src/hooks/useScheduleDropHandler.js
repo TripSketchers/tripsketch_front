@@ -1,3 +1,4 @@
+import { drop } from "lodash";
 import {
 	initScheduleHandler,
 	splitAndSetSchedule,
@@ -68,6 +69,7 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 			startTime: minutesToTime(dropStartAbs),
 			endTime: minutesToTime(dropStartAbs + totalStayTime),
 			date: dropDate,
+            place: droppedItem.place
 		};
 
 		// 3️⃣ 삽입 후 정렬
@@ -90,21 +92,23 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 			tripInfo?.transportType
 		);
 
-		travelResults.forEach((res) => {
-			const idxList = tempSchedules
-				.map((s, i) => ({ schedule: s, index: i }))
-				.filter((s) => s.schedule.tripScheduleId === res.from);
+		travelResults
+            .filter((res) => res && typeof res === "object" && "from" in res)
+            .forEach((res) => {
+                const idxList = tempSchedules
+                    .map((s, i) => ({ schedule: s, index: i }))
+                    .filter((s) => s.schedule.tripScheduleId === res?.from);
 
-			if (idxList.length > 1) {
-				// split된 경우, 두 번째 스케줄에만 travelTime 부여
-				tempSchedules[idxList[1].index].travelTime =
-					res?.travelTime ?? 0;
-			} else if (idxList.length === 1) {
-				// 일반 스케줄은 그대로 적용
-				tempSchedules[idxList[0].index].travelTime =
-					res?.travelTime ?? 0;
-			}
-		});
+                if (idxList.length > 1) {
+                    // split된 경우, 두 번째 스케줄에만 travelTime 부여
+                    tempSchedules[idxList[1].index].travelTime =
+                        res?.travelTime ?? 0;
+                } else if (idxList.length === 1) {
+                    // 일반 스케줄은 그대로 적용
+                    tempSchedules[idxList[0].index].travelTime =
+                        res?.travelTime ?? 0;
+                }
+            });
 
 		// ✅ 날짜별 마지막 스케줄 travelTime = 0 설정
 		if (tempSchedules.length > 0) {

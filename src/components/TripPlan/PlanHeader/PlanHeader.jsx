@@ -12,7 +12,7 @@ function PlanHeader() {
     const navigate = useNavigate();
 
     if (!tripDestination?.img) {
-        return <div>로딩 중...</div>;
+        return <></>;
     }
 
     return (
