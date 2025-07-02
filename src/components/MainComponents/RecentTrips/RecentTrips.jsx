@@ -63,6 +63,8 @@ function RecentTrips() {
         refetchOnWindowFocus: false,
     });
 
+    console.log("getRecentAlbums", getRecentAlbums);
+
     return (
         <div css={S.SLayout}>
             <div css={S.SContainer}>

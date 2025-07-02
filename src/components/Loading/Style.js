@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors  from "../../constants/color";
 
 export const SLayout = css`
     /*
@@ -32,7 +33,7 @@ export const SLayout = css`
         width: 0.6em;
         height: 0.6em;
         margin: 0.19em;
-        background: #cdffd8;
+        background: ${colors.loading1};
         border-radius: 0.6em;
         animation: loading 1s infinite alternate;
     }
@@ -42,27 +43,27 @@ export const SLayout = css`
  * Smarter targeting vs nth-of-type?
  */
     .loading span:nth-of-type(2) {
-        background: #c1f0e1;
+        background: ${colors.loading2};
         animation-delay: 0.2s;
     }
     .loading span:nth-of-type(3) {
-        background: #b9e6e5;
+        background: ${colors.loading3};
         animation-delay: 0.4s;
     }
     .loading span:nth-of-type(4) {
-        background: #b0dcec;
+        background: ${colors.loading4};
         animation-delay: 0.6s;
     }
     .loading span:nth-of-type(5) {
-        background: #a6d0f2;
+        background: ${colors.loading5};
         animation-delay: 0.8s;
     }
     .loading span:nth-of-type(6) {
-        background: #9fc7f7;
+        background: ${colors.loading6};
         animation-delay: 1s;
     }
     .loading span:nth-of-type(7) {
-        background: #94b9ff;
+        background: ${colors.loading7};
         animation-delay: 1.2s;
     }
 

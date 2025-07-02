@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
@@ -11,8 +11,34 @@ import Loading from "../../Loading/Loading";
 
 function MyTrip({ filterType }) {
     const navigate = useNavigate();
+    const containerRef = useRef(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 20; // 한 페이지에 보여줄 여행 카드 개수
+    const [itemsPerPage, setItemsPerPage] = useState(20); // 한 페이지에 보여줄 여행 카드 개수
+
+    const calculateItemsPerPage = () => {
+    if (!containerRef.current) return;
+
+    const containerWidth = containerRef.current.clientWidth;
+    const containerHeight = window.innerHeight - 200; // 상단 영역 제외 등
+
+    const cardWidth = 190 + 20; // 카드 + gap
+    const cardHeight = 190 + 20;
+
+    const cardsPerRow = Math.floor(containerWidth / cardWidth);
+    const rows = Math.floor(containerHeight / cardHeight);
+
+    const total = cardsPerRow * rows;
+    setItemsPerPage(total);
+  };
+
+  // 최초 한 번 + resize 될 때마다 실행
+  useEffect(() => {
+    calculateItemsPerPage(); // 초기 실행
+
+    window.addEventListener("resize", calculateItemsPerPage);
+    return () => window.removeEventListener("resize", calculateItemsPerPage);
+  }, []);
+
 
     const getTripsQuery = useQuery({
         queryKey: ["getTripsByUserId"],
@@ -53,7 +79,7 @@ function MyTrip({ filterType }) {
 
     return (
         <>
-            <div css={S.STripBox}>
+            <div css={S.STripBox} ref={containerRef}>
                 {currentTrips?.map((trip) => (
                     <TripCard
                         onClick={() => {

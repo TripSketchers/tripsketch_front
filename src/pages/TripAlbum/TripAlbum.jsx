@@ -6,16 +6,19 @@ import AlbumFolder from "../../components/AlbumComponents/AlbumFolder/AlbumFolde
 import NavContainer from "../../components/NavComponents/NavContainer/NavContainer";
 import { Link, useLocation, useParams } from "react-router-dom";
 import AlbumWhole from "../../components/AlbumComponents/AlbumWhole/AlbumWhole";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { instance } from "../../api/config/instance";
 import { HiPlus } from "react-icons/hi";
 import { getNday } from "../../utils/DateUtils";
 import useFirebaseAuth from "../../hooks/useFirebaseAuth";
 import Loading from "../../components/Loading/Loading";
+import { useTrip } from "../../components/Routes/TripContext";
 
 function TripAlbum(props) {
     const { firebaseUser, loading } = useFirebaseAuth();
+    const queryClient = useQueryClient();
     const { tripId } = useParams();
+    const { tripInfo } = useTrip();
     const location = useLocation();
 
     // 상태로 전달된 값 읽기
@@ -26,6 +29,24 @@ function TripAlbum(props) {
     const [showSorting, setShowSorting] = useState(true);
 
     console.log(firebaseUser);
+
+    useEffect(() => {
+        queryClient.prefetchQuery({
+            queryKey: ["getTripSchedule", tripId],
+            queryFn: async () => {
+                const options = {
+                    headers: {
+                        Authorization: localStorage.getItem("accessToken"),
+                    },
+                };
+                const res = await instance.get(
+                    `/trips/${tripId}/schedules`,
+                    options
+                );
+                return res.data;
+            },
+        });
+    }, [tripId, queryClient]);
 
     const handleRadioChange = (event) => {
         setViewType(event.target.value === "Whole" ? 0 : 1);
@@ -77,24 +98,25 @@ function TripAlbum(props) {
               })
         : [];
 
-    if (!firebaseUser || loading) { // 로그인 안했거나 로딩 중일 때
+    if (!firebaseUser || loading || getAlbum.isLoading) {
+        // 로그인 안했거나 로딩 중일 때
         const intro = loading ? "로딩 중..." : "로그인 후 이용 가능합니다.";
         return (
             <NavLayout>
                 <NavContainer>
-                    <Loading content={loading}/>
+                    <Loading content={loading} />
                 </NavContainer>
             </NavLayout>
         );
     }
+    console.log("앨범 데이터:", getAlbum.data);
 
-    if (getAlbum.isLoading) return <Loading />;
     if (getAlbum.isError) return <div>데이터를 불러오지 못했습니다.</div>;
 
     return (
         <NavLayout>
             <NavContainer>
-                <h1>여행 이름</h1>
+                <h1>{tripInfo?.title}</h1>
                 <div css={S.SViewTypeBox}>
                     <div class="switches-container">
                         <input

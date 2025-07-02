@@ -34,7 +34,7 @@ export const SBackButton = css`
     svg {
         margin-right: 5px;
         border-radius: 50%;
-        color:rgb(255, 255, 255);
+        color: transparent
     }
 `;
 

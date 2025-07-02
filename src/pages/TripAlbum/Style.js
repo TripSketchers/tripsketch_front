@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import colors from '../../constants/color';
 
 export const SLayout = css`
     position: relative;
@@ -37,7 +38,7 @@ export const SViewTypeBox = css`
         position: relative;
         display: flex;
         padding: 0;
-        background: #51748b;
+        background: ${colors.primaryButton};
         line-height: 2rem;
         border-radius: 3rem;
     }
@@ -81,7 +82,7 @@ export const SViewTypeBox = css`
         text-align: center;
         opacity: 0;
         display: block;
-        color: #51748b;
+        color: ${colors.primaryButton};
         transition: opacity 0.2s cubic-bezier(0.77, 0, 0.175, 1) 0.125s;
         position: absolute;
         top: 0;
@@ -118,7 +119,7 @@ export const SViewTypeBox = css`
 `;
 export const ViewType = (viewType) =>  css`
     cursor: pointer;
-    border-bottom: ${viewType === 1 ? "3px solid #51748b" : ""};
+    border-bottom: ${viewType === 1 ? `3px solid ${colors.primaryButton}` : ""};
 `;
 
 export const SSortingBox = css`
@@ -155,7 +156,7 @@ export const SUploadBtn = css`
     border-radius: 2rem;
     padding: 10px;
 
-    background-color: #51748b;
+    background-color: ${colors.primaryButton};
     color: white;
     font-weight: 500;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
@@ -168,7 +169,7 @@ export const SUploadBtn = css`
     }
 
     &:hover {
-        background-color: rgb(47, 102, 136);
+        background-color: ${colors.primaryButtonHover};
         svg {
             transform: rotate(180deg); /* hover 시 회전 */
         }

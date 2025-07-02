@@ -11,7 +11,7 @@ function ScheduleTable({ selectedPlaceId, setSelectedPlaceId }) {
     const navigate = useNavigate();
 
     const getTripSchedule = useQuery({
-        queryKey: ["getTripSchedule"],
+        queryKey: ["getTripSchedule", tripId],
         queryFn: async () => {
             try {
                 const options = {
