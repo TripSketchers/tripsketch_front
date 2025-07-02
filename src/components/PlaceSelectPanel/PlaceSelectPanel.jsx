@@ -10,6 +10,7 @@ import AccommodationModal from "../AccommodationModal/AccommodationModal";
 import { useLocation } from "react-router-dom";
 import qs from "qs";
 import { useTrip } from "../Routes/TripContext";
+import Loading from "../Loading/Loading";
 
 function PlaceSelectPanel({ text, categories }) {
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
@@ -44,7 +45,7 @@ function PlaceSelectPanel({ text, categories }) {
         isLoading,
         error,
     } = useInfiniteQuery({
-        queryKey: ["places", selectedCategory, searchKeyword],
+        queryKey: ["places", selectedCategory, searchKeyword, lowLat, lowLng, highLat, highLng],
         queryFn: async ({ pageParam = "" }) => {
             const res = await instance.get("/places", {
                 params: {
@@ -67,7 +68,7 @@ function PlaceSelectPanel({ text, categories }) {
 
             
     if (!lowLat || !lowLng || !highLat || !highLng) {
-        return <div>위치 정보 로딩 중...</div>;
+        return <Loading content={"위치 정보를 로딩 중입니다."}/>;
     }
 
     const handleAccommodationConfirm = (selectedMap) => {
@@ -100,7 +101,7 @@ function PlaceSelectPanel({ text, categories }) {
     const isPlaceAdded = (place) => {
         if (text === "숙소") return false;
         return storedPlaces.some((p) => p.googlePlaceId === place.id);
-    };
+    };    
 
     return (
         <div css={S.SLayout}>
@@ -127,7 +128,7 @@ function PlaceSelectPanel({ text, categories }) {
             </div>
 
             <div css={S.SPlaceContainer}>
-                {isLoading && <div>로딩 중...</div>}
+                {isLoading && <Loading />}
                 {error && <div>에러 발생!</div>}
 
                 {data?.pages.map((page, pageIndex) =>

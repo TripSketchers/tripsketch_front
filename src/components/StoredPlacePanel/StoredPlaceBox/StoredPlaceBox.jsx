@@ -6,17 +6,32 @@ import { FaTrash } from "react-icons/fa6";
 import { useTrip } from "../../Routes/TripContext";
 import { getImageBlobUrl } from "../../../utils/ImageUtils";
 import { useDrag } from "react-dnd";
+import { showToast } from "../../Toast/Toast";
 
-function StoredPlaceBox({ index, type, place, onRemove, disableRemove=false }) {
+function StoredPlaceBox({
+	index,
+	type,
+	place,
+	onRemove,
+	disableRemove = false,
+}) {
 	const { setFocusedPlace } = useTrip();
 	const [imgSrc, setImgSrc] = useState(place.imageUrl || fallbackImg);
 
 	const [{ isDragging }, dragRef] = useDrag({
-		type: "PLACE", // DropZone에서 이 타입을 받아야 함
-		item: { schedule: place }, // PlanTable의 handleDrop과 맞춰야 함
+		type: "PLACE",
+		item: { schedule: place },
 		collect: (monitor) => ({
 			isDragging: monitor.isDragging(),
 		}),
+		canDrag: () => {
+			if (disableRemove) {
+				return true;
+			}
+			// 드래그 시도할 때 토스트 표시
+			showToast.info("장소 추가 중에는 스케줄을 배치할 수 없습니다.");
+			return false;
+		},
 	});
 
 	useEffect(() => {
