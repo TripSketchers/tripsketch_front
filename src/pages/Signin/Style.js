@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import colors from '../../constants/color';
 
 export const SLayout = css`
     display: flex;
@@ -25,13 +26,14 @@ export const SLayout = css`
     }
 `;
 
-export const SContainer = css`
+export const SContainer = (isMobile) => css`
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 0px 28px rgba(0,0,0,0.25), 0 0px 10px rgba(0,0,0,0.22);
     position: relative;
     overflow: hidden;
-    width: 800px;
+    width: ${isMobile ? "400px" : "800px"};
+    min-width: 400px;
     max-width: 100%;
     min-height: 500px;
 `;
@@ -49,8 +51,7 @@ export const SOverlayBox = (isRightPanelActive) => css`
 `;
 
 export const SOverlay = (isRightPanelActive) => css`
-    background: rgb(44,195,185);
-    background: linear-gradient(90deg, rgba(44,195,185,1) 0%, rgba(44,109,195,1) 100%);
+    background: linear-gradient(90deg, ${colors.mainGreenHover} 0%, ${colors.mainBlueHover} 100%);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 0;

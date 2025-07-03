@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors from "../../../constants/color";
 
 export const SLayout = css`
     margin: 5% 0;
@@ -9,11 +10,25 @@ export const SLayout = css`
 export const STitle = css`
     display: flex;
     align-items: center;
+    gap: 5px;
+    margin-bottom: 18px;
+
+    &::before {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 24px;
+        
+        background: linear-gradient(180deg, ${colors.mainBlue} 60%, ${colors.mainGreen} 100%);
+        border-radius: 3px;
+        margin-right: 10px;
+    }
 
     h3 {
-        margin-left: 10px;
-        font-size: 1.3rem;
-        font-weight: 500;
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+        margin: 0;
     }
 `;
 
