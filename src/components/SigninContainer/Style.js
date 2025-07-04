@@ -1,4 +1,5 @@
 import { css, keyframes } from '@emotion/react';
+import colors from '../../constants/color';
 
 const show = keyframes` // Keyframes 애니메이션 정의
   0%, 49.99% {
@@ -12,20 +13,28 @@ const show = keyframes` // Keyframes 애니메이션 정의
   }
 `;
 
-export const SLayout = (isSignin, isRightPanelActive) => css`
+export const SLayout = (isSignin, isRightPanelActive, isMobile) => css`
     position: absolute;
     top: 0;
     height: 100%;
     transition: all 0.6s ease-in-out;
     left: 0;
-    width: 50%;
-    z-index: 2;
-    z-index: ${isSignin 
-        ? (isRightPanelActive ? '2' : '5')
-        : (isRightPanelActive ? '5' : '1')};
-    opacity: ${isSignin ? '1' : (isRightPanelActive ? '1' : '0')};
-    transform: ${isRightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
-    animation: ${!isSignin && isRightPanelActive ? css`${show} 0.6s` : 'none'};
+    width: ${isMobile ? "100%" : "50%"};
+    ${isMobile
+        ? `
+        z-index: 5;
+        opacity: 1;
+        transform: none;
+        animation: none;
+    `
+        : `
+        z-index: ${isSignin 
+            ? (isRightPanelActive ? '2' : '5')
+            : (isRightPanelActive ? '5' : '1')};
+        opacity: ${isSignin ? '1' : (isRightPanelActive ? '1' : '0')};
+        transform: ${isRightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
+        animation: ${!isSignin && isRightPanelActive ? css`${show} 0.6s` : 'none'};
+    `}
 `;
 
 export const SContainer = css`
@@ -75,4 +84,21 @@ export const ErrorMsg = css`
     text-align: left;
     font-size: 12px;
     color: red;
+`;
+
+export const SMobileButton = css`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 16px;
+    color: ${colors.primaryBlue};
+    
+    path {
+        color: ${colors.primaryBlue};
+    }
+
+    svg {
+        margin-left: 4px;
+        font-size: 1em;
+    }
 `;

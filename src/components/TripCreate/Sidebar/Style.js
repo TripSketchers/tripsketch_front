@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors from "../../../constants/color";
 
 export const SLayout = css`
     display: flex;
@@ -56,7 +57,7 @@ export const SBox = (isActive) => css`
     ${isActive
         ? ` 
         box-shadow: 0px 0px 10px #a7b5b9;
-        background-color:rgb(110, 196, 211); 
+        background-color: ${colors.mainBlue}; 
         * {
             font-weight: 600;
             color: white;
@@ -71,10 +72,10 @@ export const SSaveBtn = css`
     border-radius: 20px;
     padding: 11px;
     transition: all 0.3s ease;
-	border: 4px solid rgb(110, 196, 211);
+	border: 4px solid ${colors.mainBlue};
 	* {
 		font-size: 28px;
 		font-weight: 600;
-		color: rgb(110, 196, 211);
+		color: ${colors.mainBlue};
 	}
 `;

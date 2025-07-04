@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import colors from '../../constants/color';
 
 export const SLayout = css`
     display: flex;
@@ -42,7 +43,7 @@ export const SRightContainer = css`
 
 export const STripBox = css`
     padding: 4px;
-    background-color: #d9d9d9;
+    background-color: ${colors.primaryLightGray};
     border-radius: 1rem;
     overflow: hidden;
 `;
@@ -50,12 +51,14 @@ export const STripBox = css`
 
 export const SUploadButton = css`
     margin-top: 10px;
+    border: 3px solid ${colors.primaryButton};
     border-radius: 1rem;
     width: 100%;
-    background-color: black;
-    color: white;
+    /* background-color: ${colors.primaryButton}; */
+    color: ${colors.primaryButton};
     padding: 10px;
     font-size: 1.3rem;
+    font-weight: 600;
     height: 100px;
 
     @media (max-width: 1300px) { // SRightContainer 위치 조정

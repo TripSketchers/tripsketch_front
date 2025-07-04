@@ -1,12 +1,15 @@
+import { se } from "date-fns/locale";
+
 const colors = {
-    primary: "#2ecc71",
-    secondary: "#3498db",
-    primaryGreen: "#333333",
-    primaryRed: "#dddddd",
+    primary: "#333333",
+    primaryBlue: "#3498db",
+    primaryGreen: "#2ecc71",
+    primaryRed: "#da2a2a",
+    primaryLightGray: "#EAEAEC",
 
     // 버튼 색상 : 확인/취소/기본(white인 경우 Hover 시 색상 변경)
-    primaryButtonHover: "rgb(47, 102, 136)",
-    primaryButton: "#51748b",
+    primaryButton: "#5d749f",
+    primaryButtonHover: "#4a5c80",
     primaryCancelButton: "#636c74",
     primaryCancelButtonHover: "#808080",
     primaryWhiteButtonHover: "#dff2f6",
@@ -18,6 +21,13 @@ const colors = {
     loading5: "#a6d0f2",
     loading6: "#9fc7f7",
     loading7: "#94b9ff",
+
+    mainGreen: "#cdffd8",
+    mainGreenHover: "#9abfa2",
+    mainLightBlue: "#d5dff3",
+    mainBlue: "#94b9ff",
+    mainBlueHover: "#6f8bbf",
+    mainDarkBlue: "#384560",
 };
 
 export default colors;

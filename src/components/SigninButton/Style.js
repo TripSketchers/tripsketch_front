@@ -1,9 +1,10 @@
 import { css } from '@emotion/react';
+import colors from '../../constants/color';
 
 export const SLayout = css`
     border-radius: 20px;
-    border: 1px solid rgb(44,195,185);
-    background: rgb(44,195,185);
+    border: 1px solid ${colors.mainBlue};
+    background: ${colors.mainBlue};
     color: #FFFFFF;
     font-size: 14px;
     font-weight: bold;

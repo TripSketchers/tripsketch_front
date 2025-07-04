@@ -37,12 +37,11 @@ function Header(props) {
                 <img src={logo} />
                 <h1>Trip Sketch</h1>
             </Link>
-            <div css={S.SContainer}>
+            <div>
                 {!!principalState?.data?.data ? (
                     <div css={S.SDropLayout}>
                         <span className="loginName">
-                            반가워요,{" "}
-                            {principalState.data.data.email.split("@")[0]}님!
+                            {principalState.data.data.email.split("@")[0]}님 
                         </span>
                         <AiOutlineDown />
                         <ul css={S.SDropDown} >
@@ -57,7 +56,7 @@ function Header(props) {
                         </ul>
                     </div>
                 ) : (
-                    <div css={S.SLoginBox}>
+                    <div css={S.SLoginBox(isScrolled, isMain)}>
                         <Link to={"/auth/signin"}>로그인</Link>
                     </div>
                 )}

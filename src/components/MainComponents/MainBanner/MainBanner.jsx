@@ -1,25 +1,26 @@
 import React, { useState, useEffect, useRef } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import MainImg1 from "../../../assets/Santorini.jpg";
-import MainImg2 from "../../../assets/Amsterdam.jpg";
-import MainImg3 from "../../../assets/Copenhagen.jpg";
+import banner1 from "../../../assets/banner1.png";
+import banner2 from "../../../assets/banner2.png";
+import banner3 from "../../../assets/banner3.png";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 
 const images = [
     {
-        src: MainImg1,
-        title: "예약시간에 맞춰 일정을 짜고 싶으신가요?",
-        desc: "트립스케치에서는 예약시간에 맞춰 일정을 변경할 수 있어요.<br />운영시간도 알려주니 알찬 여행 계획을 편하게 세워보세요!",
+        src: banner1,
+        title: "일정표에 나만의 여행 이야기를 그려보세요!",
+        desc: "여행 계획표 위에 손끝으로 여행의 순간을 채워보세요.<br />시간에 맞춰 일정을 드래그하며 나만의 여정을 완성하세요!",
     },
     {
-        src: MainImg2,
-        title: "여행지 추천이 필요하신가요?",
-        desc: "트립스케치가 인기 여행지를 추천해드려요.<br />다양한 여행지를 한눈에 확인해보세요!",
+        src: banner2,
+        title: "설레는 여행지를 장소보관함에 담아보세요!",
+        desc: "카테고리별 추천 여행지를 만날 수 있어요.<br />간직하고 싶은 여행지를 장소보관함에 담아보세요.",
     },
     {
-        src: MainImg3,
-        title: "여행 일정을 쉽게 관리하세요!",
-        desc: "일정표를 쉽고 편하게 관리할 수 있습니다.<br />여행 준비가 한결 쉬워집니다.",
+        src: banner3,
+        title: "여행의 추억을 앨범 속에 소중히 담아보세요.",
+        desc: "여행지에서의 빛나는 순간을 앨범에 차곡차곡 저장하세요.<br />장소별 사진을 모아두면, 언제든 여행의 기억이 펼쳐집니다.",
     },
 ];
 
@@ -92,14 +93,14 @@ function MainBanner(props) {
                     onClick={handlePrev}
                     className="leftBtn"
                 >
-                    ←
+                    <FaArrowLeft />
                 </button>
                 <button
                     css={S.SSlideBtn}
                     onClick={handleNext}
                     className="rightBtn"
                 >
-                    →
+                    <FaArrowRight />
                 </button>
             </div>
             {/* 페이지 표시 및 프로그레스바 */}

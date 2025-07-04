@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors from "../../constants/color";
 
 export const SLayout = css`
     display: flex;
@@ -6,7 +7,7 @@ export const SLayout = css`
     width: 100%;
     height: calc(100vh - 100px);
     overflow: hidden;
-    background-color: rgb(239, 247, 248);
+    background-color: #f1f4fb;
 `;
 
 export const SContainer = css`

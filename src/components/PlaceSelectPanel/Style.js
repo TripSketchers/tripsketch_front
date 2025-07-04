@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors from "../../constants/color";
 
 export const SLayout = css`
 	display: flex;
@@ -31,7 +32,7 @@ export const SCategoryTab = (selectedCategory) => css`
 	border: ${!selectedCategory && "1px solid #dbdbdb"};
 	border-radius: 5px;
 	padding: 5px 10px;
-	background-color: ${selectedCategory && "rgb(78, 140, 152)"};
+	background-color: ${selectedCategory && colors.mainBlueHover};
 	color: ${selectedCategory ? "white" : "#999"};
 	font-size: 14px;
 	cursor: pointer;

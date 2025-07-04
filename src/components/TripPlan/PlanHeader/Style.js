@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors from "../../../constants/color";
 
 export const SLayout = (img) => css`
 	display: flex;
@@ -44,7 +45,7 @@ export const SButton = css`
 	justify-content: center;
 	align-items: center;
 	border-radius: 10px;
-	background-color:rgb(58, 98, 111);
+	background-color: ${colors.mainDarkBlue};
 	font-size: 14px;
 	font-weight: 500;
 	min-width: 65px;

@@ -1,11 +1,12 @@
 import { css } from "@emotion/react";
+import colors from "../../../constants/color";
 
 export const SLayout = css`
     position: relative;
     display: flex;
     flex-direction: column;
     height: 100%;
-    background-color: #e6e6e6;
+    background-color: rgb(244, 244, 244);
     padding: 20px 20%;
 `;
 
@@ -28,19 +29,10 @@ export const SBannerBox = css`
     pointer-events: none;
 
     img {
-        width: 500px;
-        height: 240px;
+        aspect-ratio: 4 / 2.5;
         object-fit: cover;
-        border-radius: 40px;
-
-        @media (max-width: 900px) {
-            width: 400px;
-            height: 200px;
-        }
-        @media (max-width: 700px) {
-            width: 300px;
-            height: 160px;
-        }
+        border-radius: 20px;
+        max-width: 400px;
     }
 
     &.center {
@@ -101,28 +93,33 @@ export const SSlideBtn = css`
     position: absolute;
     bottom: 0%;
     transform: translateY(-50%);
-    background: #432d13;
-    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: ${colors.mainBlue};
     border: none;
     border-radius: 50%;
     width: 48px;
     height: 48px;
     font-size: 2rem;
     z-index: 2;
-    cursor: pointer;
     opacity: 0.8;
     transition: background 0.2s;
+    cursor: pointer;
+    * {
+        color: #fff;
+    }
     
     &:hover {
-        background: #6e4b1b;
+        background: ${colors.mainBlueHover};
     }
 
     &.rightBtn {
-        right: clamp(0px, 20%, 180px);
+        right: 0px;
     }
 
     &.leftBtn {
-        left: clamp(0px, 20%, 180px);
+        left: 0px;
     }
 `;
 
@@ -146,7 +143,7 @@ export const SPageCount = (progress) => css`
 
         div {
             height: 100%;
-            background: #432d13;
+            background: ${colors.mainBlueHover};
             width: ${progress}%;
             transition: width 0.1s linear;
         }

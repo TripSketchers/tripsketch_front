@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors from "../../constants/color";
 
 export const SSearchBox = css`
 	position: relative;
@@ -9,7 +10,7 @@ export const SSearchBox = css`
 	padding: 5px 10px;
 	width: 100%;
 	height: 2.5rem;
-	box-shadow: 2px 2px 5px #a7b5b9;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
 	background-color: white;
 	z-index: 1;
 `;
@@ -34,7 +35,7 @@ export const SButton = css`
 	max-width: 100px;
 	height: 100%;
 	font-size: 16px;
-	background-color: #6ec4d3;
+	background-color: ${colors.mainBlue};
 	transition: all 0.2s ease;
 	:hover {
 		transform: scale(0.95);

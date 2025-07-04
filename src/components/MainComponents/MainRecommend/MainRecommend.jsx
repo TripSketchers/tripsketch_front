@@ -47,7 +47,6 @@ function MainRecommend(props) {
         <div css={S.SLayout}>
             <div>
                 <div css={S.STitle}>
-                    <FaRegPaperPlane />
                     <h3>최근 가장 인기 있는 국내 여행지, BEST 3</h3>
                 </div>
                 <div css={S.SContainer}>
@@ -74,7 +73,6 @@ function MainRecommend(props) {
                         )}
                 </div>
                 <div css={S.STitle}>
-                    <FaRegPaperPlane />
                     <h3>최근 가장 인기 있는 해외 여행지, BEST 3</h3>
                 </div>
                 <div css={S.SContainer}>

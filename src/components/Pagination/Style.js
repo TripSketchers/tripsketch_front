@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors from "../../constants/color";
 
 export const SLayout = css`
     display: flex;
@@ -22,7 +23,7 @@ export const PageButton = css`
 
 export const PageNumber = (active) => css`
     padding: 6px 10px;
-    background: ${active ? "#365267" : "#fff"};
+    background: ${active ? colors.mainDarkBlue : "#fff"};
     color: ${active ? "#fff" : "#000"};
     border: 1px solid #ccc;
     border-radius: 4px;

@@ -160,7 +160,7 @@ function TripAlbum(props) {
                         </div>
                     )}
                 </div>
-                <div style={{ minHeight: "400px" }}>
+                <div style={{ minHeight: "520px" }}>
                     {viewType === 0 ? (
                         <AlbumWhole albums={sortedAlbums} />
                     ) : (
