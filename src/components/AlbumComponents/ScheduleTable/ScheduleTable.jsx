@@ -28,7 +28,7 @@ function ScheduleTable({
             setSelectedDate(dateKeys[0]);
             setSelectedPlaces(groupedSchedule[dateKeys[0]]);
         }
-    }, [dateKeys, groupedSchedule]);
+    }, [groupedSchedule]);
 
     // 날짜 클릭 시 해당하는 장소 목록 업데이트
     const handleDateClick = (date) => {

@@ -18,7 +18,6 @@ function TripAlbum(props) {
     const { firebaseUser, loading } = useFirebaseAuth();
     const queryClient = useQueryClient();
     const { tripId } = useParams();
-    const { tripInfo } = useTrip();
     const location = useLocation();
 
     // 상태로 전달된 값 읽기
@@ -27,8 +26,6 @@ function TripAlbum(props) {
     const [viewType, setViewType] = useState(stateViewType ?? 0);
     const [sorting, setSorting] = useState(0); //최신순 : 0, 과거순: 1
     const [showSorting, setShowSorting] = useState(true);
-
-    console.log(firebaseUser);
 
     useEffect(() => {
         queryClient.prefetchQuery({
@@ -80,13 +77,15 @@ function TripAlbum(props) {
         refetchOnWindowFocus: false,
     });
 
+    console.log(getAlbum?.data)
+
     // 여기서 n일차 가공
     const sortedAlbums = Array.isArray(getAlbum?.data?.albums)
         ? [...getAlbum?.data?.albums]
               .map((item) => {
                   return {
                       ...item,
-                      dayDiff: getNday(getAlbum?.data?.startDate, item.date),
+                      dayDiff: getNday(getAlbum?.data?.trip?.startDate, item.date),
                   };
               })
               .sort((a, b) => {
@@ -109,14 +108,13 @@ function TripAlbum(props) {
             </NavLayout>
         );
     }
-    console.log("앨범 데이터:", getAlbum.data);
 
     if (getAlbum.isError) return <div>데이터를 불러오지 못했습니다.</div>;
 
     return (
         <NavLayout>
             <NavContainer>
-                <h1>{tripInfo?.title}</h1>
+                <h1>{getAlbum?.data?.trip?.title}</h1>
                 <div css={S.SViewTypeBox}>
                     <div class="switches-container">
                         <input

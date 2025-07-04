@@ -25,6 +25,7 @@ export const SContainer = css`
     @media (max-width: 1000px) {
         // SRightContainer 위치 조정
         flex-direction: column;
+        align-items: stretch;
     }
 `;
 
@@ -37,8 +38,8 @@ export const SLeftContainer = css`
 export const STripBox = css`
     position: relative;
     width: 100%;
-    max-height: 320px;
-    min-height: 160px;
+    aspect-ratio: 4 / 2.5;
+    height: auto;
     border-radius: 20px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -117,15 +118,107 @@ export const STripBox = css`
 export const SRightContainer = css`
     position: relative;
     flex: 1;
+    width: 100%;
 
-    & > div {
+    .albumContainer {
         position: relative;
         width: 100%;
-        min-height: 160px;
+        aspect-ratio: 4 / 2.5;
+        height: auto;
+    }
 
-        @media (max-width: 1000px) {
-            // SRightContainer 위치 조정
-            max-height: 364px;
+    @media (max-width: 1000px) {
+        .albumContainer {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            height: auto;
+        }
+
+        .albumContainer-1 {
+            margin-bottom: -60px;
+        }
+
+        .albumContainer-2 {
+            margin-bottom: -30px;
+        }
+
+        .albumBox {
+            position: relative !important;
+            width: 100% !important;
+            aspect-ratio: 4 / 2.5;
+            height: auto !important;
+            transition: transform 0.3s ease;
+            margin-bottom: -20%; /* 겹치게 */
+        }
+
+        // albumBox가 1개일 때
+        .albumBox-count-1.albumBox-idx-1 {
+            transform: translate(0%, 5%) !important;
+            z-index: 0;
+            transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
+
+            &:hover {
+                transform: translate(0%, 5%) scale(1.03) !important;
+                z-index: 3;
+            }
+        }
+
+        // albumBox가 2개일 때
+        .albumBox-count-2.albumBox-idx-1 {  // 1번 앨범
+            transform: translate(0, 0px) !important;
+            z-index: 0;
+            transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
+
+            &:hover {
+                transform: translate(0, 0px) scale(1.03) !important;
+                z-index: 3;
+            }
+        }
+        .albumBox-count-2.albumBox-idx-2 {  // 2번 앨범
+            position: absolute !important;
+            transform: translate(0, 0) !important;
+            z-index: 0;
+            transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
+
+            &:hover {
+                transform: translate(0, 0px) scale(1.03) !important;
+                z-index: 3;
+            }
+        }
+
+        // albumBox가 3개일 때
+        .albumBox-count-3.albumBox-idx-1 {  // 1번 앨범
+            transform: translate(0, 80px) !important;
+            z-index: 0;
+            transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
+
+            &:hover {
+                transform: translate(0%, 25%) scale(1.03) !important;
+                z-index: 3;
+            }
+        }
+        .albumBox-count-3.albumBox-idx-2 {  // 2번 앨범
+            position: absolute !important;
+            transform: translate(0%, -200px) !important;
+            z-index: 1;
+            transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
+
+            &:hover {
+                transform: translate(0%, -55%) scale(1.03) !important;
+                z-index: 3;
+            }
+        }
+        .albumBox-count-3.albumBox-idx-3 {  // 3번 앨범
+            position: absolute !important;
+            transform: translate(0%, -240px) !important;
+            z-index: 2;
+            transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
+
+            &:hover {
+                transform: translate(0%, -65%) scale(1.03) !important;
+                z-index: 3;
+            }
         }
     }
 
@@ -138,6 +231,7 @@ export const SRightContainer = css`
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block; // img 아래에 **줄바꿈 공백(default inline space)**이 방지
         }
     }
 
@@ -146,7 +240,6 @@ export const SRightContainer = css`
         position: absolute;
         width: 100%;
         height: 100%;
-        min-height: 160px;
         z-index: 2;
         transform: translate(0%, 0%);
         transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
@@ -161,7 +254,6 @@ export const SRightContainer = css`
         position: absolute;
         width: 80%;
         height: 90%;
-        left: 0;
         top: 10%;
         z-index: 1;
         transform: translate(0%, 0%);
@@ -175,13 +267,12 @@ export const SRightContainer = css`
         position: absolute;
         width: 80%;
         height: 90%;
-        left: 20%;
         top: 0;
         z-index: 0;
-        transform: translate(0%, 0%);
+        transform: translate(20%, 0%);
         transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
         &:hover {
-            transform: translate(0%, 0%) scale(1.03);
+            transform: translate(20%, 0%) scale(1.03);
             z-index: 3;
         }
     }
@@ -228,8 +319,7 @@ export const SRightContainer = css`
 export const SNoAlbum = css`
     position: relative;
     width: 100%;
-    height: 320px;
-    min-height: 160px;
+    aspect-ratio: 4 / 2.5;
     font-size: 1.1rem;
     border-radius: 20px;
     border: 3px dashed lightgray;
@@ -246,7 +336,7 @@ export const SNoAlbum = css`
         align-items: center;
         justify-content: center;
         margin-bottom: 20px;
-        
+
         * {
             color: gray;
         }

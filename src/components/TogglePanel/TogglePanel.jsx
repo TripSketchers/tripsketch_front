@@ -7,9 +7,6 @@ import SwalAlert from "../SwalAlert/SwalAlert";
 
 function TogglePanel({ triggerIcon, menuItems }) {
     const [isPanelOpen, setIsPanelOpen] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedAction, setSelectedAction] = useState(null);
-    const [selectedConfirmInfo, setSelectedConfirmInfo] = useState(null);
     const panelRef = useRef(null);
 
     useEffect(() => {
@@ -30,22 +27,20 @@ function TogglePanel({ triggerIcon, menuItems }) {
     const handleItemClick = (item, e) => {
         e.stopPropagation();
         if (item.confirm) {
-            // 이 메뉴는 모달 띄우기
-            // setSelectedAction(() => item.action);
-            // setSelectedConfirmInfo(item.confirm);
             SwalAlert({
-                title: "앨범을 삭제하시겠어요?",
-                text: "앨범 안의 사진도 모두 삭제됩니다.",
+                title: item.confirm.title,
+                text: item.confirm.message,
                 icon: "warning",
-                confirmButtonText: "삭제",
+                confirmButtonText: item.confirm.confirmText,
                 showCancelButton: true,
                 onConfirm: () => {
                     item.action(e);
                     SwalAlert({
                         icon: "success",
                         title: "삭제 완료",
-                        text: "사진이 성공적으로 삭제되었습니다.",
+                        text: "성공적으로 삭제되었습니다.",
                     });
+                    setIsPanelOpen(false);
                 },
             });
         } else {
@@ -53,14 +48,6 @@ function TogglePanel({ triggerIcon, menuItems }) {
             item.action(e);
             setIsPanelOpen(false);
         }
-    };
-
-    const handleConfirm = () => {
-        if (selectedAction) {
-            selectedAction();
-        }
-        setIsModalOpen(false);
-        setIsPanelOpen(false);
     };
 
     return (
@@ -87,19 +74,6 @@ function TogglePanel({ triggerIcon, menuItems }) {
                         </div>
                     ))}
                 </div>
-            )}
-
-            {isModalOpen && selectedConfirmInfo && (
-                <ConfirmModal
-                    title={selectedConfirmInfo.title}
-                    message={selectedConfirmInfo.message}
-                    confirmText={selectedConfirmInfo.confirmText}
-                    onClose={() => {
-                        setIsModalOpen(false);
-                        setIsPanelOpen(false);
-                    }}
-                    onConfirm={handleConfirm}
-                />
             )}
         </div>
     );

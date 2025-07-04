@@ -27,9 +27,10 @@ export const SHostBox = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    width: auto;
 
     .host {
-        font-size: 14px;
+        font-size: 10px;
         background-color: #365267;
         color: white;
         border-radius: 10px;
@@ -39,6 +40,7 @@ export const SHostBox = css`
 
     span {
         font-weight: 600;
+        white-space: nowrap;
     }
 `;
 

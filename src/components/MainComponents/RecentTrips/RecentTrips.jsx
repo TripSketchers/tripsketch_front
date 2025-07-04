@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { IoIosImages } from "react-icons/io";
 import { getNightandDays } from "../../../utils/DateUtils";
+import Loading from "../../Loading/Loading";
 
 function RecentTrips() {
     const navigate = useNavigate();
@@ -63,21 +64,23 @@ function RecentTrips() {
         refetchOnWindowFocus: false,
     });
 
-    console.log("getRecentAlbums", getRecentAlbums);
+    console.log(getRecentAlbums?.data);
 
     return (
         <div css={S.SLayout}>
             <div css={S.SContainer}>
                 <div css={S.SLeftContainer}>
                     <h2>다가오는 여행 일정보기</h2>
-                    {getUpcomingTrip?.data ? (
+                    {getUpcomingTrip.isLoading ? (
+                        <Loading content="여행 정보를 불러오는 중입니다..." />
+                    ) : getUpcomingTrip?.data.tripId ? (
                         <div
                             css={S.STripBox}
-                            onClick={() =>
+                            onClick={() => {
                                 navigate(
-                                    `/trip/plan/${getUpcomingTrip?.tripId}`
-                                )
-                            }
+                                    `/trip/album/${getUpcomingTrip.data.tripId}`
+                                );
+                            }}
                         >
                             <div className="info">
                                 <div className="dDay">{dDay}</div>
@@ -115,21 +118,21 @@ function RecentTrips() {
                         </div>
                     ) : (
                         <div css={S.SNoAlbum}>
-                                <div>
-                                    <span>
-                                        <IoIosImages /> 예정된 여행이 없습니다
-                                        <br />
-                                    </span>
-                                    <p>새로운 여행계획을 세워보세요!</p>
-                                </div>
+                            <div>
+                                <span>
+                                    <IoIosImages /> 예정된 여행이 없습니다
+                                    <br />
+                                </span>
+                                <p>새로운 여행계획을 세워보세요!</p>
                             </div>
+                        </div>
                     )}
                 </div>
                 <div css={S.SRightContainer}>
                     <h2>최근 앨범 보러가기</h2>
-                    <div>
+                    <div className={`albumContainer albumContainer-${getRecentAlbums?.data?.length}`}>
                         {getRecentAlbums?.data &&
-                        getRecentAlbums.data.length > 0 ? (
+                        getRecentAlbums?.data?.length > 0 ? (
                             getRecentAlbums?.data?.map((album, idx) => (
                                 <div
                                     className={`albumBox albumBox-count-${
@@ -151,7 +154,7 @@ function RecentTrips() {
                                     <img src={album.photoUrl} alt="" />
                                 </div>
                             ))
-                        ) : (
+                        ) : getUpcomingTrip?.data?.tripId ? (
                             <div css={S.SNoAlbum}>
                                 <div>
                                     <span>
@@ -164,12 +167,27 @@ function RecentTrips() {
                                     data-text="새 앨범 만들기"
                                     onClick={() =>
                                         navigate(
-                                            `/trip/album/${getUpcomingTrip?.tripId}`
+                                            `/trip/album/${getUpcomingTrip?.data?.tripId}`, 
+                                            {
+                                                state: {
+                                                    title: getUpcomingTrip?.data?.title
+                                                },
+                                            }
                                         )
                                     }
                                 >
                                     + 새 앨범 만들기
                                 </button>
+                            </div>
+                        ) : (
+                            <div css={S.SNoAlbum}>
+                                <div>
+                                    <span>
+                                        <IoIosImages /> 여행이 존재하지 않습니다.
+                                        <br />
+                                    </span>
+                                    <p>여행을 다녀오고 앨범을 만들어보세요!</p>
+                                </div>
                             </div>
                         )}
                     </div>
