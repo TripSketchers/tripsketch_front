@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+import colors from "../../../../constants/color";
 
 export const SDatePickerWrapper = css`
     .react-datepicker__navigation {
@@ -57,23 +58,23 @@ export const SDatePickerWrapper = css`
         background-color: #f0f0f0;
     }
     .react-datepicker__day--in-range {
-        background-color: rgb(158, 217, 228) !important;
+        background-color: ${colors.mainLightBlue} !important;
         color: white;
     }
     .react-datepicker__day--range-start,
     .react-datepicker__day--range-end {
-        background-color: rgb(68, 205, 230) !important;
+        background-color: ${colors.mainBlue} !important;
         color: white;
     }
     .react-datepicker__day--selected:not([aria-disabled="true"]):hover,
     .react-datepicker__day--in-selecting-range:not(
             [aria-disabled="true"]
         ):hover {
-        background-color: rgb(68, 205, 230);
+        background-color: ${colors.mainBlue};
     }
 
     .react-datepicker__day--in-range:not([aria-disabled="true"]):hover {
-        background-color: rgb(68, 205, 230);
+        background-color: ${colors.mainBlue};
     }
     .react-datepicker__day--in-selecting-range:not(
             .react-datepicker__day--in-range,
@@ -81,7 +82,7 @@ export const SDatePickerWrapper = css`
             .react-datepicker__quarter-text--in-range,
             .react-datepicker__year-text--in-range
         ) {
-        background-color: rgb(209, 230, 233);
+        background-color: ${colors.mainLightBlue};
         color: #444;
     }
     .react-datepicker__day--outside-month,

@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+import colors from "../../../../constants/color";
 
 export const STitle = css`
     font-size: 30px;
@@ -27,7 +28,7 @@ export const SConfirmButton = css`
     color: white;
     font-size: 16px;
     font-weight: bold;
-    background-color: rgb(110, 196, 211);
+    background-color: ${colors.primaryButton};
     cursor: pointer;
 
     &:disabled {

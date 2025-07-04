@@ -134,6 +134,7 @@ export const SRightContainer = css`
             width: 100%;
             aspect-ratio: 4 / 3;
             height: auto;
+            margin-bottom: -60px;
         }
 
         .albumContainer-1 {
@@ -142,6 +143,10 @@ export const SRightContainer = css`
 
         .albumContainer-2 {
             margin-bottom: -30px;
+        }
+
+        .albumContainer-3 {
+            margin-bottom: 0px;
         }
 
         .albumBox {
