@@ -10,6 +10,7 @@ export const SLayout = css`
     justify-content: center;
     align-items: center;
     height: 100%; /* 화면 전체 높이 */
+    min-height: 200px;
 
     .loading {
         text-align: center;

@@ -108,7 +108,7 @@ export const SSharedUsersContainer = css`
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 8px;
+            padding: 8px 0;
             border-bottom: 1px solid #e5e7eb;
 
             span {
@@ -126,5 +126,11 @@ export const SSharedUsersContainer = css`
                 }
             }
         }
+    }
+
+    p {
+        font-size: 12px;
+        color: #a0aec0;
+        margin-top: 10px;
     }
 `;

@@ -28,6 +28,7 @@ export const SHostBox = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    width: auto;
 
     .host {
         font-size: 14px;
@@ -40,6 +41,7 @@ export const SHostBox = css`
 
     span {
         font-weight: 600;
+        white-space: nowrap;
     }
 `;
 
