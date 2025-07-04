@@ -102,5 +102,5 @@ export const SContainer = css`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 400px;
+    height: 520px;
 `;

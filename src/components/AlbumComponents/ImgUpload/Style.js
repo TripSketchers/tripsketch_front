@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import colors from '../../../constants/color';
 
 export const SLayout = css`
     position: relative;
@@ -18,7 +19,7 @@ export const SContainer = css`
     justify-content: center;
     padding: 2rem 0;
     border-radius: 1rem;
-    background-color: #f1f1f1;
+    background-color: ${colors.primaryLightGray};
 `;
 
 export const STopContainer = css`
@@ -35,7 +36,7 @@ export const STopContainer = css`
         z-index: 1;
         font-size: 2rem;
         width: 50px;
-        height: 500px;
+        height: 400px;
         
         @media (max-width: 1100px) {
             height: 400px;
@@ -55,7 +56,7 @@ export const SImgBox = css`
     position: relative;
     border-radius: 1rem;
     width: 100%;
-    height: 500px;
+    height: 400px;
     overflow: hidden;
     background-color: white;
     
