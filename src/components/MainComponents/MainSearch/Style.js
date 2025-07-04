@@ -33,7 +33,7 @@ export const SIndicator = css`
 		user-select: none;
 	}
 	.dot.active {
-		color: #222;
+		color:  white;
 		opacity: 1;
 	}
 `;
