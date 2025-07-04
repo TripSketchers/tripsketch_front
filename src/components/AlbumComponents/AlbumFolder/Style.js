@@ -44,3 +44,10 @@ export const SFolderContainer = css`
     gap: 15px 70px;
     grid-template-columns: repeat(auto-fill, 265px); /* 기본 3개 */
 `;
+
+export const SContainer = css`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+`;

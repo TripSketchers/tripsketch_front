@@ -4,7 +4,7 @@ import { instance } from "../api/config/instance";
 export const getImageBlobUrl = async (photoReference) => {
     if (!photoReference) return "";
     try {
-        const res = await instance.get(`/photo?ref=${photoReference}`, {
+        const res = await instance.get(`/photo?ref=${encodeURIComponent(photoReference)}`, {
             headers: {
                 Authorization: localStorage.getItem("accessToken"),
             },

@@ -6,8 +6,8 @@ const colors = {
     primaryLightGray: "#EAEAEC",
 
     // 버튼 색상 : 확인/취소/기본(white인 경우 Hover 시 색상 변경)
-    primaryButtonHover: "rgb(47, 102, 136)",
-    primaryButton: "#51748b",
+    primaryButton: "#5d749f",
+    primaryButtonHover: "#4a5c80",
     primaryCancelButton: "#636c74",
     primaryCancelButtonHover: "#808080",
     primaryWhiteButtonHover: "#dff2f6",
@@ -23,7 +23,8 @@ const colors = {
     mainGreen: "#cdffd8",
     mainGreenHover: "#5ed6a6",
     mainBlue: "#94b9ff",
-    mainBlueHover: "#5b8eea",
+    mainBlueHover: "#6f8bbf",
+    mainDarkBlue: "#384560",
 };
 
 export default colors;

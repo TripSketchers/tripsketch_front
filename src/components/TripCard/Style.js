@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors from "../../constants/color";
 
 export const SLayout = css`
     position: relative;
@@ -30,7 +31,7 @@ export const SHostBox = css`
 
     .host {
         font-size: 14px;
-        background-color: #365267;
+        background-color: ${colors.mainDarkBlue};
         color: white;
         border-radius: 10px;
         padding: 5px;
@@ -44,7 +45,7 @@ export const SHostBox = css`
 
 export const SDday = css`
     border-radius: 20px;
-    background-color: #365267;
+    background-color: ${colors.mainDarkBlue};
     color: white;
     width: 70px;
 	height: 100%;

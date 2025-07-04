@@ -97,3 +97,10 @@ export const SImgCheckBox = css`
     width: 15px;
     height: 15px;
 `;
+
+export const SContainer = css`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+`;

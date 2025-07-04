@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors from "../../constants/color";
 
 export const SLayout = css`
     display: flex;
@@ -22,13 +23,14 @@ export const SHeader = css`
     margin-bottom: 30px;
     display: flex;
     justify-content: space-between;
-    align-items: end;
+    align-items: center;
 `;
 
 export const STitleBox = css`
     width: max-content;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
     div {
         display: inline-block;
@@ -61,7 +63,7 @@ export const STitleBox = css`
         left: 0;
         right: 0;
         bottom: 0;
-        background: #5c86b3;
+        background: ${colors.mainBlue};
         -webkit-transform: scaleX(0);
         transform: scaleX(0);
         -webkit-transform-origin: 0 50%;
@@ -92,6 +94,7 @@ export const SFilterBox = css`
 
     ul {
         display: flex;
+        align-items: center;
         gap: 20px;
         list-style: none;
         padding: 0;
@@ -106,7 +109,7 @@ export const SFilterBox = css`
         transition: color 0.3s;
 
         &:hover, &.active {
-            color: #5c86b3;
+            color: ${colors.mainBlueHover};
             font-weight: 600;
         }
     }
