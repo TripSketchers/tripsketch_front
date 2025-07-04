@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import SearchInput from "../../SearchInput/SearchInput";
 import { instance } from "../../../api/config/instance";
-import { FaLocationDot } from "react-icons/fa6";
+import { FaArrowRight, FaLocationDot } from "react-icons/fa6";
 import SliderContainer from "../../SliderContainer/SliderContainer";
 import { mainImages } from "./MainImages";
 import GradientBtn from "../../GradientBtn/GradientBtn";
@@ -118,6 +118,9 @@ function MainSearch(props) {
 												</span>
 												{item.koName.split(" ")[0]}
 											</div>
+											<span className="create-trip-hint">
+												<FaArrowRight /> 여행 생성하기
+											</span>
 										</div>
 									)
 								)}

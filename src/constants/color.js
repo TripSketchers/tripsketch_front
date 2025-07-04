@@ -1,3 +1,5 @@
+import { se } from "date-fns/locale";
+
 const colors = {
     primary: "#333333",
     primaryBlue: "#3498db",
@@ -21,7 +23,8 @@ const colors = {
     loading7: "#94b9ff",
 
     mainGreen: "#cdffd8",
-    mainGreenHover: "#5ed6a6",
+    mainGreenHover: "#9abfa2",
+    mainLightBlue: "#d5dff3",
     mainBlue: "#94b9ff",
     mainBlueHover: "#6f8bbf",
     mainDarkBlue: "#384560",

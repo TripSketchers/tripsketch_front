@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors from "../../constants/color";
 
 export const SLayout = css`
 	display: flex;
@@ -30,7 +31,7 @@ export const STitleBox = css`
 		gap: 5px;
 		border-radius: 8px;
 		padding: 4px 8px;
-		background-color:rgb(87, 87, 87);
+		background-color: ${colors.mainBlueHover};
 		color: white;
 		* {
 			color: white;

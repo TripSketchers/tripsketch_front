@@ -1,5 +1,6 @@
 import { css } from "@emotion/react";
 import { getColorByCategory } from "../../../utils/CategoryUtils";
+import colors from "../../../constants/color";
 
 export const SLayout = css`
 	display: flex;
@@ -77,7 +78,7 @@ export const SButton = (isAdded) => css`
 	align-items: center;
 	border-radius: 50%;
 	padding: 5px;
-	background-color: ${isAdded ? "rgb(51, 172, 185)" : "rgb(188, 224, 228)"};
+	background-color: ${isAdded ? colors.mainBlueHover : colors.mainBlue};
 	box-shadow: 1px 1px 5px #a7b5b9;
 	& * {
 		font-size: 18px;

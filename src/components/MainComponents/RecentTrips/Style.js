@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors from "../../../constants/color";
 
 export const SLayout = css`
     position: relative;
@@ -73,9 +74,9 @@ export const STripBox = css`
     .dDay {
         margin-right: 5px;
         border-radius: 1rem;
-        padding: 5px;
-        background-color: #dff2f6;
-        color: black;
+        padding: 5px 10px;
+        background-color: ${colors.mainDarkBlue};
+        color: white;
     }
 
     .tripTitle {
@@ -273,6 +274,7 @@ export const SNoAlbum = css`
         height: 50px;
         line-height: 50px;
         font-size: 20px;
+        font-weight: 600;
         text-align: center;
         font-family: sans-serif;
         text-decoration: none;
@@ -288,7 +290,7 @@ export const SNoAlbum = css`
         width: 100%;
         height: 100%;
         text-align: center;
-        background: #81e7f9;
+        background: ${colors.mainBlueHover};
         color: #fff;
         transition: 0.5s;
         transform-origin: bottom;
@@ -306,7 +308,7 @@ export const SNoAlbum = css`
         width: 100%;
         height: 100%;
         text-align: center;
-        background: #6ec4d3;
+        background: ${colors.mainBlue};
         color: #fff;
         transition: 0.5s;
         transform-origin: top;

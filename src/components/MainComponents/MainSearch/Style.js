@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors from "../../../constants/color";
 
 export const SLayout = css`
 	position: relative;
@@ -103,38 +104,65 @@ export const STripDestinations = css`
 	background-color: white;
 	border-end-end-radius: 10px;
 	border-end-start-radius: 10px;
-	padding-top: 10px; /* 스크롤 영역과 스크롤바 모두 10px 아래에서 시작 */
+    padding: 20px 5px 10px 5px;
 	overflow: auto;
 
 	::-webkit-scrollbar {
-		width: 4px;
+		width: 6px;
 	}
 
 	::-webkit-scrollbar-track {
-		background-color: rgb(240, 240, 240);
+		background-color: white;
 		border-radius: 1rem;
 		margin-top: 10px;
 		margin-bottom: 10px;
 	}
 
 	::-webkit-scrollbar-thumb {
-		background-color: black;
+		background-color: ${colors.primaryLightGray};
 		border-radius: 1rem;
 	}
 `;
 
 export const STripDestinationBox = css`
+	position: relative;
 	display: flex;
 	align-items: center;
 	height: 50px;
 	cursor: pointer;
+    border-radius: 10px;
+
+    :hover {
+        background-color: ${colors.mainLightBlue};
+    }
 
 	svg {
 		margin: 0 10px;
 	}
 
-	:hover {
-		background-color: rgba(110, 196, 211, 0.2);
+	/* -> 여행 생성하기 텍스트 */
+	.create-trip-hint {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+		opacity: 0;
+		position: absolute;
+		right: 18px;
+		top: 50%;
+		transform: translateY(-50%);
+		font-size: 0.98rem;
+		color: ${colors.mainBlue};
+		font-weight: 600;
+		pointer-events: none;
+		transition: opacity 0.2s;
+		white-space: nowrap;
+        * {
+            color: ${colors.mainBlue};
+        }
+	}
+
+	&:hover .create-trip-hint {
+		opacity: 1;
 	}
 `;
 
