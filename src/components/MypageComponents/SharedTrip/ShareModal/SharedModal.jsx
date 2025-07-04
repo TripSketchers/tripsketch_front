@@ -6,11 +6,13 @@ import ModalLayout from "../../../ModalLayout/ModalLayout";
 import { useQuery } from "@tanstack/react-query";
 import { showToast } from "../../../Toast/Toast";
 import { toast } from "react-toastify";
+import Loading from "../../../Loading/Loading";
 
 function SharedModal({ tripId, onClose }) {
     const [input, setInput] = useState("");
     const [emails, setEmails] = useState([]);
     const [message, setMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const { data: sharedUsers = [], refetch } = useQuery({
         queryKey: ["getTripShare", tripId],
@@ -61,6 +63,7 @@ function SharedModal({ tripId, onClose }) {
     };
 
     const handleSend = async () => {
+        setIsLoading(true);
         try {
             const option = {
                 headers: {
@@ -71,12 +74,16 @@ function SharedModal({ tripId, onClose }) {
                 emails: emails,
                 message: message,
             };
-            const response = await instance.post(
+            await instance.post(
                 `/account/trips/${tripId}/share`,
                 shareList,
                 option
             );
             showToast.success("초대 전송 완료!");
+            setIsLoading(false);
+            setEmails([]);
+            setMessage("");
+            refetch();
         } catch (error) {
             const failedEmails = error.response?.data?.failedEmails || [];
 
@@ -84,10 +91,6 @@ function SharedModal({ tripId, onClose }) {
                 prev.map((e) => (failedEmails.includes(e) ? { ...e } : e))
             );
             showToast.error("일부 이메일 초대에 실패했습니다.");
-        } finally {
-            setEmails([]);
-            setMessage("");
-            refetch();
         }
     };
 
@@ -113,70 +116,82 @@ function SharedModal({ tripId, onClose }) {
     return (
         <ModalLayout onClose={onClose}>
             <h2 css={S.STitle}>{"여행"} 공유</h2>
-            <div css={S.SInputContainer}>
-                {emails.map((email) => (
-                    <div key={email} className="email-tag">
-                        <span>{email}</span>
-                        <button onClick={() => removeEmail(email)}>
-                            &times;
-                        </button>
-                    </div>
-                ))}
-                <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyUp={handleKeyUp}
-                    placeholder="이메일 입력 후 Enter"
-                    autoFocus
-                    autoComplete="email"
-                />
-            </div>
-            {emails?.length > 0 && (
+            {isLoading ? (
+                <Loading content="초대장을 전송하는 중입니다! 잠시만 기다려주세요." />
+            ) : (
                 <div>
-                    <textarea
-                        css={S.STextArea}
-                        placeholder="이메일 메시지를 작성해주세요"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                    ></textarea>
-                    <div css={S.SButtonGroup}>
-                        <button onClick={() => setEmails([])}>취소</button>
-                        <button className="sendBtn" onClick={handleSend}>
-                            전송
-                        </button>
+                    <div css={S.SInputContainer}>
+                        {emails.map((email) => (
+                            <div key={email} className="email-tag">
+                                <span>{email}</span>
+                                <button onClick={() => removeEmail(email)}>
+                                    &times;
+                                </button>
+                            </div>
+                        ))}
+                        <input
+                            type="text"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyUp={handleKeyUp}
+                            placeholder="이메일 입력 후 Enter"
+                            autoFocus
+                            autoComplete="email"
+                        />
+                    </div>
+                    {emails?.length > 0 && (
+                        <div>
+                            <textarea
+                                css={S.STextArea}
+                                placeholder="이메일 메시지를 작성해주세요"
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                            ></textarea>
+                            <div css={S.SButtonGroup}>
+                                <button onClick={() => setEmails([])}>
+                                    취소
+                                </button>
+                                <button
+                                    className="sendBtn"
+                                    onClick={() => handleSend()}
+                                >
+                                    전송
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                    <div css={S.SSharedUsersContainer}>
+                        <h3>공유된 사용자</h3>
+                        <div>
+                            {sharedUsers?.data?.length === 0 ? (
+                                <p>공유된 사용자가 없습니다.</p>
+                            ) : (
+                                <ul>
+                                    {sharedUsers?.data?.map((user) => (
+                                        <li
+                                            key={user.shareId}
+                                            className="shared-user-item"
+                                        >
+                                            <span>{user.email}</span>
+                                            <button
+                                                onClick={() =>
+                                                    handleCancelShare(
+                                                        user.tripId,
+                                                        user.shareId
+                                                    )
+                                                }
+                                            >
+                                                공유 취소
+                                            </button>
+                                        </li>
+                                    ))}
+                                    <p>공유 취소시 이미 공유된 이메일은 회수되지 않습니다.</p>
+                                </ul>
+                            )}
+                        </div>
                     </div>
                 </div>
             )}
-            <div css={S.SSharedUsersContainer}>
-                <h3>공유된 사용자</h3>
-                <div>
-                    {sharedUsers?.data?.length === 0 ? (
-                        <p>공유된 사용자가 없습니다.</p>
-                    ) : (
-                        <ul>
-                            {sharedUsers?.data?.map((user) => (
-                                <li
-                                    key={user.shareId}
-                                    className="shared-user-item"
-                                >
-                                    <span>{user.email}</span>
-                                    <button
-                                        onClick={() =>
-                                            handleCancelShare(
-                                                user.tripId,
-                                                user.shareId
-                                            )
-                                        }
-                                    >
-                                        공유 취소
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-            </div>
         </ModalLayout>
     );
 }

@@ -1,51 +1,34 @@
-import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
-import { instance } from "../../../api/config/instance";
+import React, { useEffect, useMemo, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import { useNavigate, useParams } from "react-router-dom";
-import Loading from "../../Loading/Loading";
 
-function ScheduleTable({ selectedPlaceId, setSelectedPlaceId }) {
-    const { tripId } = useParams();
-    const navigate = useNavigate();
+function ScheduleTable({
+    selectedPlaceId,
+    setSelectedPlaceId,
+    scheduleData = [],
+}) {
+    const groupedSchedule = useMemo(() => {
+        return scheduleData
+            .filter((item) => item !== null && item !== undefined)
+            .reduce((acc, cur) => {
+                const date = cur.date;
+                if (!acc[date]) acc[date] = [];
+                acc[date].push(cur);
+                return acc;
+            }, {});
+    }, [scheduleData]);
 
-    const getTripSchedule = useQuery({
-        queryKey: ["getTripSchedule", tripId],
-        queryFn: async () => {
-            try {
-                const options = {
-                    headers: {
-                        Authorization: localStorage.getItem("accessToken"),
-                    },
-                };
-                return await instance.get(
-                    `/trips/${tripId}/schedules`,
-                    options
-                );
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        retry: 0,
-        refetchOnWindowFocus: false,
-    });
+    const dateKeys = Object.keys(groupedSchedule);
+    const [selectedDate, setSelectedDate] = useState("");
+    const [selectedPlaces, setSelectedPlaces] = useState([]);
 
-    const groupedSchedule = getTripSchedule?.data?.data?.tripSchedulePlaceViews
-        .filter((item) => item !== null && item !== undefined)
-        .reduce((acc, cur) => {
-            const date = cur.date;
-            if (!acc[date]) acc[date] = [];
-            acc[date].push(cur);
-            return acc;
-        }, {});
-
-    // 날짜 클릭 시 해당하는 place 목록을 1열부터 순서대로 배치
-    const dateKeys = Object.keys(groupedSchedule || {});
-    const [selectedDate, setSelectedDate] = useState(dateKeys[0] || ""); // 최초 선택된 날짜
-    const [selectedPlaces, setSelectedPlaces] = useState(
-        groupedSchedule?.[dateKeys[0]]
-    );
+    // ✅ scheduleData가 바뀔 때 초기화
+    useEffect(() => {
+        if (dateKeys.length > 0) {
+            setSelectedDate(dateKeys[0]);
+            setSelectedPlaces(groupedSchedule[dateKeys[0]]);
+        }
+    }, [groupedSchedule]);
 
     // 날짜 클릭 시 해당하는 장소 목록 업데이트
     const handleDateClick = (date) => {
@@ -58,29 +41,6 @@ function ScheduleTable({ selectedPlaceId, setSelectedPlaceId }) {
     const handlePlaceClick = (id) => {
         setSelectedPlaceId(id);
     };
-
-    useEffect(() => {
-        if (
-            getTripSchedule.isFetched &&
-            (!groupedSchedule || dateKeys.length === 0)
-        ) {
-            alert("등록된 일정이 없어요. 먼저 여행 일정을 추가해 주세요!");
-            navigate(`/trip/plan/${tripId}`);
-        }
-    }, [
-        getTripSchedule.isFetched,
-        groupedSchedule,
-        dateKeys,
-        navigate,
-        tripId,
-    ]);
-
-    if (getTripSchedule.isLoading) {
-        // return <div>일정을 불러오는 중입니다...</div>;
-        return <Loading />;
-    }
-
-    console.log(getTripSchedule.data?.data?.tripSchedulePlaceViews);
 
     return (
         <div css={S.STripTable}>
@@ -99,8 +59,8 @@ function ScheduleTable({ selectedPlaceId, setSelectedPlaceId }) {
                     ))}
                 </ul>
             </div>
+            {/* 장소 목록 (세로 스크롤 가능) */}
             <div>
-                {/* 장소 목록 (세로 스크롤 가능) */}
                 <div className="title">장소</div>
                 <ul css={S.SScroll}>
                     {selectedPlaces?.map((item) => (
