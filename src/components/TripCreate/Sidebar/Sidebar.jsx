@@ -13,6 +13,7 @@ import { useTrip } from "../../Routes/TripContext";
 import { convertStoredAccommodationMapToArray } from "../../../utils/StoredAccommdationsUtils";
 import { useLocation, useNavigate } from "react-router-dom";
 import SwalAlert from "../../SwalAlert/SwalAlert";
+import { format } from "date-fns";
 
 function Sidebar({ selectedStep, setSelectedStep }) {
     const navigate = useNavigate();
@@ -36,8 +37,12 @@ function Sidebar({ selectedStep, setSelectedStep }) {
                 trip: {
                     tripId: location.state.tripId ?? null,
                     title: tripInfo?.title || "여행 이름을 입력하세요",
-                    startDate: tripInfo?.startDate,
-                    endDate: tripInfo?.endDate,
+                    startDate: tripInfo?.startDate
+                        ? format(new Date(tripInfo.startDate), "yyyy-MM-dd")
+                        : undefined,
+                    endDate: tripInfo?.endDate
+                        ? format(new Date(tripInfo.endDate), "yyyy-MM-dd")
+                        : undefined,
                     tripDestinationId:
                         location.state.tripDestinationId ||
                         tripInfo?.tripDestinationId ||
