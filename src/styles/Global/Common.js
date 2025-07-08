@@ -58,6 +58,7 @@ export const Common = css`
         font-size: 16px;
         border-radius: 1.5rem;
         padding: 2rem;
+        white-space: pre-line;
     }
 
     .swal2-icon {

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { instance } from '../../api/config/instance';
 import ProfileContainer from '../../components/ProfileContainer/ProfileContainer';
 import PasswordInput from '../../components/PasswordInput/PasswordInput';
+import SwalAlert from '../../components/SwalAlert/SwalAlert';
 
 function ProfileEdit() {
     const queryClient = useQueryClient();
@@ -34,9 +35,17 @@ function ProfileEdit() {
                 }
             };
             await instance.post("/account/auth/email", {}, option);
-            alert("인증 메일 전송 완료. 인증 요청 메일을 확인해주세요.");
+            SwalAlert({
+                title: "인증 메일 전송 완료",
+				text: "인증 요청 메일을 확인해주세요",
+                icon: "success",
+            });
         } catch (error) {
-            alert("인증 메일 전송 실패. 다시 시도해주세요.");
+            SwalAlert({
+                title: "인증 메일 전송 실패",
+				text: "다시 시도해주세요.",
+                icon: "error",
+            });
         }
     };
 
@@ -106,7 +115,11 @@ function ProfileEdit() {
             };
 
             await instance.put("/account/password", { newPassword: password.newPassword }, option);
-            alert("비밀번호가 변경되었습니다!");
+            SwalAlert({
+                title: "비밀번호 변경 완료",
+				text: "비밀번호가 변경되었습니다!",
+                icon: "success",
+            });
             window.location.replace("/account/mypage");
         } catch (error) {
             console.log(error);

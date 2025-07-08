@@ -10,6 +10,7 @@ import {
     deletePhoto,
     clearPhotos,
 } from "../../../api/DB/AlbumDB";
+import SwalAlert from "../../SwalAlert/SwalAlert";
 
 function ImgUpload({ memos, setMemos, onPhotosChange }) {
     const [photos, setPhotos] = useState([]);
@@ -29,14 +30,17 @@ function ImgUpload({ memos, setMemos, onPhotosChange }) {
         const files = Array.from(e.target.files);
 
         if (files.length + photos.length > 100) {
-            alert("최대 100장까지만 저장할 수 있어요!");
+            SwalAlert({
+                title: `최대 100장까지만 저장할 수 있어요!`,
+                onConfirm: () => {},
+            });
             return;
         }
 
         for (const file of files) {
-            await addPhoto(file);  // Blob 자체 저장
+            await addPhoto(file); // Blob 자체 저장
         }
-    
+
         fetchPhotos(); // 새로 가져오기
     };
 
@@ -54,7 +58,6 @@ function ImgUpload({ memos, setMemos, onPhotosChange }) {
     };
 
     useEffect(() => {
-        //임시
         fetchPhotos();
     }, []);
 
@@ -81,7 +84,10 @@ function ImgUpload({ memos, setMemos, onPhotosChange }) {
         const newMemo = e.target.value;
         // currentPage가 photos 배열 범위를 벗어난 경우 경고창 띄우기
         if (photos.length === 0 || currentPage === photos.length) {
-            alert("먼저 사진을 선택해주세요!");
+            SwalAlert({
+                title: `먼저 사진을 선택해주세요!`,
+                text: `사진을 선택한 후에 메모를 작성할 수 있습니다.`,
+            });
             return; // 텍스트 입력을 하지 않음
         }
         const currentId = photos[currentPage].id;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import NavLayout from "../../components/NavComponents/NavLayout/NavLayout";
@@ -14,6 +14,8 @@ import Loading from "../../components/Loading/Loading";
 import usePrompt from "../../hooks/usePrompt";
 import { getAuth } from "firebase/auth";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { getNday } from "../../utils/DateUtils";
+import SwalAlert from "../../components/SwalAlert/SwalAlert";
 
 function TripAlbumUpload() {
     const { tripId } = useParams();
@@ -47,11 +49,41 @@ function TripAlbumUpload() {
         enabled: false,
     });
 
+    const groupedSchedule = useMemo(() => {
+        const scheduleList = data?.data?.tripSchedulePlaceViews;
+        const startDate = data?.data?.trip?.startDate;
+
+        if (!scheduleList || !startDate) return [];
+
+        // 날짜별로 장소를 묶기
+        const map = scheduleList.reduce((acc, cur) => {
+            const date = cur.date;
+            if (!acc[date]) acc[date] = [];
+            acc[date].push(cur);
+            return acc;
+        }, {});
+
+        // 날짜 정렬 후, startDate 기준 n일차 계산
+        const sortedDates = Object.keys(map).sort(); // ISO 형식이면 문자열 정렬로 OK
+
+        return sortedDates.map((date) => ({
+            dayLabel: getNday(startDate, date), // ✅ n일차 계산
+            date,
+            places: map[date],
+        }));
+    }, [data]);
+
     useEffect(() => {
         const auth = getAuth();
         if (!auth.currentUser) {
-            alert("로그인이 필요합니다!");
-            navigate("/auth/signin");
+            SwalAlert({
+                title: "로그인이 필요합니다!",
+                text: "로그인 페이지로 이동합니다.",
+                icon: "error",
+                onConfirm: () => {
+                    navigate("/auth/signin");
+                }
+            });
         }
     }, []);
 
@@ -64,8 +96,15 @@ function TripAlbumUpload() {
     useEffect(() => {
         refetch().then((result) => {
             if (!result.data?.data?.tripSchedulePlaceViews?.length) {
-                alert("등록된 일정이 없어요. 먼저 여행 일정을 추가해 주세요!");
-                navigate(`/trip/plan/${tripId}`);
+                SwalAlert({
+                    title: "등록된 일정이 없어요. ",
+                    text: "먼저 여행 일정을 추가해 주세요!\n여행 계획 페이지로 이동합니다.",
+                    icon: "warning",
+                    confirmButtonText: "이동하기",
+                    onConfirm: () => {
+                        navigate(`/trip/plan/${tripId}`);
+                    }
+                });
             }
         });
     }, [tripId, refetch, navigate]);
@@ -74,18 +113,32 @@ function TripAlbumUpload() {
         const auth = getAuth();
 
         if (!auth.currentUser) {
-            alert("로그인이 필요합니다!");
-            navigate("/auth/signin");
+            SwalAlert({
+                title: "로그인이 필요합니다!",
+                text: "로그인 페이지로 이동합니다.",
+                icon: "error",
+                onConfirm: () => {
+                    navigate("/auth/signin");
+                }
+            });
             return;
         }
         const photos = await getAllPhotos(); //IndexedDB에서 사진 가져오기
 
         if (photos.length === 0) {
-            alert("업로드할 사진이 없어요!");
+             SwalAlert({
+                title: `업로드할 사진이 없어요!`,
+                text: `업로드할 사진을 먼저 선택해주세요.`,
+                icon: "error",
+            });
             return;
         }
         if (selectedPlaceId.length === 0) {
-            alert("장소를 선택해주세요!");
+            SwalAlert({
+                title: `장소를 선택해주세요!`,
+                text: `장소를 선택하지 않으면 사진을 업로드할 수 없어요.`,
+                icon: "error",
+            });
             return;
         }
 
@@ -120,9 +173,16 @@ function TripAlbumUpload() {
             // 이제 DB에 메타데이터 저장
             await instance.post(`/trips/${tripId}/album`, album, option);
             await clearPhotos(); // 업로드 완료 후 초기화
-            alert("사진 업로드 완료!");
+            SwalAlert({
+                title: `사진 업로드 완료!`,
+                icon: "success",
+            });
         } catch (error) {
-            alert(error.response.data.sendFail);
+            SwalAlert({
+                title: `사진 업로드 실패!`,
+                text: "업로드 중 오류가 발생했어요.\n다시 시도해주세요.",
+                icon: "error",
+            });
         } finally {
             setPageLoading(false); // 로딩 종료
             setHasUnsavedPhotos(false); // 상태 초기화
@@ -133,7 +193,7 @@ function TripAlbumUpload() {
     return (
         <NavLayout>
             <NavContainer>
-                {isLoading ? (
+                {isLoading || groupedSchedule.length === 0 ? (
                     <Loading content={"일정 데이터를 불러오고 있어요..."} />
                 ) : pageLoading ? (
                     <Loading
@@ -159,7 +219,7 @@ function TripAlbumUpload() {
                                 <ScheduleTable
                                     selectedPlaceId={selectedPlaceId}
                                     setSelectedPlaceId={setSelectedPlaceId}
-                                    scheduleData={data.data?.tripSchedulePlaceViews}
+                                    scheduleData={groupedSchedule}
                                 />
                             </div>
                             <button

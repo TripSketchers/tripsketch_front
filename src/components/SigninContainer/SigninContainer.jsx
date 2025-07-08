@@ -10,6 +10,7 @@ import PasswordInput from "../PasswordInput/PasswordInput";
 import { auth } from "../../api/Firebase/Firebase";
 import { signInWithCustomToken } from "firebase/auth";
 import { FaArrowRight } from "react-icons/fa6";
+import SwalAlert from "../SwalAlert/SwalAlert";
 
 function SigninContainer({
 	isSignin,
@@ -70,12 +71,16 @@ function SigninContainer({
 			!isSignin &&
 			(!user.email || !user.password || !user.checkPassword)
 		) {
-			alert("모든 항목을 입력해주세요.");
+			SwalAlert({
+				title: "모든 항목을 입력해주세요.",
+			});
 			return;
 		}
 
 		if (!isSignin && (messages.password || messages.checkPassword)) {
-			alert("입력된 정보를 확인해주세요.");
+			SwalAlert({
+				title: "입력된 정보를 확인해주세요.",
+			});
 			return;
 		}
 
@@ -90,8 +95,13 @@ function SigninContainer({
 			const response = await instance.post(endpoint, data);
 
 			if (!isSignin) {
-				alert("회원가입이 완료되었습니다!");
-				window.location.replace("/auth/signin");
+				SwalAlert({
+				title: "회원가입이 완료되었습니다!",
+				icon: "success",
+				onConfirm: () => { // 회원가입 후 로그인 페이지로 이동	
+					window.location.replace("/auth/signin");
+				}
+			});
 			} else {
 				localStorage.setItem(
 					"accessToken",
@@ -102,14 +112,19 @@ function SigninContainer({
 					await signInWithCustomToken(auth, firebaseToken);
 					window.location.replace("/");
 				} catch (e) {
+					SwalAlert({
+						title: "로그인 실패",
+						text: "로그인에 실패했습니다. 다시 시도해주세요.",
+						icon: "error",
+					});
 					console.error("로그인 실패", e);
 				}
 			}
 		} catch (error) {
 			const errors = error.response?.data;
-			if (errors?.email) alert(errors.email);
-			else if (errors?.password) alert(errors.password);
-			else if (errors?.signin) alert(errors.signin);
+			if (errors?.email) console.error(errors.email);
+			else if (errors?.password) console.error(errors.password);
+			else if (errors?.signin) console.error(errors.signin);
 		}
 	};
 

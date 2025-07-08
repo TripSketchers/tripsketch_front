@@ -1,5 +1,5 @@
-import { css } from '@emotion/react';
-import colors from '../../constants/color';
+import { css } from "@emotion/react";
+import colors from "../../constants/color";
 
 export const SLayout = css`
     display: flex;
@@ -8,11 +8,13 @@ export const SLayout = css`
     height: 100%;
     gap: 20px;
 
-    @media (max-width: 1300px) { // SRightContainer 위치 조정
+    @media (max-width: 1300px) {
+        // SRightContainer 위치 조정
         flex-direction: column;
     }
 
-    h3 { // 제목
+    h3 {
+        // 제목
         padding: 10px 0;
         font-size: 20px;
         font-weight: 600;
@@ -24,10 +26,11 @@ export const SLeftContainer = css`
 `;
 
 export const SRightContainer = css`
-    flex: 0.6;
+    flex: 0.7;
+    max-width: 400px;
 
-    @media (max-width: 1350px) { // SRightContainer 위치 조정
-        flex: 0.7;
+    @media (max-width: 1300px) {
+        max-width: 100%;
     }
 
     .titleBox {
@@ -48,7 +51,6 @@ export const STripBox = css`
     overflow: hidden;
 `;
 
-
 export const SUploadButton = css`
     margin-top: 10px;
     border: 3px solid ${colors.primaryButton};
@@ -61,8 +63,8 @@ export const SUploadButton = css`
     font-weight: 600;
     height: 100px;
 
-    @media (max-width: 1300px) { // SRightContainer 위치 조정
+    @media (max-width: 1300px) {
+        // SRightContainer 위치 조정
         height: 50px;
     }
 `;
-
