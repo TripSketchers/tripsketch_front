@@ -114,7 +114,7 @@ function TripAlbum(props) {
             <NavContainer>
                 <h1>{getAlbum?.data?.trip?.title}</h1>
                 <div css={S.SViewTypeBox}>
-                    <div class="switches-container">
+                    <div className="switches-container">
                         <input
                             type="radio"
                             id="switchWhole"
@@ -133,8 +133,8 @@ function TripAlbum(props) {
                         />
                         <label htmlFor="switchWhole">전체보기</label>
                         <label htmlFor="switchFolder">폴더별 보기</label>
-                        <div class="switch-wrapper">
-                            <div class="switch">
+                        <div className="switch-wrapper">
+                            <div className="switch">
                                 <div>전체보기</div>
                                 <div>폴더별 보기</div>
                             </div>

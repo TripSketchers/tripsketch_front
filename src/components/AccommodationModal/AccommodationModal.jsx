@@ -11,9 +11,12 @@ import ModalLayout from "../ModalLayout/ModalLayout";
 function AccommodationModal({ onClose, onConfirm, selectedPlace }) {
     const { tripInfo, storedAccommodations } = useTrip();
 
-    const toKSTDate = (dateStr) => {
-        return new Date(dateStr + "T00:00:00+09:00");
-    }
+    const toKSTDate = (date) => {
+        if (typeof date === "string") {
+            return new Date(date + "T00:00:00+09:00");
+        }
+        return date; // 이미 Date 객체면 그대로 반환
+    };
 
     const stayDays =
         tripInfo?.startDate && tripInfo?.endDate
