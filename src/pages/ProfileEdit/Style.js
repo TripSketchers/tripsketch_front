@@ -42,17 +42,17 @@ export const SRow = css`
     max-width: 800px;
     font-size: 14px;
 
-    & > *:first-child {
+    & > *:first-of-type {
         width: 20%;
         min-width: 85px;
     }
 
-    & > *:nth-child(2) {
+    & > *:nth-of-type(2) {
         width: 50%;
         min-width: 150px;
     }
 
-    & > *:last-child {
+    & > *:last-of-type {
         width: 20%;
         min-width: 85px;
     }

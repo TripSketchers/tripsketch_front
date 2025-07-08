@@ -22,7 +22,6 @@ function SigninOauth2(props) {
             if (firebaseToken) {
                 try {
                     await signInWithCustomToken(auth, firebaseToken);
-                    console.log("Firebase 로그인 성공");
                 } catch (error) {
                     console.error("Firebase 로그인 실패", error);
                 }

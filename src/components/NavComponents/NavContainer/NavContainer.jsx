@@ -23,7 +23,7 @@ const SLayout = css`
     
     & > div {
         position: relative;
-        margin: 0 20%;
+        margin: 0 20% 40px;
         border-radius: 10px;
         padding: 30px 40px;
         box-shadow: 0 0 6px rgba(0, 0, 0, 0.7);

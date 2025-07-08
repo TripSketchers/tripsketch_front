@@ -9,7 +9,6 @@ export function useFirebaseAuth() {
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            console.log("user changed", user);
             setFirebaseUser(user);
             if (user) {
                 const tokenResult = await getIdTokenResult(user);

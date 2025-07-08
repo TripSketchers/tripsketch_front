@@ -10,8 +10,6 @@ function TravelTimeBlock({ topPx, heightPx, item, transportType }) {
 	};
 
 	const handleClick = () => {
-		console.log("TravelTimeBlock clicked:", item);
-
 		if (!item.origin || !item.destination) {
 			console.warn("좌표 정보가 없습니다.");
 			return;

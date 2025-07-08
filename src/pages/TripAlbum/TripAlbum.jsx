@@ -77,8 +77,6 @@ function TripAlbum(props) {
         refetchOnWindowFocus: false,
     });
 
-    console.log(getAlbum?.data)
-
     // 여기서 n일차 가공
     const sortedAlbums = Array.isArray(getAlbum?.data?.albums)
         ? [...getAlbum?.data?.albums]
@@ -133,8 +131,8 @@ function TripAlbum(props) {
                             checked={viewType === 1}
                             onChange={handleRadioChange}
                         />
-                        <label for="switchWhole">전체보기</label>
-                        <label for="switchFolder">폴더별 보기</label>
+                        <label htmlFor="switchWhole">전체보기</label>
+                        <label htmlFor="switchFolder">폴더별 보기</label>
                         <div class="switch-wrapper">
                             <div class="switch">
                                 <div>전체보기</div>

@@ -27,7 +27,6 @@ function Sidebar({ selectedStep, setSelectedStep }) {
 		try {
 			// ✅ 선택한 교통수단 저장
 			localStorage.setItem("transportType", selectedTransport);
-            console.log(storedAccommodations);
             
 			const mergedAccommodations =
 				convertStoredAccommodationMapToArray(storedAccommodations);
