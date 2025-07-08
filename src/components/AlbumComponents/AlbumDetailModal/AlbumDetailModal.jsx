@@ -7,7 +7,6 @@ import { IoClose } from "react-icons/io5";
 import { instance } from "../../../api/config/instance";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import ConfirmModal from "../../ConfirmModal/ConfirmModal";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import SwalAlert from "../../SwalAlert/SwalAlert";
@@ -56,7 +55,7 @@ function AlbumDetailModal({ photo, onClose }) {
             setIsEditing(false); // 편집 모드 종료
             queryClient.invalidateQueries(["getAlbum", tripId]);
         } catch (error) {
-            alert(error.response.data.sendFail);
+            console.error(error.response.data.sendFail);
         }
     };
 

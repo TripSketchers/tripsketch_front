@@ -8,6 +8,7 @@ import TogglePanel from "../../../TogglePanel/TogglePanel";
 import { instance } from "../../../../api/config/instance";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import SwalAlert from "../../../SwalAlert/SwalAlert";
 
 function AlbumFolderItem({ album, photo, onClickFolder }) {
     const { tripId } = useParams();
@@ -24,9 +25,7 @@ function AlbumFolderItem({ album, photo, onClickFolder }) {
                 `/trips/${tripId}/albums/${album.albumId}`,
                 option
             );
-            alert(`폴더 ${album.albumId} 삭제 완료`);
             queryClient.invalidateQueries(["getAlbum", tripId]);
-            // setIsModalOpen(fasle);
         } catch (error) {
             console.log(error);
         }
