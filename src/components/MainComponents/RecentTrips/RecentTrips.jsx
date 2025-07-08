@@ -76,7 +76,7 @@ function RecentTrips() {
                             css={S.STripBox}
                             onClick={() => {
                                 navigate(
-                                    `/trip/album/${getUpcomingTrip.data.tripId}`
+                                    `/trip/plan/${getUpcomingTrip.data.tripId}`
                                 );
                             }}
                         >
