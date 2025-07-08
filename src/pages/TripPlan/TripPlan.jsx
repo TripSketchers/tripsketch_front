@@ -133,9 +133,6 @@ function TripPlan() {
             );
 
             if (currentTransportType !== lastUsedTransportType) {
-                console.log(
-                    "🚗 교통 수단 변경 감지 → travelTime 재계산 실행"
-                );
                 const travelSchedules = await calculateAllTravelTimes(
                     updatedSchedules,
                     currentTransportType

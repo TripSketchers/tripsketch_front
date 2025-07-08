@@ -73,8 +73,6 @@ function ScheduleCard({
 	});
 
 	const handleEditClick = (e) => {
-		console.log(schedule);
-
 		e.stopPropagation();
 		if (!isLocked && !isResizing) {
 			setSelectedSchedule(schedule);

@@ -51,7 +51,7 @@ export const SOverlayBox = (isRightPanelActive) => css`
 `;
 
 export const SOverlay = (isRightPanelActive) => css`
-    background: linear-gradient(90deg, ${colors.mainGreenHover} 0%, ${colors.mainBlueHover} 100%);
+    background: linear-gradient(90deg, ${colors.mainGreenHover} 0%, ${colors.mainBlue} 100%);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 0;

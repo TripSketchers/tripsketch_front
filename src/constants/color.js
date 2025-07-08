@@ -23,7 +23,7 @@ const colors = {
     loading7: "#94b9ff",
 
     mainGreen: "#cdffd8",
-    mainGreenHover: "#9abfa2",
+    mainGreenHover: "#badfc2",
     mainLightBlue: "#d5dff3",
     mainBlue: "#94b9ff",
     mainBlueHover: "#6f8bbf",

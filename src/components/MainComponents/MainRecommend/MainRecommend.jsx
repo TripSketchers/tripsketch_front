@@ -60,7 +60,7 @@ function MainRecommend(props) {
                                 >
                                     <div className="banner_bg">
                                         <span>{item.koName}</span>
-                                        <p class="hover_text">
+                                        <p className="hover_text">
                                             {item.koName}
                                             {hasBatchim(item.koName)
                                                 ? "으로 "
@@ -86,7 +86,7 @@ function MainRecommend(props) {
                                 >
                                     <div className="banner_bg">
                                         <span>{item.koName}</span>
-                                        <p class="hover_text">
+                                        <p className="hover_text">
                                             {item.koName}
                                             {hasBatchim(item.koName)
                                                 ? "으로 "

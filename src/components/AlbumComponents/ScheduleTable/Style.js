@@ -11,7 +11,7 @@ export const STripTable = css`
         text-align: center;
     }
 
-    div:nth-child(2) {
+    div:nth-of-type(2) {
         flex: 1;
         min-width: 0;
     }

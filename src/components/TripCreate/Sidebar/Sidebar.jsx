@@ -24,14 +24,13 @@ function Sidebar({ selectedStep, setSelectedStep }) {
         setShowModal(true);
     };
 
-    const handleTransportSelect = async (selectedTransport) => {
-        try {
-            // ✅ 선택한 교통수단 저장
-            localStorage.setItem("transportType", selectedTransport);
-            console.log(storedAccommodations);
-
-            const mergedAccommodations =
-                convertStoredAccommodationMapToArray(storedAccommodations);
+	const handleTransportSelect = async (selectedTransport) => {
+		try {
+			// ✅ 선택한 교통수단 저장
+			localStorage.setItem("transportType", selectedTransport);
+            
+			const mergedAccommodations =
+				convertStoredAccommodationMapToArray(storedAccommodations);
 
             const reqData = {
                 trip: {

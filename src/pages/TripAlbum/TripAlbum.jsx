@@ -77,8 +77,6 @@ function TripAlbum(props) {
         refetchOnWindowFocus: false,
     });
 
-    console.log(getAlbum?.data)
-
     // 여기서 n일차 가공
     const sortedAlbums = Array.isArray(getAlbum?.data?.albums)
         ? [...getAlbum?.data?.albums]
@@ -116,7 +114,7 @@ function TripAlbum(props) {
             <NavContainer>
                 <h1>{getAlbum?.data?.trip?.title}</h1>
                 <div css={S.SViewTypeBox}>
-                    <div class="switches-container">
+                    <div className="switches-container">
                         <input
                             type="radio"
                             id="switchWhole"
@@ -133,10 +131,10 @@ function TripAlbum(props) {
                             checked={viewType === 1}
                             onChange={handleRadioChange}
                         />
-                        <label for="switchWhole">전체보기</label>
-                        <label for="switchFolder">폴더별 보기</label>
-                        <div class="switch-wrapper">
-                            <div class="switch">
+                        <label htmlFor="switchWhole">전체보기</label>
+                        <label htmlFor="switchFolder">폴더별 보기</label>
+                        <div className="switch-wrapper">
+                            <div className="switch">
                                 <div>전체보기</div>
                                 <div>폴더별 보기</div>
                             </div>

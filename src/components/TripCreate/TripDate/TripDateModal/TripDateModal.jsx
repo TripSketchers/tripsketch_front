@@ -6,10 +6,10 @@ import CustomDatePicker from "../CustomDatePicker/CustomDatePicker";
 import ModalLayout from "../../../ModalLayout/ModalLayout";
 
 function TripDateModal({ savedDateRange, onClose, onSelect }) {
-	const [tempDateRange, setTempDateRange] = useState({
-		startDate: null,
-		endDate: null,
-	});
+	const [tempDateRange, setTempDateRange] = useState(() => ({
+		startDate: savedDateRange?.startDate ?? null,
+		endDate: savedDateRange?.endDate ?? null,
+	}));
 
 	const handleBackdropClick = () => {
 		if (!savedDateRange.startDate || !savedDateRange.endDate) {
