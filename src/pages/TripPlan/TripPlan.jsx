@@ -36,144 +36,161 @@ function TripPlan() {
 		storedPlaces,
 		setStoredPlaces,
 		setStoredAccommodations,
+		schedules,
 		setSchedules,
 		setTripDestination,
 	} = useTrip();
 
-    const fetchTripInfo = async () => {
-        try {
-            const res = await instance.get(`/trips/${tripId}`, {
-                headers: {
-                    Authorization: localStorage.getItem("accessToken"),
-                },
-            });
+	const assignPositionByDate = (schedules) => {
+		const schedulesByDate = {};
+		schedules.forEach((s) => {
+			if (!schedulesByDate[s.date]) schedulesByDate[s.date] = [];
+			schedulesByDate[s.date].push(s);
+		});
+		Object.values(schedulesByDate).forEach((arr) => {
+			arr.sort(
+				(a, b) =>
+					timeToMinutes(a.startTime) - timeToMinutes(b.startTime)
+			);
+			arr.forEach((s, idx) => {
+				s.position = idx;
+			});
+		});
+		return schedules;
+	};
 
-            const data = res.data;
-            setTripInfo(data.trip);
-            setTripDestination(data.tripDestination);
-            setStoredPlaces(data.storedPlaces);
-            const accommodationMap = convertArrayToAccommodationMap(
-                data.storedAccommodations
-            );
-            setStoredAccommodations(accommodationMap);
+	const fetchTripInfo = async () => {
+		try {
+			const res = await instance.get(`/trips/${tripId}`, {
+				headers: {
+					Authorization: localStorage.getItem("accessToken"),
+				},
+			});
 
-            const updatedSchedules = [];
-            data.tripSchedules.forEach((schedule) => {
-                const result = splitAndSetSchedule(
-                    schedule,
-                    schedule.date,
-                    schedule.startTime,
-                    schedule.endTime
-                );
-                updatedSchedules.push(...result);
-            });
+			const data = res.data;
+			setTripInfo(data.trip);
+			setTripDestination(data.tripDestination);
+			setStoredPlaces(data.storedPlaces);
+			const accommodationMap = convertArrayToAccommodationMap(
+				data.storedAccommodations
+			);
+			setStoredAccommodations(accommodationMap);
 
-            const tripDates =
-                data.trip.startDate && data.trip.endDate
-                    ? eachDayOfInterval({
-                            start: new Date(data.trip.startDate),
-                            end: new Date(data.trip.endDate),
-                      }).map((d) => format(d, "yyyy-MM-dd"))
-                    : [];
+			const updatedSchedules = [];
+			data.tripSchedules.forEach((schedule) => {
+				const result = splitAndSetSchedule(
+					schedule,
+					schedule.date,
+					schedule.startTime,
+					schedule.endTime
+				);
+				updatedSchedules.push(...result);
+			});
 
-            tripDates?.forEach((date) => {
-                const accommodation = accommodationMap[date];
+			const tripDates =
+				data.trip.startDate && data.trip.endDate
+					? eachDayOfInterval({
+							start: new Date(data.trip.startDate),
+							end: new Date(data.trip.endDate),
+					  }).map((d) => format(d, "yyyy-MM-dd"))
+					: [];
 
-                const hasAccommodationSchedule = updatedSchedules.some(
-                    (s) => {
-                        if (!s.isAccommodation || !s.place) return false;
-                        if (
-                            s.place.googlePlaceId !==
-                            accommodation?.googlePlaceId
-                        )
-                            return false;
+			tripDates?.forEach((date) => {
+				const accommodation = accommodationMap[date];
 
-                        const sStart = timeToMinutes(s.startTime);
-                        const sEnd = timeToMinutes(s.endTime);
+				const hasAccommodationSchedule = updatedSchedules.some((s) => {
+					if (!s.isAccommodation || !s.place) return false;
+					if (s.place.googlePlaceId !== accommodation?.googlePlaceId)
+						return false;
 
-                        // ✅ 그 날짜의 "밤" (23:00 ~ 06:00 다음날) 일정이 있는지 확인
-                        return (
-                            s.date === date &&
-                            (sStart >= 1380 || sEnd > 1440) // 23:00 이후 또는 "32:00" 같은 경우
-                        );
-                    }
-                );
+					const sStart = timeToMinutes(s.startTime);
+					const sEnd = timeToMinutes(s.endTime);
 
-                if (accommodation && !hasAccommodationSchedule) {
-                    const result = splitAndSetSchedule(
-                        {
-                            tripScheduleId: `accommodation_${date}`,
-                            tripId: data.trip.tripId,
-                            date,
-                            startTime: "23:00",
-                            endTime: "32:00",
-                            stayTime: 540,
-                            travelTime: 0,
-                            position: null,
-                            isLocked: 0,
-                            place: accommodation,
-                            isAccommodation: 1,
-                            viewStartTime: "23:00",
-                            viewEndTime: "32:00",
-                        },
-                        date,
-                        "23:00",
-                        "32:00"
-                    );
-                    updatedSchedules.push(...result);
-                }
-            });
+					// ✅ 그 날짜의 "밤" (23:00 ~ 06:00 다음날) 일정이 있는지 확인
+					return (
+						s.date === date && (sStart >= 1380 || sEnd > 1440) // 23:00 이후 또는 "32:00" 같은 경우
+					);
+				});
 
-            // 🚨 transportType이 바뀐 경우에만 travelTime 계산
-            const currentTransportType = parseInt(
-                localStorage.getItem("transportType") ?? "1"
-            ); // default: 1
-            const lastUsedTransportType = parseInt(
-                localStorage.getItem("lastUsedTransportType") ?? "-1"
-            );
+				if (accommodation && !hasAccommodationSchedule) {
+					const result = splitAndSetSchedule(
+						{
+							tripScheduleId: `accommodation_${date}`,
+							tripId: data.trip.tripId,
+							date,
+							startTime: "23:00",
+							endTime: "32:00",
+							stayTime: 540,
+							travelTime: 0,
+							position: null,
+							isLocked: 0,
+							place: accommodation,
+							isAccommodation: 1,
+							viewStartTime: "23:00",
+							viewEndTime: "32:00",
+						},
+						date,
+						"23:00",
+						"32:00"
+					);
+					updatedSchedules.push(...result);
+				}
+			});
 
-            if (currentTransportType !== lastUsedTransportType) {
-                const travelSchedules = await calculateAllTravelTimes(
-                    updatedSchedules,
-                    currentTransportType
-                );
-                const adjustedSchedules =
-                    adjustScheduleTimes(travelSchedules);
+			// 🚨 transportType이 바뀐 경우에만 travelTime 계산
+			const currentTransportType = parseInt(
+				localStorage.getItem("transportType") ?? "1"
+			); // default: 1
+			const lastUsedTransportType = parseInt(
+				localStorage.getItem("lastUsedTransportType") ?? "-1"
+			);
 
-                setSchedules(adjustedSchedules);
-                setInitialSchedules(adjustedSchedules);
+			if (currentTransportType !== lastUsedTransportType) {
+				const travelSchedules = await calculateAllTravelTimes(
+					updatedSchedules,
+					currentTransportType
+				);
+				const adjustedSchedules = adjustScheduleTimes(travelSchedules);
 
-                localStorage.setItem(
-                    "lastUsedTransportType",
-                    currentTransportType
-                );
+				const positionedSchedules =
+					assignPositionByDate(adjustedSchedules);
 
-                try {
-                    const mergedSchedules = mergeSplitSchedules(
-                        adjustedSchedules,
-                        data.trip.tripId
-                    );
-                    await instance.post(
-                        `/trips/${tripId}/schedules`,
-                        mergedSchedules,
-                        {
-                            headers: {
-                                Authorization:
-                                    localStorage.getItem("accessToken"),
-                            },
-                        }
-                    );
-                } catch (err) {
-                    console.error("🛑 travelTime 일정 저장 실패", err);
-                }
-            } else {
-                setSchedules(updatedSchedules);
-                setInitialSchedules(updatedSchedules);
-            }
-        } catch (err) {
-            console.error("여행 정보를 불러오는 데 실패했습니다.", err);
-        }
-    };
+				setSchedules(positionedSchedules);
+				setInitialSchedules(positionedSchedules);
+
+				localStorage.setItem(
+					"lastUsedTransportType",
+					currentTransportType
+				);
+
+				try {
+					const mergedSchedules = mergeSplitSchedules(
+						positionedSchedules,
+						data.trip.tripId
+					);
+					await instance.post(
+						`/trips/${tripId}/schedules`,
+						mergedSchedules,
+						{
+							headers: {
+								Authorization:
+									localStorage.getItem("accessToken"),
+							},
+						}
+					);
+				} catch (err) {
+					console.error("🛑 travelTime 일정 저장 실패", err);
+				}
+			} else {
+				const positionedSchedules =
+					assignPositionByDate(updatedSchedules);
+				setSchedules(positionedSchedules);
+				setInitialSchedules(positionedSchedules);
+			}
+		} catch (err) {
+			console.error("여행 정보를 불러오는 데 실패했습니다.", err);
+		}
+	};
 
 	const handleSaveStoredPlaces = async () => {
 		const formattedPlaces = storedPlaces.map((place) => ({
@@ -234,7 +251,6 @@ function TripPlan() {
 													text={"계획"}
 													categories={categories}
 												/>
-												
 											</>
 										)}
 										<StoredPlacePanel
@@ -271,7 +287,7 @@ function TripPlan() {
 						<Map selectedStep={4} />
 					</div>
 				</Split>
-                <PlaceDetailModal />
+				<PlaceDetailModal />
 			</div>
 		</NavLayout>
 	);
