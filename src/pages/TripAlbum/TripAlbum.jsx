@@ -27,24 +27,6 @@ function TripAlbum(props) {
     const [sorting, setSorting] = useState(0); //최신순 : 0, 과거순: 1
     const [showSorting, setShowSorting] = useState(true);
 
-    useEffect(() => {
-        queryClient.prefetchQuery({
-            queryKey: ["getTripSchedule", tripId],
-            queryFn: async () => {
-                const options = {
-                    headers: {
-                        Authorization: localStorage.getItem("accessToken"),
-                    },
-                };
-                const res = await instance.get(
-                    `/trips/${tripId}/schedules`,
-                    options
-                );
-                return res.data;
-            },
-        });
-    }, [tripId, queryClient]);
-
     const handleRadioChange = (event) => {
         setViewType(event.target.value === "Whole" ? 0 : 1);
     };
@@ -76,8 +58,6 @@ function TripAlbum(props) {
         retry: 0,
         refetchOnWindowFocus: false,
     });
-
-    console.log(getAlbum?.data);
 
     // 여기서 n일차 가공
     const sortedAlbums = Array.isArray(getAlbum?.data?.albums)

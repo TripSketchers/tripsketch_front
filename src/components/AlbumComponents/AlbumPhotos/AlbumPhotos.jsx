@@ -4,6 +4,7 @@ import * as S from "./Style";
 import { instance } from "../../../api/config/instance";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { FaTrash } from "react-icons/fa6";
+import { BiCalendarExclamation } from "react-icons/bi";
 import { MdEdit } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import PhotoBox from "./PhotoBox/PhotoBox";
@@ -175,6 +176,9 @@ function AlbumPhotos({ albums }) {
                             <input
                                 type="checkbox"
                                 checked={isAllChecked}
+                                onChange={(e) =>
+                                    setIsAllChecked(e.target.checked)
+                                }
                                 onClick={handlePhotoSelectAll}
                             />
                             <button onClick={handleDeleteConfirm}>
@@ -182,7 +186,11 @@ function AlbumPhotos({ albums }) {
                             </button>
                             <button
                                 className="cancel"
-                                onClick={() => setSelectMode(false)}
+                                onClick={() => {
+                                    setSelectMode(false);
+                                    setCheckedPhoto(new Set()); // 선택 초기화
+                                    setIsAllChecked(false); // 전체 선택 해제
+                                }}
                             >
                                 취소
                             </button>
@@ -204,17 +212,16 @@ function AlbumPhotos({ albums }) {
                         css={S.SAlbumContainer}
                     >
                         <div css={S.SScheduleBox(index === 0)}>
-                            <div>
-                                <span>{album.dayDiff}</span>&nbsp;|&nbsp;
-                                {album.date} {album.placeName}
-                                <button
-                                    onClick={() =>
-                                        setEditingAlbumId(album.albumId)
-                                    }
-                                >
-                                    <MdEdit />
-                                </button>
+                            <span>{album.dayDiff}</span>&nbsp;|&nbsp;
+                            {album.date} {album.placeName}
+                            <div className="missingFlag">
+                                {album.tripScheduleMissingFlag && <BiCalendarExclamation />}
                             </div>
+                            <button
+                                onClick={() => setEditingAlbumId(album.albumId)}
+                            >
+                                <MdEdit />
+                            </button>
                         </div>
                         <div css={S.SAlbumBox}>
                             <PhotoBox

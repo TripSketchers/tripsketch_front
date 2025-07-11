@@ -4,6 +4,7 @@ import * as S from "./Style";
 import { FaFolder } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { IoMdMore, IoMdTrash } from "react-icons/io";
+import { BiCalendarExclamation } from "react-icons/bi";
 import TogglePanel from "../../../TogglePanel/TogglePanel";
 import { instance } from "../../../../api/config/instance";
 import { useParams } from "react-router-dom";
@@ -42,6 +43,7 @@ function AlbumFolderItem({ album, photo, onClickFolder }) {
                 <img src={photo} alt="앨범" />
             </div>
             <div css={S.SFolderInner}>
+                <div className="missingFlag">{album?.tripScheduleMissingFlag && <BiCalendarExclamation />}</div>
                 <div className="innerBox">
                     <TogglePanel
                         triggerIcon={
@@ -75,7 +77,7 @@ function AlbumFolderItem({ album, photo, onClickFolder }) {
             </div>
             {isEditModalOpen && (
                 <AlbumEditModal
-                    onClose={()=>setIsEditModalOpen(false)}
+                    onClose={() => setIsEditModalOpen(false)}
                     tripId={tripId}
                     album={album}
                 />
