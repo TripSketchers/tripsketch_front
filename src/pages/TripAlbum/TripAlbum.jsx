@@ -77,6 +77,8 @@ function TripAlbum(props) {
         refetchOnWindowFocus: false,
     });
 
+    console.log(getAlbum?.data);
+
     // 여기서 n일차 가공
     const sortedAlbums = Array.isArray(getAlbum?.data?.albums)
         ? [...getAlbum?.data?.albums]
