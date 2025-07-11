@@ -129,64 +129,65 @@ function SigninContainer({
 	};
 
 	return (
-		<div css={S.SLayout(isSignin, isRightPanelActive, isMobile)}>
-			<form css={S.SContainer}>
-				<h1>{text}</h1>
-				<div css={S.SBox}>
-					<a href="http://localhost:8080/oauth2/authorization/kakao">
-						<RiKakaoTalkFill size={28} />
-					</a>
-					<a href="http://localhost:8080/oauth2/authorization/google">
-						<FaGoogle size={21} />
-					</a>
-					<a href="http://localhost:8080/oauth2/authorization/naver">
-						<SiNaver size={18} />
-					</a>
-				</div>
-				<span>이메일로 {text}</span>
+        <div css={S.SLayout(isSignin, isRightPanelActive, isMobile)}>
+            <form css={S.SContainer}>
+                <h1>{text}</h1>
+                <div css={S.SBox}>
+                    <a href="https://tripsketchback-production-a057.up.railway.app/oauth2/authorization/kakao">
+                        <RiKakaoTalkFill size={28} />
+                    </a>
+                    <a href="https://tripsketchback-production-a057.up.railway.app/oauth2/authorization/google">
+                        <FaGoogle size={21} />
+                    </a>
+                    <a href="https://tripsketchback-production-a057.up.railway.app/oauth2/authorization/naver">
+                        <SiNaver size={18} />
+                    </a>
+                </div>
+                <span>이메일로 {text}</span>
 
-				<input
-					type="email"
-					name="email"
-					placeholder="Email"
-					onChange={handleInputChange}
-				/>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    onChange={handleInputChange}
+                />
 
-				<PasswordInput
-					name="password"
-					placeholder="Password"
-					onChange={handleInputChange}
-				/>
-				{!isSignin && <div css={S.ErrorMsg}>{messages.password}</div>}
+                <PasswordInput
+                    name="password"
+                    placeholder="Password"
+                    onChange={handleInputChange}
+                />
+                {!isSignin && <div css={S.ErrorMsg}>{messages.password}</div>}
 
-				{!isSignin && (
-					<>
-						<PasswordInput
-							name="checkPassword"
-							placeholder="Re-enter Password"
-							onChange={handleInputChange}
-						/>
-						<div css={S.ErrorMsg}>{messages.checkPassword}</div>
-					</>
-				)}
+                {!isSignin && (
+                    <>
+                        <PasswordInput
+                            name="checkPassword"
+                            placeholder="Re-enter Password"
+                            onChange={handleInputChange}
+                        />
+                        <div css={S.ErrorMsg}>{messages.checkPassword}</div>
+                    </>
+                )}
 
-				<SigninButton type="submit" onClick={handleAuthSubmit}>
-					{text}
-				</SigninButton>
-				{isMobile && (
-					<button
-						type="button"
-						onClick={() =>
-							setIsRightPanelActive(!isRightPanelActive)
-						}
+                <SigninButton type="submit" onClick={handleAuthSubmit}>
+                    {text}
+                </SigninButton>
+                {isMobile && (
+                    <button
+                        type="button"
+                        onClick={() =>
+                            setIsRightPanelActive(!isRightPanelActive)
+                        }
                         css={S.SMobileButton}
-					>
-						{buttonText}<FaArrowRight />
-					</button>
-				)}
-			</form>
-		</div>
-	);
+                    >
+                        {buttonText}
+                        <FaArrowRight />
+                    </button>
+                )}
+            </form>
+        </div>
+    );
 }
 
 export default SigninContainer;

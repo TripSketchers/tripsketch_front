@@ -1,5 +1,6 @@
 import axios from "axios";
 
-export const instance = axios.create({  // axios 공통 설정
-    baseURL: "http://localhost:8080/api"
-})
+export const instance = axios.create({
+    // axios 공통 설정
+    baseURL: "https://tripsketchback-production-a057.up.railway.app/api",
+});
