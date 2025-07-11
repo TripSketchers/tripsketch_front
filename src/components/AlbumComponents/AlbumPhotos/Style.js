@@ -53,9 +53,18 @@ export const SSelectMode = css`
     }
 `;
 
-export const SScheduleBox = css`
+export const SScheduleBox = (isFirst) => css`
+    display: flex;
+    width: 100%;
+    max-width: ${isFirst && `calc(100% - 95px)`};
+
     span {
         font-weight: 600;
+    }
+    
+    svg {
+        margin-left: 5px;
+        font-size: 16px;
     }
 `;
 
