@@ -2,17 +2,20 @@ import React, { useRef, useState, useEffect } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import { FaFolder } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
 import { IoMdMore, IoMdTrash } from "react-icons/io";
-import ConfirmModal from "../../../ConfirmModal/ConfirmModal";
+import { BiCalendarExclamation } from "react-icons/bi";
 import TogglePanel from "../../../TogglePanel/TogglePanel";
 import { instance } from "../../../../api/config/instance";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import SwalAlert from "../../../SwalAlert/SwalAlert";
+import AlbumEditModal from "../../AlbumEditModal/AlbumEditModal";
 
 function AlbumFolderItem({ album, photo, onClickFolder }) {
     const { tripId } = useParams();
     const queryClient = useQueryClient();
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const handleDelete = async () => {
         try {
@@ -40,6 +43,7 @@ function AlbumFolderItem({ album, photo, onClickFolder }) {
                 <img src={photo} alt="앨범" />
             </div>
             <div css={S.SFolderInner}>
+                <div className="missingFlag">{album?.tripScheduleMissingFlag && <BiCalendarExclamation />}</div>
                 <div className="innerBox">
                     <TogglePanel
                         triggerIcon={
@@ -58,6 +62,11 @@ function AlbumFolderItem({ album, photo, onClickFolder }) {
                                     confirmText: "삭제",
                                 },
                             },
+                            {
+                                icon: <MdEdit />,
+                                label: "수정",
+                                action: () => setIsEditModalOpen(true),
+                            },
                         ]}
                     />
                     <div className="infoBox">
@@ -66,6 +75,13 @@ function AlbumFolderItem({ album, photo, onClickFolder }) {
                     </div>
                 </div>
             </div>
+            {isEditModalOpen && (
+                <AlbumEditModal
+                    onClose={() => setIsEditModalOpen(false)}
+                    tripId={tripId}
+                    album={album}
+                />
+            )}
         </div>
     );
 }

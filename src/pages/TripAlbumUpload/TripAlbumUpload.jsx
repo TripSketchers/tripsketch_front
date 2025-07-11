@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import NavLayout from "../../components/NavComponents/NavLayout/NavLayout";
@@ -13,65 +13,19 @@ import ScheduleTable from "../../components/AlbumComponents/ScheduleTable/Schedu
 import Loading from "../../components/Loading/Loading";
 import usePrompt from "../../hooks/usePrompt";
 import { getAuth } from "firebase/auth";
-import { useQueryClient, useQuery } from "@tanstack/react-query";
-import { getNday } from "../../utils/DateUtils";
 import SwalAlert from "../../components/SwalAlert/SwalAlert";
+import useGroupedSchedule from "../../hooks/useGroupedSchedule";
 
 function TripAlbumUpload() {
     const { tripId } = useParams();
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
-    const [selectedPlaceId, setSelectedPlaceId] = useState([]);
+    const [selectedSchedule, setSelectedSchedule] = useState({});
     const [memos, setMemos] = useState({});
     const [pageLoading, setPageLoading] = useState(false);
 
     const [hasUnsavedPhotos, setHasUnsavedPhotos] = useState(false);
 
-    const { data, refetch, isLoading } = useQuery({
-        queryKey: ["getTripSchedule", tripId],
-        queryFn: async () => {
-            try {
-                const options = {
-                    headers: {
-                        Authorization: localStorage.getItem("accessToken"),
-                    },
-                };
-                return await instance.get(
-                    `/trips/${tripId}/schedules`,
-                    options
-                );
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        retry: 0,
-        refetchOnWindowFocus: false,
-        enabled: false,
-    });
-
-    const groupedSchedule = useMemo(() => {
-        const scheduleList = data?.data?.tripSchedulePlaceViews;
-        const startDate = data?.data?.trip?.startDate;
-
-        if (!scheduleList || !startDate) return [];
-
-        // 날짜별로 장소를 묶기
-        const map = scheduleList.reduce((acc, cur) => {
-            const date = cur.date;
-            if (!acc[date]) acc[date] = [];
-            acc[date].push(cur);
-            return acc;
-        }, {});
-
-        // 날짜 정렬 후, startDate 기준 n일차 계산
-        const sortedDates = Object.keys(map).sort(); // ISO 형식이면 문자열 정렬로 OK
-
-        return sortedDates.map((date) => ({
-            dayLabel: getNday(startDate, date), // ✅ n일차 계산
-            date,
-            places: map[date],
-        }));
-    }, [data]);
+    const { groupedSchedule, isLoading, refetch } = useGroupedSchedule(tripId);
 
     useEffect(() => {
         const auth = getAuth();
@@ -82,7 +36,7 @@ function TripAlbumUpload() {
                 icon: "error",
                 onConfirm: () => {
                     navigate("/auth/signin");
-                }
+                },
             });
         }
     }, []);
@@ -95,6 +49,7 @@ function TripAlbumUpload() {
 
     useEffect(() => {
         refetch().then((result) => {
+            clearPhotos();
             if (!result.data?.data?.tripSchedulePlaceViews?.length) {
                 SwalAlert({
                     title: "등록된 일정이 없어요. ",
@@ -103,11 +58,11 @@ function TripAlbumUpload() {
                     confirmButtonText: "이동하기",
                     onConfirm: () => {
                         navigate(`/trip/plan/${tripId}`);
-                    }
+                    },
                 });
             }
         });
-    }, [tripId, refetch, navigate]);
+    }, [tripId, refetch]);
 
     const handleUploadBtn = async () => {
         const auth = getAuth();
@@ -119,21 +74,21 @@ function TripAlbumUpload() {
                 icon: "error",
                 onConfirm: () => {
                     navigate("/auth/signin");
-                }
+                },
             });
             return;
         }
         const photos = await getAllPhotos(); //IndexedDB에서 사진 가져오기
 
         if (photos.length === 0) {
-             SwalAlert({
+            SwalAlert({
                 title: `업로드할 사진이 없어요!`,
                 text: `업로드할 사진을 먼저 선택해주세요.`,
                 icon: "error",
             });
             return;
         }
-        if (selectedPlaceId.length === 0) {
+        if (selectedSchedule.length === 0) {
             SwalAlert({
                 title: `장소를 선택해주세요!`,
                 text: `장소를 선택하지 않으면 사진을 업로드할 수 없어요.`,
@@ -148,7 +103,7 @@ function TripAlbumUpload() {
             const uploadPromises = photos.map(async (photo) => {
                 const storageRef = ref(
                     storage,
-                    `tripsketch/trip-${tripId}/album-${selectedPlaceId}/${photo.id}.jpg`
+                    `tripsketch/trip-${tripId}/album-${selectedSchedule.tripScheduleId}/${photo.id}.jpg`
                 );
                 await uploadBytes(storageRef, photo.file);
                 const downloadUrl = await getDownloadURL(storageRef);
@@ -167,7 +122,10 @@ function TripAlbumUpload() {
                 },
             };
             const album = {
-                tripScheduleId: selectedPlaceId,
+                tripScheduleId: selectedSchedule?.tripScheduleId,
+                date: selectedSchedule?.date,
+                placeName: selectedSchedule?.placeName,
+                startTime: selectedSchedule?.startTime,
                 photos: uploadedPhotos,
             };
             // 이제 DB에 메타데이터 저장
@@ -217,8 +175,8 @@ function TripAlbumUpload() {
                             </div>
                             <div css={S.STripBox}>
                                 <ScheduleTable
-                                    selectedPlaceId={selectedPlaceId}
-                                    setSelectedPlaceId={setSelectedPlaceId}
+                                    selectedSchedule={selectedSchedule}
+                                    setSelectedSchedule={setSelectedSchedule}
                                     scheduleData={groupedSchedule}
                                 />
                             </div>

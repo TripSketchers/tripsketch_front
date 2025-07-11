@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 
-function ScheduleTable({ selectedPlaceId, setSelectedPlaceId, scheduleData }) {
+function ScheduleTable({ selectedSchedule, setSelectedSchedule, scheduleData, style }) {
     const [selectedDayIndex, setSelectedDayIndex] = useState(0);
 
     useEffect(() => {
         if (scheduleData.length > 0) {
             setSelectedDayIndex(0);
-            setSelectedPlaceId(scheduleData[0]?.places[0].tripScheduleId);
+            setSelectedSchedule(scheduleData[0]?.places[0]);
         }
-    }, [scheduleData, setSelectedPlaceId]);
+    }, [scheduleData, setSelectedSchedule]);
 
     // 날짜 클릭 시 해당하는 장소 목록 업데이트
     const handleDateClick = (index) => {
@@ -18,20 +18,20 @@ function ScheduleTable({ selectedPlaceId, setSelectedPlaceId, scheduleData }) {
 
         const selectedDay = scheduleData[index];
         if (selectedDay && selectedDay.places.length > 0) {
-            setSelectedPlaceId(selectedDay.places[0].tripScheduleId); // 날짜 바꾸면 첫 장소 선택
+            setSelectedSchedule(selectedDay.places[0]); // 날짜 바꾸면 첫 장소 선택
         }
     };
 
     // 장소 클릭 시 trip_schedule_id 출력
-    const handlePlaceClick = (id) => {
-        setSelectedPlaceId(id);
+    const handlePlaceClick = (item) => {
+        setSelectedSchedule(item);
     };
 
     const currentDay = scheduleData[selectedDayIndex];
 
     return (
-        <div css={S.STripTable}>
-            {/* 날짜 목록 (가로 스크롤 가능) */}
+        <div css={S.STripTable} style={style}>
+            {/* 날짜 목록 (세로 스크롤 가능) */}
             <div>
                 <div className="title">날짜</div>
                 <ul css={S.SScroll}>
@@ -54,10 +54,10 @@ function ScheduleTable({ selectedPlaceId, setSelectedPlaceId, scheduleData }) {
                         <li
                             key={item.tripScheduleId}
                             css={S.SSelectSchedule(
-                                item.tripScheduleId === selectedPlaceId
+                                item.tripScheduleId === selectedSchedule.tripScheduleId
                             )}
                             onClick={() =>
-                                handlePlaceClick(item.tripScheduleId)
+                                handlePlaceClick(item)
                             }
                         >
                             {item.placeName}

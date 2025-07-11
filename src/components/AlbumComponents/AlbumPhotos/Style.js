@@ -32,7 +32,7 @@ export const SSelectMode = css`
 
         :hover {
             background-color: ${colors.primaryButtonHover};
-            color:rgb(211, 13, 13);
+            color: rgb(211, 13, 13);
             * {
                 color: rgb(211, 13, 13);
             }
@@ -53,9 +53,33 @@ export const SSelectMode = css`
     }
 `;
 
-export const SScheduleBox = css`
+export const SScheduleBox = (isFirst) => css`
+    display: flex;
+    width: 100%;
+    max-width: ${isFirst && `calc(100% - 95px)`};
+    align-items: center;
+    text-align: center;
+
+    button {
+        margin-left: 5px;
+        height: 16px;
+    }
+
     span {
         font-weight: 600;
+    }
+    
+    svg {
+        font-size: 16px;
+    }
+
+    .missingFlag {
+        margin-left: 5px;
+        font-size: 20px;
+        
+        path {
+            color: ${colors.primaryRed};
+        }
     }
 `;
 
