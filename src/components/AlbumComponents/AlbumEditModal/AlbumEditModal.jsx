@@ -18,10 +18,6 @@ function AlbumEditModal({ tripId, album, onClose }) {
         refetch();
     }, [tripId, refetch]);
 
-    console.log(tripId);
-    console.log(album.albumId);
-    console.log(selectedSchedule);
-
     const handleEdit = async () => {
         try {
             const option = {
@@ -37,8 +33,8 @@ function AlbumEditModal({ tripId, album, onClose }) {
                 placeName: selectedSchedule.placeName,
                 startTime: selectedSchedule.startTime,
             };
-            console.log(albumInfo);
             await instance.put(`/trips/${tripId}/album`, albumInfo, option);
+            onClose();
             queryClient.invalidateQueries(["getAlbum", tripId]);
         } catch (error) {
             console.log(error);
@@ -49,8 +45,8 @@ function AlbumEditModal({ tripId, album, onClose }) {
         <ModalLayout onClose={onClose}>
             <div>
                 <h2 css={S.STitle}>앨범 일정 수정</h2>
-                {isLoading ? (
-                    <Loading />
+                {isLoading || groupedSchedule.length === 0 ? (
+                    <Loading content={"일정 데이터를 불러오고 있어요..."} />
                 ) : (
                     <div>
                         <div css={S.SContainer}>

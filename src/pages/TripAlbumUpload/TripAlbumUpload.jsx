@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
 import NavLayout from "../../components/NavComponents/NavLayout/NavLayout";
@@ -13,15 +13,12 @@ import ScheduleTable from "../../components/AlbumComponents/ScheduleTable/Schedu
 import Loading from "../../components/Loading/Loading";
 import usePrompt from "../../hooks/usePrompt";
 import { getAuth } from "firebase/auth";
-import { useQueryClient, useQuery } from "@tanstack/react-query";
-import { getNday } from "../../utils/DateUtils";
 import SwalAlert from "../../components/SwalAlert/SwalAlert";
 import useGroupedSchedule from "../../hooks/useGroupedSchedule";
 
 function TripAlbumUpload() {
     const { tripId } = useParams();
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
     const [selectedSchedule, setSelectedSchedule] = useState({});
     const [memos, setMemos] = useState({});
     const [pageLoading, setPageLoading] = useState(false);
@@ -39,7 +36,7 @@ function TripAlbumUpload() {
                 icon: "error",
                 onConfirm: () => {
                     navigate("/auth/signin");
-                }
+                },
             });
         }
     }, []);
@@ -52,6 +49,7 @@ function TripAlbumUpload() {
 
     useEffect(() => {
         refetch().then((result) => {
+            clearPhotos();
             if (!result.data?.data?.tripSchedulePlaceViews?.length) {
                 SwalAlert({
                     title: "등록된 일정이 없어요. ",
@@ -60,11 +58,11 @@ function TripAlbumUpload() {
                     confirmButtonText: "이동하기",
                     onConfirm: () => {
                         navigate(`/trip/plan/${tripId}`);
-                    }
+                    },
                 });
             }
         });
-    }, [tripId, refetch, navigate]);
+    }, [tripId, refetch]);
 
     const handleUploadBtn = async () => {
         const auth = getAuth();
@@ -76,14 +74,14 @@ function TripAlbumUpload() {
                 icon: "error",
                 onConfirm: () => {
                     navigate("/auth/signin");
-                }
+                },
             });
             return;
         }
         const photos = await getAllPhotos(); //IndexedDB에서 사진 가져오기
 
         if (photos.length === 0) {
-             SwalAlert({
+            SwalAlert({
                 title: `업로드할 사진이 없어요!`,
                 text: `업로드할 사진을 먼저 선택해주세요.`,
                 icon: "error",

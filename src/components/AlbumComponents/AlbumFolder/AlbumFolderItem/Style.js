@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import colors from "../../../../constants/color";
 
 export const SFolder = css`
     position: relative;
@@ -43,6 +44,16 @@ export const SFolderInner = css`
     position: absolute;
     top: 52px;
     width: 100%;
+
+    .missingFlag {
+        position: absolute;
+        top: 12px;
+        right: 34px;
+        font-size: 20px;
+        path {
+            color: ${colors.primaryRed};
+        }
+    }
 
     .innerBox {
         //장소, 날짜 Box
