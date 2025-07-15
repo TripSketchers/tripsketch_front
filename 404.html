@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="refresh" content="0; url=/tripsketch_front/" />
-    </head>
-    <body></body>
+  <head>
+    <meta charset="utf-8">
+    <script type="text/javascript">
+      // SPA fallback handler
+      var redirectTo = sessionStorage.redirectTo || location.pathname + location.search + location.hash;
+      sessionStorage.removeItem("redirectTo");
+      location.replace("/tripsketch_front/index.html");
+      sessionStorage.redirectTo = redirectTo;
+    </script>
+  </head>
+  <body></body>
 </html>
