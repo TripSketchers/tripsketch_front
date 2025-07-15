@@ -6,7 +6,7 @@
       // SPA fallback handler
       var redirectTo = sessionStorage.redirectTo || location.pathname + location.search + location.hash;
       sessionStorage.removeItem("redirectTo");
-      location.replace("/tripsketch_front/index.html");
+      location.replace("/tripsketch_front");
       sessionStorage.redirectTo = redirectTo;
     </script>
   </head>
