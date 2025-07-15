@@ -27,7 +27,7 @@ function Header(props) {
     const handleLogoutOnClick = () => {
         if (window.confirm("로그아웃 하시겠습니까?")) {
             localStorage.removeItem("accessToken");
-            window.location.replace("/");
+            window.location.replace("/tripsketch_front");
         }
     };
 
