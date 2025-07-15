@@ -12,14 +12,14 @@ const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <QueryClientProvider client={queryClient}>
-    <RecoilRoot>
-      <BrowserRouter>
-        <Global styles={Common}/>
-        <App />
-      </BrowserRouter>
-    </RecoilRoot>
-  </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+        <RecoilRoot>
+            <BrowserRouter basename="/tripsketch_front">
+                <Global styles={Common} />
+                <App />
+            </BrowserRouter>
+        </RecoilRoot>
+    </QueryClientProvider>
 );
 
 reportWebVitals();
