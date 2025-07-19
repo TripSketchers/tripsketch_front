@@ -1,70 +1,142 @@
-# Getting Started with Create React App
+# 🗺️ TripSketch
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+여행을 스케치하듯 자유롭게 계획하고 공유할 수 있는 플랫폼, **TripSketch**입니다.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 📌 프로젝트 소개 (Overview)
 
-### `npm start`
+> 사용자가 여행 일정을 직접 생성하고, 장소를 검색·저장·관리하며, 나만의 여행 앨범까지 구성할 수 있는 여행 플랫폼입니다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 일정표 기반 여행 계획 기능
+- 장소 추천 및 검색 (Google Places API)
+- 장소보관함, 숙소, 앨범 기능 제공
+- 소셜 및 이메일 회원가입, 인증 기능
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 🛠 기술 스택 (Tech Stack)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Frontend
+- React
+- Emotion
+- React Router
+- Axios
+- React Query
 
-### `npm run build`
+### Backend
+- Spring Boot
+- Spring Security
+- JWT, OAuth2 (Google, Kakao, Naver)
+- MySQL (MariaDB)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### DevOps & Tools
+- Git, GitHub
+- Railway (배포)
+- GitHub Pages (프론트 배포)
+- Firebase (인증용 연동)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 📁 프로젝트 구조 (Project Structure)
 
-### `npm run eject`
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+trip-sketch/
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   └── ...
+│
+├── backend/
+│   ├── src/main/java/com/sketchers/tripsketch\_back/
+│   ├── resources/
+│   └── ...
+│
+└── README.md
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+````
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+> 각 디렉토리 및 주요 파일 설명은 추후 상세히 작성 예정
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## ✨ 주요 기능 소개 (Features)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- ✅ 회원가입 및 로그인 (이메일, 소셜 로그인)
+- ✅ 이메일 인증
+- ✅ 비밀번호 검증 및 변경
+- ✅ 여행 생성 및 일정표 기능
+- ✅ 장소 검색 (Google Places API)
+- ✅ 장소 보관함 및 숙소 선택
+- ✅ 여행 앨범 생성 및 사진 업로드
+- ✅ 마이페이지 기능
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## 🚀 배포 (Deployment)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+| 구분       | 도구                | 주소                                                                                                             |
+| -------- | ----------------- | -------------------------------------------------------------------------------------------------------------- |
+| Frontend | GitHub Pages      | [https://tripsketchers.github.io/tripsketch\_front](https://tripsketchers.github.io/tripsketch_front)          |
+| Backend  | Railway           | [https://tripsketchback-production-a057.up.railway.app](https://tripsketchback-production-a057.up.railway.app) |
+| Database | Railway (MariaDB) | (관리 콘솔 링크)                                                                                                     |
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 🔌 API 명세 (API Docs)
 
-### Making a Progressive Web App
+> 주요 엔드포인트 목록 및 인증 흐름은 Postman / Swagger 문서로 제공 예정
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+* `GET /api/account/principal`
+* `POST /api/trip/create`
+* `POST /api/auth/email`
+* ...
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🖼 UI 미리보기 (Screenshots)
 
-### Deployment
+| 기능       | 미리보기                                           |
+| -------- | ---------------------------------------------- |
+| 여행 생성 화면 | ![TripCreate](./screenshots/trip-create.png)   |
+| 장소 검색    | ![PlaceSearch](./screenshots/place-search.png) |
+| 앨범 관리    | ![Album](./screenshots/album.png)              |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+## 🤝 기여 방법 (Contributing)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. `main` 브랜치 → 배포용, `dev` 브랜치 → 개발용
+2. 커밋 메시지 컨벤션
+
+   * `feat: 기능 추가`
+   * `fix: 버그 수정`
+   * `style: 스타일 수정`
+3. PR 작성 시 템플릿 활용
+
+---
+
+## 🛠 트러블슈팅 (Troubleshooting)
+
+| 문제               | 원인         | 해결 방법                                     |
+| ---------------- | ---------- | ----------------------------------------- |
+| 403 오류           | CORS 설정 누락 | Spring Security의 `CorsConfiguration` 추가   |
+| 구글 지도 사진 불러오기 안됨 | API 버전 변경  | `photo_reference` 경로 수정, Places API v1 적용 |
+
+---
+
+## 📄 라이선스 (License)
+
+> 본 프로젝트는 MIT 라이선스를 따릅니다. 자유롭게 사용 및 수정이 가능합니다.
+
+---
+
+## 🔗 참고자료 (References)
+
+* [Google Places API Docs](https://developers.google.com/maps/documentation/places/web-service/overview)
+* [Spring Boot Docs](https://spring.io/projects/spring-boot)
+* [Firebase Auth Docs](https://firebase.google.com/docs/auth)
+
+---
