@@ -96,12 +96,13 @@ function SigninContainer({
 
 			if (!isSignin) {
 				SwalAlert({
-				title: "회원가입이 완료되었습니다!",
-				icon: "success",
-				onConfirm: () => { // 회원가입 후 로그인 페이지로 이동	
-					window.location.replace("/auth/signin");
-				}
-			});
+					title: "회원가입이 완료되었습니다!",
+					icon: "success",
+					onConfirm: () => {
+						// 회원가입 후 로그인 페이지로 이동
+						window.location.replace("/auth/signin");
+					},
+				});
 			} else {
 				localStorage.setItem(
 					"accessToken",
@@ -122,72 +123,94 @@ function SigninContainer({
 			}
 		} catch (error) {
 			const errors = error.response?.data;
-			if (errors?.email) console.error(errors.email);
-			else if (errors?.password) console.error(errors.password);
-			else if (errors?.signin) console.error(errors.signin);
+			if (errors?.email) {
+				SwalAlert({
+					title: "이메일 오류",
+					text: errors.email,
+					icon: "error",
+				});
+			} else if (errors?.password) {
+				SwalAlert({
+					title: "비밀번호 오류",
+					text: errors.password,
+					icon: "error",
+				});
+			} else if (errors?.signin) {
+				SwalAlert({
+					title: "로그인 실패",
+					text: errors.signin,
+					icon: "error",
+				});
+			} else {
+				SwalAlert({
+					title: "알 수 없는 오류 발생",
+					text: "문제가 지속되면 관리자에게 문의해주세요.",
+					icon: "error",
+				});
+			}
 		}
 	};
 
 	return (
-        <div css={S.SLayout(isSignin, isRightPanelActive, isMobile)}>
-            <form css={S.SContainer}>
-                <h1>{text}</h1>
-                <div css={S.SBox}>
-                    <a href="https://tripsketchback-production-a057.up.railway.app/oauth2/authorization/kakao">
-                        <RiKakaoTalkFill size={28} />
-                    </a>
-                    <a href="https://tripsketchback-production-a057.up.railway.app/oauth2/authorization/google">
-                        <FaGoogle size={21} />
-                    </a>
-                    <a href="https://tripsketchback-production-a057.up.railway.app/oauth2/authorization/naver">
-                        <SiNaver size={18} />
-                    </a>
-                </div>
-                <span>이메일로 {text}</span>
+		<div css={S.SLayout(isSignin, isRightPanelActive, isMobile)}>
+			<form css={S.SContainer}>
+				<h1>{text}</h1>
+				<div css={S.SBox}>
+					<a href="https://tripsketchback-production-a057.up.railway.app/oauth2/authorization/kakao">
+						<RiKakaoTalkFill size={28} />
+					</a>
+					<a href="https://tripsketchback-production-a057.up.railway.app/oauth2/authorization/google">
+						<FaGoogle size={21} />
+					</a>
+					<a href="https://tripsketchback-production-a057.up.railway.app/oauth2/authorization/naver">
+						<SiNaver size={18} />
+					</a>
+				</div>
+				<span>이메일로 {text}</span>
 
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    onChange={handleInputChange}
-                />
+				<input
+					type="email"
+					name="email"
+					placeholder="Email"
+					onChange={handleInputChange}
+				/>
 
-                <PasswordInput
-                    name="password"
-                    placeholder="Password"
-                    onChange={handleInputChange}
-                />
-                {!isSignin && <div css={S.ErrorMsg}>{messages.password}</div>}
+				<PasswordInput
+					name="password"
+					placeholder="Password"
+					onChange={handleInputChange}
+				/>
+				{!isSignin && <div css={S.ErrorMsg}>{messages.password}</div>}
 
-                {!isSignin && (
-                    <>
-                        <PasswordInput
-                            name="checkPassword"
-                            placeholder="Re-enter Password"
-                            onChange={handleInputChange}
-                        />
-                        <div css={S.ErrorMsg}>{messages.checkPassword}</div>
-                    </>
-                )}
+				{!isSignin && (
+					<>
+						<PasswordInput
+							name="checkPassword"
+							placeholder="Re-enter Password"
+							onChange={handleInputChange}
+						/>
+						<div css={S.ErrorMsg}>{messages.checkPassword}</div>
+					</>
+				)}
 
-                <SigninButton type="submit" onClick={handleAuthSubmit}>
-                    {text}
-                </SigninButton>
-                {isMobile && (
-                    <button
-                        type="button"
-                        onClick={() =>
-                            setIsRightPanelActive(!isRightPanelActive)
-                        }
-                        css={S.SMobileButton}
-                    >
-                        {buttonText}
-                        <FaArrowRight />
-                    </button>
-                )}
-            </form>
-        </div>
-    );
+				<SigninButton type="submit" onClick={handleAuthSubmit}>
+					{text}
+				</SigninButton>
+				{isMobile && (
+					<button
+						type="button"
+						onClick={() =>
+							setIsRightPanelActive(!isRightPanelActive)
+						}
+						css={S.SMobileButton}
+					>
+						{buttonText}
+						<FaArrowRight />
+					</button>
+				)}
+			</form>
+		</div>
+	);
 }
 
 export default SigninContainer;
