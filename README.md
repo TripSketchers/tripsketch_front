@@ -50,7 +50,7 @@ trip-sketch/
 │   └── ...
 │
 ├── backend/
-│   ├── src/main/java/com/sketchers/tripsketch\_back/
+│   ├── src/main/java/com/sketchers/tripsketch_back/
 │   ├── resources/
 │   └── ...
 │
@@ -79,7 +79,7 @@ trip-sketch/
 
 | 구분       | 도구                | 주소                                                                                                             |
 | -------- | ----------------- | -------------------------------------------------------------------------------------------------------------- |
-| Frontend | GitHub Pages      | [https://tripsketchers.github.io/tripsketch\_front](https://tripsketchers.github.io/tripsketch_front)          |
+| Frontend | GitHub Pages      | [https://tripsketchers.github.io/tripsketch_front](https://tripsketchers.github.io/tripsketch_front)          |
 | Backend  | Railway           | [https://tripsketchback-production-a057.up.railway.app](https://tripsketchback-production-a057.up.railway.app) |
 | Database | Railway (MariaDB) | (관리 콘솔 링크)                                                                                                     |
 
@@ -108,7 +108,7 @@ trip-sketch/
 
 ## 🤝 기여 방법 (Contributing)
 
-1. `main` 브랜치 → 배포용, `dev` 브랜치 → 개발용
+1. `gh-pages` 브랜치 → 배포용, `local` 브랜치 → 개발용
 2. 커밋 메시지 컨벤션
 
    * `feat: 기능 추가`
@@ -125,18 +125,4 @@ trip-sketch/
 | 403 오류           | CORS 설정 누락 | Spring Security의 `CorsConfiguration` 추가   |
 | 구글 지도 사진 불러오기 안됨 | API 버전 변경  | `photo_reference` 경로 수정, Places API v1 적용 |
 
----
 
-## 📄 라이선스 (License)
-
-> 본 프로젝트는 MIT 라이선스를 따릅니다. 자유롭게 사용 및 수정이 가능합니다.
-
----
-
-## 🔗 참고자료 (References)
-
-* [Google Places API Docs](https://developers.google.com/maps/documentation/places/web-service/overview)
-* [Spring Boot Docs](https://spring.io/projects/spring-boot)
-* [Firebase Auth Docs](https://firebase.google.com/docs/auth)
-
----
