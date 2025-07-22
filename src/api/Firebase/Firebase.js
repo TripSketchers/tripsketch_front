@@ -18,8 +18,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 // 이미 초기화된 Firebase 앱이 있는 경우 재사용
-// const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-const app = initializeApp(firebaseConfig);
+// const app = initializeApp(firebaseConfig);
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
 const storage = getStorage(app);
 
