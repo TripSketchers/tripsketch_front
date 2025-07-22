@@ -29,6 +29,8 @@ function SigninContainer({
 		checkPassword: "",
 	});
 
+	const baseUrl = "http://localhost:8080"; // https://tripsketchback-production-a057.up.railway.app
+
 	const [messages, setMessages] = useState({
 		password: "",
 		checkPassword: "",
@@ -156,13 +158,13 @@ function SigninContainer({
 			<form css={S.SContainer}>
 				<h1>{text}</h1>
 				<div css={S.SBox}>
-					<a href="https://tripsketchback-production-a057.up.railway.app/oauth2/authorization/kakao">
+					<a href={`${baseUrl}/oauth2/authorization/kakao`}>
 						<RiKakaoTalkFill size={28} />
 					</a>
-					<a href="https://tripsketchback-production-a057.up.railway.app/oauth2/authorization/google">
+					<a href={`${baseUrl}/oauth2/authorization/google`}>
 						<FaGoogle size={21} />
 					</a>
-					<a href="https://tripsketchback-production-a057.up.railway.app/oauth2/authorization/naver">
+					<a href={`${baseUrl}/oauth2/authorization/naver`}>
 						<SiNaver size={18} />
 					</a>
 				</div>

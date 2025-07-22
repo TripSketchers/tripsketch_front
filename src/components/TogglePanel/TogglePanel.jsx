@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 /** @jsxImportSource @emotion/react */
 import * as S from "./Style";
-import ConfirmModal from "../ConfirmModal/ConfirmModal";
 import { IoMdMore } from "react-icons/io";
 import SwalAlert from "../SwalAlert/SwalAlert";
 
