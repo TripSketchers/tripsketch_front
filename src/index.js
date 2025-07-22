@@ -14,7 +14,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <QueryClientProvider client={queryClient}>
         <RecoilRoot>
-            <BrowserRouter>
+            <BrowserRouter basename="/tripsketch_front">
                 <Global styles={Common} />
                 <App />
             </BrowserRouter>
