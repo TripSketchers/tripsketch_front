@@ -16,25 +16,43 @@
 <br/>
 
 ## 🛠 기술 스택 (Tech Stack)
+<img width="700" alt="Image" src="https://github.com/user-attachments/assets/9d0a019e-1503-4db2-8fdf-374b9d9d8ee2" />
 
-#### Frontend
-- React
-- Emotion
-- React Router
-- Axios
-- React Query
+#### 🎨 Frontend  
+![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB) 
+![Emotion](https://img.shields.io/badge/Emotion-C865B9?style=flat-square&logoColor=white) 
+![React Router](https://img.shields.io/badge/React%20Router-CA4245?style=flat-square&logo=reactrouter&logoColor=white) 
+![Axios](https://img.shields.io/badge/Axios-671DDF?style=flat-square&logoColor=white) 
+![React Query](https://img.shields.io/badge/React%20Query-FF4154?style=flat-square&logo=reactquery&logoColor=white)  
 
-#### Backend
-- Spring Boot
-- Spring Security
-- JWT, OAuth2 (Google, Kakao, Naver)
-- MySQL (MariaDB)
+#### ⚙️ Backend  
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat-square&logo=springboot&logoColor=white) 
+![Spring Security](https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat-square&logo=springsecurity&logoColor=white) 
+![JWT](https://img.shields.io/badge/JWT-000000?style=flat-square&logo=jsonwebtokens&logoColor=white) 
+![OAuth2](https://img.shields.io/badge/OAuth2-3EAAAF?style=flat-square&logo=openid&logoColor=white) 
+![Google](https://img.shields.io/badge/Google%20Login-4285F4?style=flat-square&logo=google&logoColor=white) 
+![Kakao](https://img.shields.io/badge/Kakao%20Login-FFCD00?style=flat-square&logo=kakaotalk&logoColor=000000) 
+![Naver](https://img.shields.io/badge/Naver%20Login-03C75A?style=flat-square&logo=naver&logoColor=white) 
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
 
-#### DevOps & Tools
-- Git, GitHub
-- AWS (백엔드, DB 배포)
-- GitHub Pages (프론트 배포)
-- Firebase (인증용 연동)
+#### 🛠 DevOps & Tools  
+![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white) 
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white) 
+![AWS](https://img.shields.io/badge/AWS-232F3E?style=flat-square&logo=amazonaws&logoColor=white) 
+![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-121013?style=flat-square&logo=github&logoColor=white) 
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=black)  
+
+<br/>
+
+## 🔎 프로젝트 산출물
+
+| ERD | 메뉴구조도 |
+|-----|------------|
+| <img width="800" alt="Image" src="https://github.com/user-attachments/assets/8ccc87be-707b-4792-8b9f-ecb28f808eb4" /> | <img width="800" height="1120" alt="Image" src="https://github.com/user-attachments/assets/e640a60d-b720-4c20-83d2-085047d3af88" /> |
+
+| 프로토타입 |
+|-----------------|
+| <img width="700" height="9206" alt="Image" src="https://github.com/user-attachments/assets/7f1dfdde-c6cf-499e-acb5-f6c01426c2b7" /> |
 
 <br/>
 
