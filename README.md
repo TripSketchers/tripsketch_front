@@ -2,7 +2,7 @@
 
 여행을 스케치하듯 자유롭게 계획하고 공유할 수 있는 플랫폼, **트립스케치**(**TripSketch**)입니다.
 
----
+<br/>
 
 ## 📌 프로젝트 소개 (Overview)
 
@@ -13,30 +13,30 @@
 
 #### 🗓️ 개발 기간 : 2025년 3월 12일 ~ 2025년 7월 15일
 
----
+<br/>
 
 ## 🛠 기술 스택 (Tech Stack)
 
-### Frontend
+#### Frontend
 - React
 - Emotion
 - React Router
 - Axios
 - React Query
 
-### Backend
+#### Backend
 - Spring Boot
 - Spring Security
 - JWT, OAuth2 (Google, Kakao, Naver)
 - MySQL (MariaDB)
 
-### DevOps & Tools
+#### DevOps & Tools
 - Git, GitHub
 - AWS (백엔드, DB 배포)
 - GitHub Pages (프론트 배포)
 - Firebase (인증용 연동)
 
----
+<br/>
 
 ## ✨ 주요 기능 소개 (Features)
 
@@ -48,6 +48,7 @@
 - 여행 앨범 사진 CRUD
 - 여행 공유 기능
   
+<br/>
 
 ### 🖼 미리보기 (Preview)
 
@@ -68,18 +69,18 @@
 | ![share](./assets/gif/share.gif) |  |
 
 
----
+<br/>
 
 ## 👤 담당 역할 및 기여
 
-### [공통]
+#### [공통]
 - 주제 선정 및 기획 (타겟 사용자 정의, 주요 기능 도출)
 - ERD, 메뉴 구조도, 프로토타입 설계 (erdcloud, Figma 활용)
 - GitHub 협업 (이슈 관리, PR 리뷰, 커밋 컨벤션 합의)
 - 주요 기능 테스트 및 버그 수정
 
 
-### [가영]
+#### [가영]
 
 - **회원 인증 및 보안 구현**  
   - 일반 로그인, 소셜 로그인(OAuth2), 이메일 인증 및 JWT 기반 인증 시스템 개발  
@@ -106,7 +107,7 @@
   - 환경변수 및 CORS 설정, 배포 후 기능 테스트 및 UI 피드백 반영
 
 
-### [정민]
+#### [정민]
 
 - **데이터 처리 및 DB 연동**  
   - 여행지 정보 크롤링 및 MySQL DB 저장  
