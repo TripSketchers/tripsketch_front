@@ -103,8 +103,8 @@ function SigninContainer({
                     title: "회원가입이 완료되었습니다!",
                     icon: "success",
                     onConfirm: () => {
-                        // 회원가입 후 로그인 페이지로 이동
-                        navigate("/auth/signin", { replace: true });
+                        setIsRightPanelActive(false);
+                        setUser({ email: "", password: "", checkPassword: "" });
                     },
                 });
             } else {
