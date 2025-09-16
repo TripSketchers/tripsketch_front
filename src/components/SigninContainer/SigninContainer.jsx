@@ -13,10 +13,10 @@ import { FaArrowRight } from "react-icons/fa6";
 import SwalAlert from "../SwalAlert/SwalAlert";
 
 function SigninContainer({
-	isSignin,
-	isRightPanelActive,
-	setIsRightPanelActive,
-	isMobile,
+    isSignin,
+    isRightPanelActive,
+    setIsRightPanelActive,
+    isMobile,
 }) {
     const text = isSignin ? "로그인" : "회원가입";
     const buttonText = isSignin ? "회원가입" : "로그인";
@@ -102,7 +102,9 @@ function SigninContainer({
                     icon: "success",
                     onConfirm: () => {
                         // 회원가입 후 로그인 페이지로 이동
-                        window.location.replace("/auth/signin");
+                        window.location.replace(
+                            "/tripsketch_front/auth/signin"
+                        );
                     },
                 });
             } else {
