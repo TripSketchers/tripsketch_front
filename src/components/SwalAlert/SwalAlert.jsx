@@ -4,17 +4,17 @@ import withReactContent from "sweetalert2-react-content";
 
 const MySwal = withReactContent(Swal);
 
-const SwalAlert = ({
-    icon = "info", // success, error, warning, info, question
+export default function SwalAlert({
+    icon = "info",
     title = "",
     text = "",
     confirmText = "확인",
     cancelText = "취소",
     reverseButtons = false, // 버튼 순서를 반대로
     showCancelButton = false,
-    onConfirm = () => {},
-    onCancel = () => {},
-}) => {
+    onConfirm,
+    onCancel,
+}) {
     MySwal.fire({
         icon,
         title,
@@ -30,14 +30,15 @@ const SwalAlert = ({
             cancelButton: "my-swal-cancel",
         },
     }).then((result) => {
-        if (result.isConfirmed) {
+        if (result.isConfirmed && typeof onConfirm === "function") {
             onConfirm();
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
+        } else if (
+            result.dismiss === Swal.DismissReason.cancel &&
+            typeof onCancel === "function"
+        ) {
             onCancel();
         }
     });
 
     return null;
-};
-
-export default SwalAlert;
+}
