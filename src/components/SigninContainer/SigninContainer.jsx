@@ -11,6 +11,7 @@ import { auth } from "../../api/Firebase/Firebase";
 import { signInWithCustomToken } from "firebase/auth";
 import { FaArrowRight } from "react-icons/fa6";
 import SwalAlert from "../SwalAlert/SwalAlert";
+import { useNavigate } from "react-router-dom";
 
 function SigninContainer({
     isSignin,
@@ -18,6 +19,7 @@ function SigninContainer({
     setIsRightPanelActive,
     isMobile,
 }) {
+    const navigate = useNavigate();
     const text = isSignin ? "로그인" : "회원가입";
     const buttonText = isSignin ? "회원가입" : "로그인";
     const passwordRegex =
@@ -102,9 +104,7 @@ function SigninContainer({
                     icon: "success",
                     onConfirm: () => {
                         // 회원가입 후 로그인 페이지로 이동
-                        window.location.replace(
-                            "/tripsketch_front/auth/signin"
-                        );
+                        navigate("/auth/signin", { replace: true });
                     },
                 });
             } else {
@@ -115,7 +115,7 @@ function SigninContainer({
                 const firebaseToken = response.data.firebaseToken;
                 try {
                     await signInWithCustomToken(auth, firebaseToken);
-                    window.location.replace("/");
+                    navigate("/", { replace: true });
                 } catch (e) {
                     SwalAlert({
                         title: "로그인 실패",
