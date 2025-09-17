@@ -84,7 +84,7 @@
     <th>장소 검색 (Google Places API)</th>
   </tr>
   <tr>
-    <td><img src="./assets/gif/trip-create.gif" alt="trip-create" /></td>
+    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/cd2d63d6f7c015c5322e4511fe8b6bfaa9b7e188/gif/tripcreate.gif" alt="trip-create" width="600"/></td>
     <td><img src="./assets/gif/place-search.gif" alt="place-search" /></td>
   </tr>
   <tr>
