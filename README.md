@@ -72,7 +72,7 @@
 
 | 회원가입 및 로그인 | 이메일 인증 |
 |--------------------|-------------|
-| ![signin](./assets/gif/signin.gif) | ![email-auth](./assets/gif/email-auth.gif) |
+| ![signin](./src/assets/gif/signin.gif) | ![email-auth](./assets/gif/email-auth.gif) |
 
 | 여행 생성 (여행 정보·장소·숙소 CRUD) | 장소 검색 (Google Places API) |
 |-------------------------------------|-------------------------------|
