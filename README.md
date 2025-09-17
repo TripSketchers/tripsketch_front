@@ -76,7 +76,7 @@
     <th>이메일 인증</th>
   </tr>
   <tr>
-    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/8207d5ab78abfef24d17e1e428ab220c9c731f23/gif/signin.gif" alt="signin" width="470"/></td>
+    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/33d4eee86fcb96a3a2b937faae6c55605ec4bbf0/gif/signin.gif" alt="signin" width="470"/></td>
     <td><img src="./assets/gif/email-auth.gif" alt="email-auth" /></td>
   </tr>
   <tr>
@@ -84,16 +84,16 @@
     <th>여행 계획표 장소 CRUD</th>
   </tr>
   <tr>
-    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/cd2d63d6f7c015c5322e4511fe8b6bfaa9b7e188/gif/tripcreate.gif" alt="trip-create" width="470"/></td>
-    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/ea40b05f1dab6cee8b2ae9df8221e04b5e244c1a/gif/tripplan.gif" alt="trip-plan" width="470" /></td>
+    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/33d4eee86fcb96a3a2b937faae6c55605ec4bbf0/gif/tripcreate.gif" alt="trip-create" width="470"/></td>
+    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/33d4eee86fcb96a3a2b937faae6c55605ec4bbf0/gif/tripplan.gif" alt="trip-plan" width="470" /></td>
   </tr>
   <tr>
     <th>여행 앨범 사진 CRUD</th>
     <th>여행 공유 기능</th>
   </tr>
   <tr>
-    <td><img src="./assets/gif/schedule.gif" alt="schedule" /></td>
-    <td><img src="./assets/gif/album.gif" alt="album" /></td>
+    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/33d4eee86fcb96a3a2b937faae6c55605ec4bbf0/gif/album.gif" alt="album" /></td>
+    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/f8a978ba1c0339782a063a7cc625d70bab98f6ae/gif/share.gif" alt="share" /></td>
   </tr>
 </table>
 
