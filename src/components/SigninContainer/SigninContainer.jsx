@@ -115,7 +115,7 @@ function SigninContainer({
                 const firebaseToken = response.data.firebaseToken;
                 try {
                     await signInWithCustomToken(auth, firebaseToken);
-                    navigate("/");
+                    window.location.replace("/tripsketch_front/");
                 } catch (e) {
                     SwalAlert({
                         title: "로그인 실패",
