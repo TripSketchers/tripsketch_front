@@ -70,21 +70,40 @@
 
 ### 🖼 미리보기 (Preview)
 
-| 회원가입 및 로그인 | 이메일 인증 |
-|--------------------|-------------|
-| ![signin](gif/signin.gif) | ![email-auth](./assets/gif/email-auth.gif) |
-
-| 여행 생성 (여행 정보·장소·숙소 CRUD) | 장소 검색 (Google Places API) |
-|-------------------------------------|-------------------------------|
-| ![trip-create](./assets/gif/trip-create.gif) | ![place-search](./assets/gif/place-search.gif) |
-
-| 여행 계획표 장소 CRUD | 여행 앨범 사진 CRUD |
-|------------------------|---------------------|
-| ![schedule](./assets/gif/schedule.gif) | ![album](./assets/gif/album.gif) |
-
-| 여행 공유 기능 |  |
-|----------------|--|
-| ![share](./assets/gif/share.gif) |  |
+<table>
+  <tr>
+    <th>회원가입 및 로그인</th>
+    <th>이메일 인증</th>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/TripSketchers/tripsketch_front/gif/signin.gif" alt="signin" width="700"/></td>
+    <td><img src="./assets/gif/email-auth.gif" alt="email-auth" /></td>
+  </tr>
+  <tr>
+    <th>여행 생성 (여행 정보·장소·숙소 CRUD)</th>
+    <th>장소 검색 (Google Places API)</th>
+  </tr>
+  <tr>
+    <td><img src="./assets/gif/trip-create.gif" alt="trip-create" /></td>
+    <td><img src="./assets/gif/place-search.gif" alt="place-search" /></td>
+  </tr>
+  <tr>
+    <th>여행 계획표 장소 CRUD</th>
+    <th>여행 앨범 사진 CRUD</th>
+  </tr>
+  <tr>
+    <td><img src="./assets/gif/schedule.gif" alt="schedule" /></td>
+    <td><img src="./assets/gif/album.gif" alt="album" /></td>
+  </tr>
+  <tr>
+    <th>여행 공유 기능</th>
+    <th></th>
+  </tr>
+  <tr>
+    <td><img src="./assets/gif/share.gif" alt="share" /></td>
+    <td></td>
+  </tr>
+</table>
 
 
 <br/>
