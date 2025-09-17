@@ -11,12 +11,13 @@ import { auth } from "../../api/Firebase/Firebase";
 import { signInWithCustomToken } from "firebase/auth";
 import { FaArrowRight } from "react-icons/fa6";
 import SwalAlert from "../SwalAlert/SwalAlert";
+import { useNavigate } from "react-router-dom";
 
 function SigninContainer({
-	isSignin,
-	isRightPanelActive,
-	setIsRightPanelActive,
-	isMobile,
+    isSignin,
+    isRightPanelActive,
+    setIsRightPanelActive,
+    isMobile,
 }) {
     const text = isSignin ? "로그인" : "회원가입";
     const buttonText = isSignin ? "회원가입" : "로그인";
@@ -35,6 +36,8 @@ function SigninContainer({
         password: "",
         checkPassword: "",
     });
+
+    const navigate = useNavigate();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -101,8 +104,7 @@ function SigninContainer({
                     title: "회원가입이 완료되었습니다!",
                     icon: "success",
                     onConfirm: () => {
-                        // 회원가입 후 로그인 페이지로 이동
-                        window.location.replace("/auth/signin");
+                        window.location.reload();
                     },
                 });
             } else {
@@ -113,7 +115,7 @@ function SigninContainer({
                 const firebaseToken = response.data.firebaseToken;
                 try {
                     await signInWithCustomToken(auth, firebaseToken);
-                    window.location.replace("/");
+                    window.location.replace("/tripsketch_front/");
                 } catch (e) {
                     SwalAlert({
                         title: "로그인 실패",
@@ -145,8 +147,8 @@ function SigninContainer({
                 });
             } else {
                 SwalAlert({
-                    title: "알 수 없는 오류 발생",
-                    text: "문제가 지속되면 관리자에게 문의해주세요.",
+                    title: "로그인 실패",
+                    text: "로그인에 실패했습니다. 다시 시도해주세요.",
                     icon: "error",
                 });
             }
