@@ -76,7 +76,7 @@
     <th>이메일 인증</th>
   </tr>
   <tr>
-    <td><img src="https://raw.githubusercontent.com/TripSketchers/tripsketch_front/gif/signin.gif" alt="signin" width="700"/></td>
+    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/8207d5ab78abfef24d17e1e428ab220c9c731f23/gif/signin.gif" alt="signin" width="600"/></td>
     <td><img src="./assets/gif/email-auth.gif" alt="email-auth" /></td>
   </tr>
   <tr>
