@@ -76,32 +76,24 @@
     <th>이메일 인증</th>
   </tr>
   <tr>
-    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/8207d5ab78abfef24d17e1e428ab220c9c731f23/gif/signin.gif" alt="signin" width="600"/></td>
+    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/8207d5ab78abfef24d17e1e428ab220c9c731f23/gif/signin.gif" alt="signin" width="550"/></td>
     <td><img src="./assets/gif/email-auth.gif" alt="email-auth" /></td>
   </tr>
   <tr>
     <th>여행 생성 (여행 정보·장소·숙소 CRUD)</th>
-    <th>장소 검색 (Google Places API)</th>
+    <th>여행 계획표 장소 CRUD</th>
   </tr>
   <tr>
-    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/cd2d63d6f7c015c5322e4511fe8b6bfaa9b7e188/gif/tripcreate.gif" alt="trip-create" width="600"/></td>
+    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/cd2d63d6f7c015c5322e4511fe8b6bfaa9b7e188/gif/tripcreate.gif" alt="trip-create" width="550"/></td>
     <td><img src="./assets/gif/place-search.gif" alt="place-search" /></td>
   </tr>
   <tr>
-    <th>여행 계획표 장소 CRUD</th>
     <th>여행 앨범 사진 CRUD</th>
+    <th>여행 공유 기능</th>
   </tr>
   <tr>
     <td><img src="./assets/gif/schedule.gif" alt="schedule" /></td>
     <td><img src="./assets/gif/album.gif" alt="album" /></td>
-  </tr>
-  <tr>
-    <th>여행 공유 기능</th>
-    <th></th>
-  </tr>
-  <tr>
-    <td><img src="./assets/gif/share.gif" alt="share" /></td>
-    <td></td>
   </tr>
 </table>
 
