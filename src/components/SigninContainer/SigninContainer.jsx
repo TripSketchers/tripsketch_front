@@ -19,7 +19,6 @@ function SigninContainer({
     setIsRightPanelActive,
     isMobile,
 }) {
-    const navigate = useNavigate();
     const text = isSignin ? "로그인" : "회원가입";
     const buttonText = isSignin ? "회원가입" : "로그인";
     const passwordRegex =
@@ -37,6 +36,8 @@ function SigninContainer({
         password: "",
         checkPassword: "",
     });
+
+    const navigate = useNavigate();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -114,7 +115,7 @@ function SigninContainer({
                 const firebaseToken = response.data.firebaseToken;
                 try {
                     await signInWithCustomToken(auth, firebaseToken);
-                    navigate("/", { replace: true });
+                    navigate("/");
                 } catch (e) {
                     SwalAlert({
                         title: "로그인 실패",
@@ -146,8 +147,8 @@ function SigninContainer({
                 });
             } else {
                 SwalAlert({
-                    title: "알 수 없는 오류 발생",
-                    text: "문제가 지속되면 관리자에게 문의해주세요.",
+                    title: "로그인 실패",
+                    text: "로그인에 실패했습니다. 다시 시도해주세요.",
                     icon: "error",
                 });
             }
