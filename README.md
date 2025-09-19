@@ -77,7 +77,7 @@
   </tr>
   <tr>
     <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/33d4eee86fcb96a3a2b937faae6c55605ec4bbf0/gif/signin.gif" alt="signin" width="470"/></td>
-    <td><img src="./assets/gif/email-auth.gif" alt="email-auth" /></td>
+    <td><img src="https://github.com/TripSketchers/tripsketch_front/blob/6aeb02e2418d33dfa942baff6e0e7c15428857cb/gif/email.gif" alt="email-auth" /></td>
   </tr>
   <tr>
     <th>여행 생성 (여행 정보·장소·숙소 CRUD)</th>
