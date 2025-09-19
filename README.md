@@ -46,13 +46,26 @@
 
 ## 🔎 프로젝트 산출물
 
-| ERD | 메뉴구조도 |
-|-----|------------|
-| <img width="800" alt="Image" src="https://github.com/user-attachments/assets/8ccc87be-707b-4792-8b9f-ecb28f808eb4" /> | <img width="800" height="1120" alt="Image" src="https://github.com/user-attachments/assets/e640a60d-b720-4c20-83d2-085047d3af88" /> |
+<table>
+  <tr>
+    <th>ERD</th>
+    <th>메뉴구조도</th>
+  </tr>
+  <tr>
+    <td><img width="400" alt="Image" src="https://github.com/user-attachments/assets/8ccc87be-707b-4792-8b9f-ecb28f808eb4" /></td>
+    <td><img width="400" height="1120" alt="Image" src="https://github.com/user-attachments/assets/e640a60d-b720-4c20-83d2-085047d3af88" /></td>
+  </tr>
 
-| 프로토타입 |
-|-----------------|
-| <img width="700" height="9206" alt="Image" src="https://github.com/user-attachments/assets/7f1dfdde-c6cf-499e-acb5-f6c01426c2b7" /> |
+</table>
+
+<table>
+    <tr>
+      <th>프로토타입</th>
+    </tr>
+    <tr>
+      <td><img width="400" height="9206" alt="Image" src="https://github.com/user-attachments/assets/7f1dfdde-c6cf-499e-acb5-f6c01426c2b7" /></td>
+    </tr>
+</table>
 
 <br/>
 
