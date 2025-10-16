@@ -39,10 +39,27 @@ function AccommodationModal({ onClose, onConfirm, selectedPlace }) {
 
     const handleSetDate = (date) => {
         const dateStr = format(date, "yyyy-MM-dd");
-        setSelectedDateMap((prev) => ({
-            ...prev,
-            [dateStr]: selectedPlace,
-        }));
+        setSelectedDateMap((prev) => {
+            const current = prev[dateStr];
+
+            const isSamePlace = (a, b) => {
+                if (!a || !b) return false;
+                if (a.id && b.id) return a.id === b.id;
+                return false;
+            };
+
+            // 같은 장소를 다시 클릭하면 토글(제거)
+            if (isSamePlace(current, selectedPlace)) {
+                const { [dateStr]: _, ...rest } = prev;
+                return rest;
+            }
+
+            // 아니면 해당 날짜에 장소 지정
+            return {
+                ...prev,
+                [dateStr]: selectedPlace,
+            };
+        });
     };
 
     const handleSelectAll = () => {
@@ -67,8 +84,12 @@ function AccommodationModal({ onClose, onConfirm, selectedPlace }) {
                     const dateStr = format(day, "yyyy-MM-dd");
                     const isSelected = !!selectedDateMap[dateStr];
                     const targetPlace = selectedDateMap[dateStr];
-                    const placeName = targetPlace?.displayName?.text || targetPlace?.name || "";
-                    const photoUrl = selectedDateMap[dateStr]?.imageUrl || fallbackImg;
+                    const placeName =
+                        targetPlace?.displayName?.text ||
+                        targetPlace?.name ||
+                        "";
+                    const photoUrl =
+                        selectedDateMap[dateStr]?.imageUrl || fallbackImg;
 
                     return (
                         <div

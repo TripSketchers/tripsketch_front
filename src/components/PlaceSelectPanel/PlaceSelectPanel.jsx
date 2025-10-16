@@ -81,7 +81,7 @@ function PlaceSelectPanel({ text, categories }) {
     }
 
     const handleAccommodationConfirm = (selectedMap) => {
-        setStoredAccommodations((prev) => ({ ...prev, ...selectedMap }));
+        setStoredAccommodations(selectedMap);
         setShowModal(false);
     };
 
