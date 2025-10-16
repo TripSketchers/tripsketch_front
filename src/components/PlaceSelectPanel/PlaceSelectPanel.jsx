@@ -35,7 +35,8 @@ function PlaceSelectPanel({ text, categories }) {
 
     const location = useLocation();
     // 구조분해 할당으로 변수에 담기
-    const { lowLat, lowLng, highLat, highLng } = tripDestination || location?.state || {};
+    const { lowLat, lowLng, highLat, highLng } =
+        tripDestination || location?.state || {};
 
     const {
         data,
@@ -45,7 +46,15 @@ function PlaceSelectPanel({ text, categories }) {
         isLoading,
         error,
     } = useInfiniteQuery({
-        queryKey: ["places", selectedCategory, searchKeyword, lowLat, lowLng, highLat, highLng],
+        queryKey: [
+            "places",
+            selectedCategory,
+            searchKeyword,
+            lowLat,
+            lowLng,
+            highLat,
+            highLng,
+        ],
         queryFn: async ({ pageParam = "" }) => {
             const res = await instance.get("/places", {
                 params: {
@@ -54,7 +63,8 @@ function PlaceSelectPanel({ text, categories }) {
                     pagetoken: pageParam, // ✅ pagetoken 보내기
                     location: [lowLat, lowLng, highLat, highLng],
                 },
-                paramsSerializer: params => qs.stringify(params, { arrayFormat: "repeat" }),
+                paramsSerializer: (params) =>
+                    qs.stringify(params, { arrayFormat: "repeat" }),
                 headers: {
                     Authorization: localStorage.getItem("accessToken"),
                 },
@@ -66,9 +76,8 @@ function PlaceSelectPanel({ text, categories }) {
         enabled: !!lowLat && !!lowLng && !!highLat && !!highLng,
     });
 
-            
     if (!lowLat || !lowLng || !highLat || !highLng) {
-        return <Loading content={"위치 정보를 로딩 중입니다."}/>;
+        return <Loading content={"위치 정보를 로딩 중입니다."} />;
     }
 
     const handleAccommodationConfirm = (selectedMap) => {
@@ -101,13 +110,15 @@ function PlaceSelectPanel({ text, categories }) {
     const isPlaceAdded = (place) => {
         if (text === "숙소") return false;
         return storedPlaces.some((p) => p.googlePlaceId === place.id);
-    };    
+    };
 
     return (
         <div css={S.SLayout}>
             <div css={S.SSearchBox}>
                 <SearchInput
-                    placeholder={`${text === "숙소" ? "숙소" : "장소"}명을 입력하세요`}
+                    placeholder={`${
+                        text === "숙소" ? "숙소" : "장소"
+                    }명을 입력하세요`}
                     onSearch={(value) => {
                         setSearchKeyword(value);
                         setSelectedCategory(value ? null : categories[0]);
@@ -131,8 +142,8 @@ function PlaceSelectPanel({ text, categories }) {
                 {isLoading && <Loading />}
                 {error && <div>에러 발생!</div>}
 
-                {data?.pages.map((page, pageIndex) =>
-                    page.places
+                {(data?.pages ?? []).map((page, pageIndex) =>
+                    (page?.places ?? [])
                         .filter(
                             (place) =>
                                 !selectedCategory ||
@@ -141,7 +152,9 @@ function PlaceSelectPanel({ text, categories }) {
                         .map((place, i) => (
                             <PlaceBox
                                 key={
-                                    place.googlePlaceId || place.id
+                                    place.googlePlaceId ||
+                                    place.id ||
+                                    `${pageIndex}-${i}`
                                 }
                                 place={place}
                                 onToggle={(e) => {

@@ -10,7 +10,7 @@ function CustomDatePicker({ dateRange, setDateRange }) {
 
     useEffect(() => {
         const handleResize = () => {
-            setMonthsToShow(window.innerWidth < 880 ? 1 : 2);
+            setMonthsToShow(window.innerWidth < 1000 ? 1 : 2);
         };
         handleResize();
         window.addEventListener("resize", handleResize);
