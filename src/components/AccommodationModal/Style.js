@@ -1,5 +1,12 @@
 import { css } from "@emotion/react";
 
+export const SWrapper = css`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
+
 export const STitle = css`
     margin-bottom: 10px;
     font-size: 24px;
@@ -82,6 +89,7 @@ export const SBtnContainer = css`
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 100%;
 `;
 
 export const selectAllBtn = css`
