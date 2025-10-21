@@ -20,6 +20,12 @@ const TIME_END = 1440; // 24:00
 const TIMELINE_END = 1800; // 30:00 (익일 06:00)
 
 export default function useScheduleDropHandler(schedules, setSchedules) {
+	// tripScheduleId에서 기준 날짜 추출 (예: accommodation_2025-11-09 → 2025-11-09)
+	const getBaseDateFromId = (tripScheduleId = "") => {
+		const parts = String(tripScheduleId).split("_");
+		return parts.length >= 2 ? parts[1] : null;
+	};
+
 	const handleDrop = async (
 		droppedItem,
 		dropDate,
@@ -28,6 +34,11 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 		tripInfo
 	) => {
 		const isSplit = droppedItem.isSplit === true;
+		// ✅ 분할 스케줄이면 그룹의 '원본 기준 날짜'를 사용
+		const baseDateForSplit =
+			isSplit ? (getBaseDateFromId(droppedItem.tripScheduleId) || dropDate) : dropDate;
+		const effectiveDropDate = baseDateForSplit;
+
 		const totalStayTime = calculateTotalStayTime(
 			droppedItem,
 			startTime,
@@ -68,7 +79,7 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 				droppedItem.tripScheduleId ?? Date.now() + Math.random(),
 			startTime: minutesToTime(dropStartAbs),
 			endTime: minutesToTime(dropStartAbs + totalStayTime),
-			date: dropDate,
+			date: effectiveDropDate, // ✅ 기준 날짜 고정
             place: droppedItem.place
 		};
 
@@ -115,11 +126,11 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 			tempSchedules[tempSchedules.length - 1].travelTime = 0;
 		}
 
-		// 6️⃣ 시간 겹침 조정
+		// 6️⃣ 시간 겹침 조정: effectiveDropDate 기준으로 당일/익일 선택
 		const daySchedules = tempSchedules.filter((s) => {
 			const scheduleStartAbs = getAbsoluteMinutes(s.startTime);
 			const scheduleDate = new Date(s.date);
-			const dropDateObj = new Date(dropDate);
+			const dropDateObj = new Date(effectiveDropDate);
 			const diffDays =
 				(scheduleDate - dropDateObj) / (1000 * 60 * 60 * 24);
 
@@ -155,7 +166,7 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
 		initScheduleHandler(setSchedules); // 내부 초기화만
 		const newSchedules = splitAndSetSchedule(
 			droppedItem,
-			dropDate,
+			effectiveDropDate, // ✅ 여기서도 기준 날짜 고정
 			adjustedStartTime,
 			adjustedEndTime
 		);

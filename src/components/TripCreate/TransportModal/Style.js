@@ -8,11 +8,12 @@ export const STitle = css`
 
 export const SMessage = css`
     font-size: 14px;
-    color:rgb(150, 150, 150);
+    color: rgb(150, 150, 150);
 `;
 
 export const optionList = css`
     display: flex;
+    justify-content: center;
     gap: 20px;
     margin: 20px 0;
     & > div {
@@ -50,6 +51,15 @@ export const option = (isSelected) => css`
 
 export const icon = css`
     flex-shrink: 0;
+`;
+
+export const notice = css`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #d75252ff;
+    margin: 10px 0;
+    font-size: 14px;
 `;
 
 export const confirmBtn = css`
