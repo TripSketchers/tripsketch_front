@@ -70,28 +70,82 @@ function PlanTable({ initialSchedules, showPlaceSelectPanel }) {
     const renderDaySchedules = (daySchedules) => {
         const result = [];
 
-        for (let i = 0; i < daySchedules.length; i++) {
-            const current = daySchedules[i];
+        // 정렬 헬퍼: 시작 시간 기준 (30:00 같은 값도 timeToMinutes로 처리됨)
+        const sorted = [...daySchedules].sort(
+            (a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime)
+        );
+
+        const normPoint = (node) => {
+            if (!node) return null;
+            const p = node.place ?? node;
+            const lat =
+                p.latitude ??
+                p.lat ??
+                p.location?.lat ??
+                p.geometry?.location?.lat ??
+                null;
+            const lng =
+                p.longitude ??
+                p.lng ??
+                p.location?.lng ??
+                p.geometry?.location?.lng ??
+                null;
+            const name = p.name ?? p.placeName ?? p.title ?? "";
+            return lat == null || lng == null ? null : { lat, lng, name };
+        };
+
+        const isSamePoint = (a, b) => {
+            if (!a || !b) return false;
+            return (
+                Math.abs(a.lat - b.lat) < 1e-6 && Math.abs(a.lng - b.lng) < 1e-6
+            );
+        };
+
+        const findNextChrono = (list, idx) => {
+            const cur = list[idx];
+            if (!cur) return null;
+            const curEnd = timeToMinutes(cur.endTime);
+            let best = null;
+            let bestDelta = Infinity;
+            for (let k = 0; k < list.length; k++) {
+                if (k === idx) continue;
+                const st = timeToMinutes(list[k].startTime);
+                const delta = st - curEnd;
+                if (delta >= 0 && delta < bestDelta) {
+                    best = list[k];
+                    bestDelta = delta;
+                }
+            }
+            return best;
+        };
+
+        for (let i = 0; i < sorted.length; i++) {
+            const current = sorted[i];
             result.push({ ...current, type: "schedule" });
 
             if (current.travelTime && current.travelTime > 0) {
                 const startMin = timeToMinutes(current.endTime);
                 const endMin = startMin + current.travelTime;
 
-                const origin = {
-                    lat: current.place?.latitude ?? current.latitude,
-                    lng: current.place?.longitude ?? current.longitude,
-                    name: current.place?.name ?? current.name ?? "", // ✅ 이름 포함
-                };
+                const origin = normPoint(current);
 
-                const next = daySchedules[i + 1];
-                const destination = next
-                    ? {
-                          lat: next.place?.latitude ?? next.latitude,
-                          lng: next.place?.longitude ?? next.longitude,
-                          name: next.place?.name ?? next.name ?? "", // ✅ 이름 포함
-                      }
-                    : null;
+                // 우선 인접 인덱스 사용하되, 없거나 좌표 누락이면 findNextChrono로 보정
+                let next = sorted[i + 1];
+                if (!next || !normPoint(next)) {
+                    const fallback = findNextChrono(sorted, i);
+                    if (fallback) next = fallback;
+                }
+
+                const destination = next ? normPoint(next) : null;
+
+                // 목적지 없거나 origin === destination이면 travel 블록 생성하지 않음
+                if (
+                    !destination ||
+                    !origin ||
+                    isSamePoint(origin, destination)
+                ) {
+                    continue;
+                }
 
                 result.push({
                     id: `travel_${current.tripScheduleId}_${i}`,
@@ -131,9 +185,9 @@ function PlanTable({ initialSchedules, showPlaceSelectPanel }) {
             setHasChanges(false);
         } catch (err) {
             console.error("🛑 저장 실패", err);
-			SwalAlert({
+            SwalAlert({
                 title: "저장에 실패했습니다.",
-				text: "일정 저장에 실패했습니다. 다시 시도해주세요.",
+                text: "일정 저장에 실패했습니다. 다시 시도해주세요.",
                 icon: "error",
             });
         }

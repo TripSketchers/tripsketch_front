@@ -9,7 +9,7 @@ const ANCHOR_MIN = 360; // 06:00
 const normByAnchor = (mins) => (mins - ANCHOR_MIN + 1440) % 1440;
 
 function ScheduleEditor({ schedule, popupPosition, onSave, onClose }) {
-    const { schedules, setSchedules } = useTrip();
+    const { schedules, setSchedules, tripInfo } = useTrip();
     const { handleDrop } = useScheduleDropHandler(schedules, setSchedules);
 
     // viewStartTime, viewEndTime이 있으면 원래 일정 기준으로 사용
@@ -119,7 +119,7 @@ function ScheduleEditor({ schedule, popupPosition, onSave, onClose }) {
 
         // ✅ 분할 카드면 해당 카드의 date를 "잠금"해서 넘김
         const lockDate = !!schedule?.isSplit;
-        const dropDate = schedule.date; // 그대로 사용
+        const dropDate = schedule.date;
 
         handleDrop(
             {
@@ -133,7 +133,7 @@ function ScheduleEditor({ schedule, popupPosition, onSave, onClose }) {
             dropDate,
             start,
             end,
-            { lockDate } // ✅ 추가
+            tripInfo
         );
 
         onClose?.();
