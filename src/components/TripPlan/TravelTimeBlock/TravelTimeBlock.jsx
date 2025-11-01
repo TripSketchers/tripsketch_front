@@ -35,8 +35,6 @@ function TravelTimeBlock({ topPx, heightPx, item, transportType }) {
         const googleUrl = `https://www.google.com/maps/dir/?api=1&origin=${originLat},${originLng}&destination=${destLat},${destLng}&travelmode=${mode}`;
 
         window.open(googleUrl, "_blank");
-        console.log(item);
-        console.log(googleUrl);
     };
 
     return (
