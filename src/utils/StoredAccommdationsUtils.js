@@ -1,9 +1,11 @@
-import {
-	addDays,
-	format,
-	parseISO,
-	eachDayOfInterval,
-} from "date-fns";
+import { addDays, format, parseISO, eachDayOfInterval } from "date-fns";
+
+/**
+ * 유틸: place 객체에서 일관된 ID 추출
+ */
+function getPlaceId(place) {
+    return place?.googlePlaceId || place?.id || place?.place_id || null;
+}
 
 /**
  * storedAccommodations Map을 배열로 변환하면서,
@@ -15,57 +17,61 @@ import {
  * @returns {Array} - [{ place, checkInDate, checkOutDate }, ...]
  */
 export function convertStoredAccommodationMapToArray(
-	accommodationMap,
-	dateToRemove
+    accommodationMap,
+    dateToRemove
 ) {
-	// ✅ 날짜-숙소 쌍을 배열로 변환, 제거할 날짜는 제외
-	const dateEntries = Object.entries(accommodationMap)
-		.filter(([date]) => date !== dateToRemove) // ❌ 제거 대상 날짜 제외
-		.sort(([a], [b]) => new Date(a) - new Date(b)); // 📅 날짜 오름차순 정렬
+    // ✅ 날짜-숙소 쌍을 배열로 변환, 제거할 날짜는 제외
+    const dateEntries = Object.entries(accommodationMap)
+        .filter(([date]) => date !== dateToRemove) // ❌ 제거 대상 날짜 제외
+        .sort(([a], [b]) => new Date(a) - new Date(b)); // 📅 날짜 오름차순 정렬
 
-	const grouped = []; // 최종 결과 (숙소 묶음들)
-	let current = null; // 현재 묶고 있는 숙소 정보
+    const grouped = []; // 최종 결과 (숙소 묶음들)
+    let current = null; // 현재 묶고 있는 숙소 정보
 
-	for (let i = 0; i < dateEntries.length; i++) {
-		const [dateStr, place] = dateEntries[i];
-		const date = parseISO(dateStr); // 문자열 → 날짜 객체로 파싱
+    for (let i = 0; i < dateEntries.length; i++) {
+        const [dateStr, place] = dateEntries[i];
+        const date = parseISO(dateStr); // 문자열 → 날짜 객체로 파싱
 
-		if (!current) {
-			// ✅ 첫 번째 항목이거나, 새 묶음을 시작하는 경우
-			current = {
-				place,
-				checkInDate: dateStr,
-				checkOutDate: format(addDays(date, 1), "yyyy-MM-dd"), // 하루 뒤로 설정
-			};
-		} else {
-			const prevCheckOut = parseISO(current.checkOutDate); // 이전 묶음의 종료일
-			const isConsecutive =
-				format(date, "yyyy-MM-dd") ===
-				format(prevCheckOut, "yyyy-MM-dd");
-			const isSamePlace =
-				place?.googlePlaceId === current.place?.googlePlaceId;
+        if (!current) {
+            // ✅ 첫 번째 항목이거나, 새 묶음을 시작하는 경우
+            current = {
+                place,
+                checkInDate: dateStr,
+                checkOutDate: format(addDays(date, 1), "yyyy-MM-dd"), // 하루 뒤로 설정
+            };
+        } else {
+            const prevCheckOut = parseISO(current.checkOutDate); // 이전 묶음의 종료일
+            const isConsecutive =
+                format(date, "yyyy-MM-dd") ===
+                format(prevCheckOut, "yyyy-MM-dd");
 
-			if (isConsecutive && isSamePlace) {
-				// ✅ 같은 숙소 + 연속 날짜 → 하나의 묶음으로 연결
-				current.checkOutDate = format(addDays(date, 1), "yyyy-MM-dd");
-			} else {
-				// 🔄 장소가 다르거나 날짜가 끊기면 → 현재 묶음 종료
-				grouped.push(current);
+            // place 비교를 위해 일관된 키 사용
+            const prevPlaceId = getPlaceId(current.place);
+            const placeId = getPlaceId(place);
+            const isSamePlace =
+                placeId && prevPlaceId && placeId === prevPlaceId;
 
-				// 새로운 묶음 시작
-				current = {
-					place,
-					checkInDate: dateStr,
-					checkOutDate: format(addDays(date, 1), "yyyy-MM-dd"),
-				};
-			}
-		}
-	}
+            if (isConsecutive && isSamePlace) {
+                // ✅ 같은 숙소 + 연속 날짜 → 하나의 묶음으로 연결
+                current.checkOutDate = format(addDays(date, 1), "yyyy-MM-dd");
+            } else {
+                // 🔄 장소가 다르거나 날짜가 끊기면 → 현재 묶음 종료
+                grouped.push(current);
 
-	// ✅ 마지막 묶음이 남아 있다면 결과에 추가
-	if (current) grouped.push(current);
+                // 새로운 묶음 시작
+                current = {
+                    place,
+                    checkInDate: dateStr,
+                    checkOutDate: format(addDays(date, 1), "yyyy-MM-dd"),
+                };
+            }
+        }
+    }
 
-	return grouped;
+    // ✅ 마지막 묶음이 남아 있다면 결과에 추가
+    if (current) grouped.push(current);
+
+    return grouped;
 }
 
 /**
@@ -76,22 +82,22 @@ export function convertStoredAccommodationMapToArray(
  * @returns {Object} - { "yyyy-MM-dd": place, ... }
  */
 export function convertArrayToAccommodationMap(accommodations) {
-	const map = {};
+    const map = {};
 
-	accommodations.forEach(({ place, checkInDate, checkOutDate }) => {
-		const start = parseISO(checkInDate);
-		const end = parseISO(checkOutDate);
+    accommodations.forEach(({ place, checkInDate, checkOutDate }) => {
+        const start = parseISO(checkInDate);
+        const end = parseISO(checkOutDate);
 
-		const stayDates = eachDayOfInterval({
-			start,
-			end: addDays(end, -1), // checkOutDate는 마지막 날 포함 안 하니까 -1
-		});
+        const stayDates = eachDayOfInterval({
+            start,
+            end: addDays(end, -1), // checkOutDate는 마지막 날 포함 안 하니까 -1
+        });
 
-		stayDates.forEach((date) => {
-			const dateStr = format(date, "yyyy-MM-dd");
-			map[dateStr] = place;
-		});
-	});
+        stayDates.forEach((date) => {
+            const dateStr = format(date, "yyyy-MM-dd");
+            map[dateStr] = place;
+        });
+    });
 
-	return map;
+    return map;
 }

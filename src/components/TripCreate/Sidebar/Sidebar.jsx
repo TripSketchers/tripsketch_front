@@ -25,13 +25,13 @@ function Sidebar({ selectedStep, setSelectedStep }) {
         setShowModal(true);
     };
 
-	const handleTransportSelect = async (selectedTransport) => {
-		try {
-			// ✅ 선택한 교통수단 저장
-			localStorage.setItem("transportType", selectedTransport);
-            
-			const mergedAccommodations =
-				convertStoredAccommodationMapToArray(storedAccommodations);
+    const handleTransportSelect = async (selectedTransport) => {
+        try {
+            // ✅ 선택한 교통수단 저장
+            localStorage.setItem("transportType", selectedTransport);
+
+            const mergedAccommodations =
+                convertStoredAccommodationMapToArray(storedAccommodations);
 
             const reqData = {
                 trip: {
@@ -99,7 +99,7 @@ function Sidebar({ selectedStep, setSelectedStep }) {
                 });
                 SwalAlert({
                     title: `여행이 수정되었습니다!`,
-					icon: "success",
+                    icon: "success",
                 });
                 navigate(`/trip/plan/${tripInfo.tripId}`);
             } else {
@@ -110,7 +110,7 @@ function Sidebar({ selectedStep, setSelectedStep }) {
                 });
                 SwalAlert({
                     title: `여행이 생성되었습니다!`,
-					icon: "success",
+                    icon: "success",
                 });
                 navigate("/account/mypage");
             }
@@ -118,8 +118,8 @@ function Sidebar({ selectedStep, setSelectedStep }) {
             console.error(err);
             SwalAlert({
                 title: `여행 생성에 실패했습니다.`,
-				text: `다시 시도해주세요.`,
-				icon: "error",
+                text: `다시 시도해주세요.`,
+                icon: "error",
             });
         }
     };
