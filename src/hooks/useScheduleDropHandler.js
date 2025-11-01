@@ -1,3 +1,4 @@
+import { showToast } from "../components/Toast/Toast";
 import {
     initScheduleHandler,
     splitAndSetSchedule,
@@ -9,17 +10,14 @@ import {
     minutesToTime,
     timeToMinutes,
 } from "../utils/ScheduleTimeUtils";
-import {
-    calculateTravelTimes,
-    calculateAllTravelTimes,
-} from "../utils/ScheduleTravelUtils";
+import { calculateTravelTimes } from "../utils/ScheduleTravelUtils";
 
 const TIMELINE_START = 360; // 06:00
 const TIME_END = 1440; // 24:00
 const TIMELINE_END = 1800; // 30:00 (익일 06:00)
 
 export default function useScheduleDropHandler(schedules, setSchedules) {
-    // tripScheduleId에서 기준 날짜 추출 (예: accommodation_2025-11-09 → 2025-11-09)
+    // tripScheduleId에서 기준 날짜 추출
     const getBaseDateFromId = (tripScheduleId = "") => {
         const parts = String(tripScheduleId).split("_");
         return parts.length >= 2 ? parts[1] : null;
@@ -32,8 +30,11 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
         endTime,
         tripInfo
     ) => {
+        // 💾 드롭 전 원본 스케줄 상태 저장 (롤백용)
+        // 원본 배열 자체를 복사
+        const originalSchedules = [...schedules];
+
         const isSplit = droppedItem.isSplit === true;
-        // ✅ 분할 스케줄이면 그룹의 '원본 기준 날짜'를 사용
         const baseDateForSplit = isSplit
             ? getBaseDateFromId(droppedItem.tripScheduleId) || dropDate
             : dropDate;
@@ -77,33 +78,31 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
             ...droppedItem,
             tripScheduleId:
                 droppedItem.tripScheduleId ?? Date.now() + Math.random(),
-            // minutesToTime expects 0..1439 (clock minutes) — 절대분을 시계분으로 변환 (%1440)
             startTime: minutesToTime(dropStartAbs % 1440),
             endTime: minutesToTime((dropStartAbs + totalStayTime) % 1440),
             date: effectiveDropDate,
             place: droppedItem.place,
+            // travelTime 초기화
+            travelTime: 0,
         };
 
         // 3️⃣ 삽입 후 정렬
-        const tempSchedules = [...baseSchedules, simulatedItem].sort((a, b) => {
-            if (a.date < b.date) return -1;
-            if (a.date > b.date) return 1;
-            return timeToMinutes(a.startTime) - timeToMinutes(b.startTime);
-        });
+        // 💡 핵심 수정: baseSchedules의 모든 스케줄 객체를 복사하여 참조를 끊음
+        const copiedBaseSchedules = baseSchedules.map((s) => ({ ...s }));
+
+        const tempSchedules = [...copiedBaseSchedules, simulatedItem].sort(
+            (a, b) => {
+                if (a.date < b.date) return -1;
+                if (a.date > b.date) return 1;
+                return timeToMinutes(a.startTime) - timeToMinutes(b.startTime);
+            }
+        );
 
         const currIndex = tempSchedules.findIndex(
             (s) => s.tripScheduleId === simulatedItem.tripScheduleId
         );
 
         // 4️⃣ 영향 받는 스케줄들 travelTime 계산
-        console.log(
-            "[travelTime][calc] prevIndex:",
-            prevIndex,
-            "currIndex:",
-            currIndex,
-            "transportType:",
-            tripInfo?.transportType
-        );
         const travelResults = await calculateTravelTimes(
             prevSchedules,
             tempSchedules,
@@ -111,7 +110,8 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
             currIndex,
             tripInfo?.transportType
         );
-        console.log("[travelTime][results]", travelResults);
+
+        let droppedItemTravelTime = 0; // 드롭된 아이템의 travelTime 저장용 변수
 
         travelResults
             .filter((res) => res && typeof res === "object" && "from" in res)
@@ -119,15 +119,24 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
                 const idxList = tempSchedules
                     .map((s, i) => ({ schedule: s, index: i }))
                     .filter((s) => s.schedule.tripScheduleId === res?.from);
+
+                const travelTime = res?.travelTime ?? 0;
+
                 if (idxList.length > 1) {
                     // split된 경우, 두 번째 스케줄에만 travelTime 부여
-                    tempSchedules[idxList[1].index].travelTime =
-                        res?.travelTime ?? 0;
+                    tempSchedules[idxList[1].index].travelTime = travelTime;
                 } else if (idxList.length === 1) {
                     // 일반 스케줄은 그대로 적용
-                    tempSchedules[idxList[0].index].travelTime =
-                        res?.travelTime ?? 0;
-                    droppedItem.travelTime = res?.travelTime ?? 0;
+                    // tempSchedules[idxList[0].index]는 이미 복사된 객체이므로 원본에 영향 X
+                    tempSchedules[idxList[0].index].travelTime = travelTime;
+
+                    // droppedItem (simulatedItem)에 할당된 travelTime을 별도로 저장
+                    if (
+                        tempSchedules[idxList[0].index].tripScheduleId ===
+                        droppedItem.tripScheduleId
+                    ) {
+                        droppedItemTravelTime = travelTime;
+                    }
                 }
             });
 
@@ -136,7 +145,13 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
             tempSchedules[tempSchedules.length - 1].travelTime = 0;
         }
 
-        // 6️⃣ 시간 겹침 조정: effectiveDropDate 기준으로 당일/익일 선택
+        // 6️⃣ 시간 겹침 조정 준비
+        // droppedItem을 직접 수정하지 않고, 계산된 travelTime을 가진 임시 객체를 생성
+        const itemForOverlapCheck = {
+            ...droppedItem,
+            travelTime: droppedItemTravelTime,
+        };
+
         const daySchedules = tempSchedules.filter((s) => {
             const scheduleStartAbs = getAbsoluteMinutes(s.startTime);
             const scheduleDate = new Date(s.date);
@@ -152,36 +167,20 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
             return false;
         });
 
+        // travelTime이 포함된 임시 객체 itemForOverlapCheck를 전달
         const adjustedStartAbs = findOverlappingSlot(
             daySchedules,
-            droppedItem,
+            itemForOverlapCheck,
             dropStartAbs,
             dropEndAbs
         );
 
-        console.log("조정된 시작 시간: ", minutesToTime(adjustedStartAbs));
-
         if (adjustedStartAbs === null) {
-            console.log(
-                "[travelTime][recalc-all] no slot found → recalculate all travel times"
+            // ❌ 조정될 자리가 없는 경우: 원본 상태로 롤백
+            setSchedules(originalSchedules);
+            showToast.info(
+                "일정을 넣을 공간이 없어요. 다른 빈 곳에 다시 시도해 보세요!"
             );
-            // ✅ 조정될 자리가 없는 경우 전체 이동 시간 재계산
-            const restored = await calculateAllTravelTimes(
-                prevSchedules,
-                tripInfo?.transportType
-            );
-            // 전체 재계산된 travelTime 스냅샷
-            console.log(
-                "[travelTime][recalc-all][snapshot]",
-                restored.map((s) => ({
-                    id: s.tripScheduleId,
-                    date: s.date,
-                    start: s.startTime,
-                    end: s.endTime,
-                    travelTime: s.travelTime ?? 0,
-                }))
-            );
-            setSchedules(restored);
             return;
         }
 
@@ -197,36 +196,12 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
             adjustedEndTime
         );
 
-        // 💡 tempSchedules에서 travelTime 가져와서 newSchedules에 넣어주기
+        // 💡 새로운 스케줄에 travelTime을 정확하게 적용
         newSchedules.forEach((ns) => {
-            const matched = tempSchedules.find(
-                (ts) => ts.scheduleId === ns.scheduleId
-            );
-            if (matched?.travelTime !== undefined) {
-                ns.travelTime = matched.travelTime;
-                console.log(
-                    "[travelTime][merge] matched to new schedule",
-                    {
-                        date: ns.date,
-                        start: ns.startTime,
-                        end: ns.endTime,
-                    },
-                    "travelTime:",
-                    ns.travelTime
-                );
-            } else {
-                console.log(
-                    "[travelTime][merge] no matched travelTime, default 0 for",
-                    {
-                        date: ns.date,
-                        start: ns.startTime,
-                        end: ns.endTime,
-                    }
-                );
-            }
+            ns.travelTime = droppedItemTravelTime;
         });
 
-        const finalSchedules = [...baseSchedules, ...newSchedules];
+        const finalSchedules = [...copiedBaseSchedules, ...newSchedules]; // 💡 copiedBaseSchedules 사용
 
         // 8️⃣ 날짜별 정렬 및 position 지정
         const byDate = finalSchedules.reduce((acc, s) => {
@@ -244,18 +219,6 @@ export default function useScheduleDropHandler(schedules, setSchedules) {
                 s.position = i;
             });
         });
-
-        // travelTime 최종 스냅샷
-        console.log(
-            "[travelTime][final]",
-            finalSchedules.map((s) => ({
-                id: s.tripScheduleId,
-                date: s.date,
-                start: s.startTime,
-                end: s.endTime,
-                travelTime: s.travelTime ?? 0,
-            }))
-        );
 
         // 9️⃣ 최종 적용
         setSchedules(finalSchedules);
