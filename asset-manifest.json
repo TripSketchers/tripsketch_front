@@ -1,0 +1,38 @@
+{
+  "files": {
+    "main.css": "/tripsketch_front/static/css/main.f9d7751e.css",
+    "main.js": "/tripsketch_front/static/js/main.9e5f3671.js",
+    "static/js/488.d98c4ebe.chunk.js": "/tripsketch_front/static/js/488.d98c4ebe.chunk.js",
+    "static/media/Gyoungju.JPG": "/tripsketch_front/static/media/Gyoungju.3274e395855c435ae3c4.JPG",
+    "static/media/Busan.jpg": "/tripsketch_front/static/media/Busan.766791fd71f9bf4462f4.jpg",
+    "static/media/Seoul.jpg": "/tripsketch_front/static/media/Seoul.e4ec1ccd087fe7309601.jpg",
+    "static/media/Sydney.jpg": "/tripsketch_front/static/media/Sydney.b228a65045fa75f0204b.jpg",
+    "static/media/Copenhagen.jpg": "/tripsketch_front/static/media/Copenhagen.89606391adfa7bd03b5d.jpg",
+    "static/media/Honolulu.jpg": "/tripsketch_front/static/media/Honolulu.849cc71617f186ee6a95.jpg",
+    "static/media/Jeju.jpg": "/tripsketch_front/static/media/Jeju.bbb695a7838dc44bf5a6.jpg",
+    "static/media/Amsterdam.jpg": "/tripsketch_front/static/media/Amsterdam.2348b8c6226d88e8553e.jpg",
+    "static/media/w1.jpg": "/tripsketch_front/static/media/w1.e142ee3d19ab8a23cba7.jpg",
+    "static/media/NewYork.jpg": "/tripsketch_front/static/media/NewYork.e18e39f8fdc90e47b9ea.jpg",
+    "static/media/banner2.png": "/tripsketch_front/static/media/banner2.1cd4166f1538f3d5f0a2.png",
+    "static/media/banner1.png": "/tripsketch_front/static/media/banner1.06875c669fa41d781db2.png",
+    "static/media/banner3.png": "/tripsketch_front/static/media/banner3.fac1c3e820c710efd723.png",
+    "static/media/Berlin.jpg": "/tripsketch_front/static/media/Berlin.5b95d517c143fd34647c.jpg",
+    "static/media/Santorini.jpg": "/tripsketch_front/static/media/Santorini.9c9641ffe8c6587eb4d8.jpg",
+    "static/media/London.jpg": "/tripsketch_front/static/media/London.37abe4674c74ce6f9813.jpg",
+    "static/media/TripSketch.png": "/tripsketch_front/static/media/TripSketch.088d315855c87893ecef.png",
+    "static/media/empty-icon.png": "/tripsketch_front/static/media/empty-icon.0feca8877c1d69aa88b1.png",
+    "static/media/fallbackImg.png": "/tripsketch_front/static/media/fallbackImg.0117ea08b0f3828690b8.png",
+    "static/media/slick.svg": "/tripsketch_front/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/tripsketch_front/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/tripsketch_front/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/tripsketch_front/static/media/slick.295183786cd8a1389865.woff",
+    "index.html": "/tripsketch_front/index.html",
+    "main.f9d7751e.css.map": "/tripsketch_front/static/css/main.f9d7751e.css.map",
+    "main.9e5f3671.js.map": "/tripsketch_front/static/js/main.9e5f3671.js.map",
+    "488.d98c4ebe.chunk.js.map": "/tripsketch_front/static/js/488.d98c4ebe.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f9d7751e.css",
+    "static/js/main.9e5f3671.js"
+  ]
+}
