@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/tripsketch_front/static/css/main.f9d7751e.css",
-    "main.js": "/tripsketch_front/static/js/main.ee5ee942.js",
+    "main.js": "/tripsketch_front/static/js/main.8da2a392.js",
     "static/js/488.d98c4ebe.chunk.js": "/tripsketch_front/static/js/488.d98c4ebe.chunk.js",
     "static/media/Gyoungju.JPG": "/tripsketch_front/static/media/Gyoungju.3274e395855c435ae3c4.JPG",
     "static/media/Busan.jpg": "/tripsketch_front/static/media/Busan.766791fd71f9bf4462f4.jpg",
@@ -28,11 +28,11 @@
     "static/media/slick.woff": "/tripsketch_front/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/tripsketch_front/index.html",
     "main.f9d7751e.css.map": "/tripsketch_front/static/css/main.f9d7751e.css.map",
-    "main.ee5ee942.js.map": "/tripsketch_front/static/js/main.ee5ee942.js.map",
+    "main.8da2a392.js.map": "/tripsketch_front/static/js/main.8da2a392.js.map",
     "488.d98c4ebe.chunk.js.map": "/tripsketch_front/static/js/488.d98c4ebe.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f9d7751e.css",
-    "static/js/main.ee5ee942.js"
+    "static/js/main.8da2a392.js"
   ]
 }
