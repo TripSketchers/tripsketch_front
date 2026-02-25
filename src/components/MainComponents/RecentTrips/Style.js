@@ -43,7 +43,9 @@ export const STripBox = css`
     height: auto;
     border-radius: 20px;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
     cursor: pointer;
 
     &:hover {
@@ -121,203 +123,121 @@ export const SRightContainer = css`
     flex: 1;
     width: 100%;
 
-    .albumContainer {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 4 / 2.5;
-        height: auto;
-    }
-
-    @media (max-width: 1000px) {
-        .albumContainer {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 4 / 3;
-            height: auto;
-            margin-bottom: -60px;
-        }
-
-        .albumContainer-1 {
-            margin-bottom: -60px;
-        }
-
-        .albumContainer-2 {
-            margin-bottom: -30px;
-        }
-
-        .albumContainer-3 {
-            margin-bottom: 0px;
-        }
-
-        .albumBox {
-            position: relative !important;
-            width: 100% !important;
-            aspect-ratio: 4 / 2.5;
-            height: auto !important;
-            transition: transform 0.3s ease;
-            margin-bottom: -20%; /* 겹치게 */
-        }
-
-        // albumBox가 1개일 때
-        .albumBox-count-1.albumBox-idx-1 {
-            transform: translate(0%, 5%) !important;
-            z-index: 0;
-            transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
-
-            &:hover {
-                transform: translate(0%, 5%) scale(1.03) !important;
-                z-index: 3;
-            }
-        }
-
-        // albumBox가 2개일 때
-        .albumBox-count-2.albumBox-idx-1 {  // 1번 앨범
-            transform: translate(0, 0px) !important;
-            z-index: 0;
-            transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
-
-            &:hover {
-                transform: translate(0, 0px) scale(1.03) !important;
-                z-index: 3;
-            }
-        }
-        .albumBox-count-2.albumBox-idx-2 {  // 2번 앨범
-            position: absolute !important;
-            transform: translate(0, 0) !important;
-            z-index: 0;
-            transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
-
-            &:hover {
-                transform: translate(0, 0px) scale(1.03) !important;
-                z-index: 3;
-            }
-        }
-
-        // albumBox가 3개일 때
-        .albumBox-count-3.albumBox-idx-1 {  // 1번 앨범
-            transform: translate(0, 80px) !important;
-            z-index: 0;
-            transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
-
-            &:hover {
-                transform: translate(0%, 25%) scale(1.03) !important;
-                z-index: 3;
-            }
-        }
-        .albumBox-count-3.albumBox-idx-2 {  // 2번 앨범
-            position: absolute !important;
-            transform: translate(0%, -200px) !important;
-            z-index: 1;
-            transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
-
-            &:hover {
-                transform: translate(0%, -55%) scale(1.03) !important;
-                z-index: 3;
-            }
-        }
-        .albumBox-count-3.albumBox-idx-3 {  // 3번 앨범
-            position: absolute !important;
-            transform: translate(0%, -240px) !important;
-            z-index: 2;
-            transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
-
-            &:hover {
-                transform: translate(0%, -65%) scale(1.03) !important;
-                z-index: 3;
-            }
-        }
-    }
-
-    /* 기본 albumBox 스타일 */
+    /* 공통 앨범 박스 기본 스타일 */
     .albumBox {
+        overflow: hidden;
         box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.2);
         cursor: pointer;
+        background-color: white;
+        transition:
+            transform 0.3s ease,
+            z-index 0.3s ease,
+            box-shadow 0.3s ease;
 
         img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: block; // img 아래에 **줄바꿈 공백(default inline space)**이 방지
+            display: block;
         }
     }
 
-    /* albumBox가 1개일 때 */
+    /* [기본: 1000px 초과] 가로로 겹치는 부채꼴 형태 */
+    .albumContainer {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 4 / 2.5;
+    }
+
+    /* 갯수별 데스크탑 배치 */
     .albumBox-count-1 {
         position: absolute;
         width: 100%;
         height: 100%;
-        z-index: 2;
-        transform: translate(0%, 0%);
-        transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
-        &:hover {
-            transform: translate(0%, 0%) scale(1.03);
-            z-index: 3;
-        }
     }
-
-    /* albumBox가 2개일 때 */
-    .albumBox-count-2.albumBox-idx-1 {
+    .albumBox-count-2 {
         position: absolute;
         width: 80%;
         height: 90%;
-        top: 10%;
-        z-index: 1;
-        transform: translate(0%, 0%);
-        transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
-        &:hover {
-            transform: translate(0%, 0%) scale(1.03);
-            z-index: 3;
+        &.albumBox-idx-1 {
+            top: 10%;
+            left: 0;
+            z-index: 1;
+        }
+        &.albumBox-idx-2 {
+            top: 0;
+            left: 20%;
+            z-index: 0;
         }
     }
-    .albumBox-count-2.albumBox-idx-2 {
+    .albumBox-count-3 {
         position: absolute;
-        width: 80%;
-        height: 90%;
-        top: 0;
-        z-index: 0;
-        transform: translate(20%, 0%);
-        transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
-        &:hover {
-            transform: translate(20%, 0%) scale(1.03);
-            z-index: 3;
+        width: 70%;
+        height: 85%;
+        &.albumBox-idx-1 {
+            bottom: 0;
+            left: 0;
+            z-index: 2;
+        }
+        &.albumBox-idx-2 {
+            top: 9%;
+            left: 20%;
+            z-index: 1;
+        }
+        &.albumBox-idx-3 {
+            top: 0;
+            left: 40%;
+            z-index: 0;
         }
     }
 
-    /* albumBox가 3개일 때*/
-    .albumBox-count-3.albumBox-idx-1 {
-        position: absolute;
-        width: 70%;
-        height: 85%;
-        z-index: 2;
-        transform: translate(0%, 18%);
-        transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
-        &:hover {
-            transform: translate(0%, 18%) scale(1.03);
-            z-index: 3;
+    /* 데스크탑 호버 효과 */
+    @media (min-width: 1001px) {
+        .albumBox:hover {
+            transform: scale(1.05);
+            z-index: 10;
         }
     }
-    .albumBox-count-3.albumBox-idx-2 {
-        position: absolute;
-        width: 70%;
-        height: 85%;
-        z-index: 1;
-        transform: translate(20%, 9%);
-        transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
-        &:hover {
-            transform: translate(20%, 9%) scale(1.03);
-            z-index: 3;
+
+    /* [반응형: 1000px 이하] 세로로 겹치는 형태 */
+    @media (max-width: 1000px) {
+        .albumContainer {
+            display: flex;
+            flex-direction: column;
+            aspect-ratio: auto; /* 고정 비율 해제하여 내용만큼 늘어나게 함 */
+            padding-bottom: 20px;
         }
-    }
-    .albumBox-count-3.albumBox-idx-3 {
-        position: absolute;
-        width: 70%;
-        height: 85%;
-        z-index: 0;
-        transform: translate(40%, 0%);
-        transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s;
-        &:hover {
-            transform: translate(40%, 0%) scale(1.03);
-            z-index: 3;
+
+        .albumBox {
+            position: relative !important; /* absolute 해제 */
+            width: 100% !important;
+            height: auto !important;
+            aspect-ratio: 4 / 2.5;
+            left: 0 !important;
+            top: 0 !important;
+            transform: none !important;
+
+            /* 아래쪽 박스가 위쪽 박스 위로 올라오게 z-index 설정 */
+            &.albumBox-idx-1 {
+                z-index: 1;
+            }
+            &.albumBox-idx-2 {
+                z-index: 2;
+            }
+            &.albumBox-idx-3 {
+                z-index: 3;
+            }
+        }
+
+        /* 두 번째 박스부터 위로 겹치기 */
+        .albumBox + .albumBox {
+            margin-top: -45%;
+        }
+
+        .albumBox:hover {
+            transform: translateY(-10px) !important;
+            z-index: 10 !important;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
     }
 `;
